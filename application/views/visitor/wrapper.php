@@ -11,7 +11,20 @@
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+		<?php 
 
+		$primarycol = '';
+		$secondarycol = '';
+
+		$arr1 = ['#fab438','#11998e','#f47b24','#1f78bc'];
+		$arr2 = ['#feec03','#38ef7d','#fbaf14','#57a2cb'];
+
+		$ano = array_rand($arr1, 1);
+
+		$primarycol = $arr1[$ano];
+		$secondarycol = $arr2[$ano];
+
+		?>
 		<style>
 
 			.radio {
@@ -103,7 +116,7 @@
 			  padding-bottom: 6px;
 			  font-weight: 700;
 			  border-width: 3px;
-			  border-image: linear-gradient(to right, #11998e, #38ef7d);
+			  border-image: linear-gradient(to right, <?php echo $primarycol.','.$secondarycol ?>);
 			  border-image-slice: 1;
 			}
 			.form__field:focus ~ .form__label {
@@ -112,7 +125,7 @@
 			  display: block;
 			  transition: 0.2s;
 			  font-size: 1rem;
-			  color: #11998e;
+			  color: <?php echo $primarycol ?>;
 			  font-weight: 700;
 			}
 
@@ -125,7 +138,7 @@
 		
 	</head>
 	<body style="overflow: hidden;">
-		<div class="container-fluid" style="background-image: linear-gradient(to bottom right, #079a4b, #7ebf45);overflow-y: auto;
+		<div class="container-fluid" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol.','.$secondarycol ?>);overflow-y: auto;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;">
 			<div class="container-sm" style="height: 100vh; max-width: 570px;">

@@ -48,6 +48,9 @@ class Survey extends CI_Controller {
 		$email = $this->input->post('email');
 		$asal_perusahaan = $this->input->post('asal_perusahaan');
 		$nama_karyawan = $this->input->post('nama_karyawan');
+		$unit_kerja = $this->input->post('unit_kerja');
+		$job_grade = $this->input->post('job_grade');
+		$nama_jabatan = $this->input->post('nama_jabatan');
 
 		$jawaban = [];
 
@@ -71,6 +74,9 @@ class Survey extends CI_Controller {
 			'email' => $email,
 			'asal_perusahaan' => $asal_perusahaan,
 			'nama_karyawan' => $nama_karyawan,
+			'unit_kerja' => $unit_kerja,
+			'job_grade' => $job_grade,
+			'nama_jabatan' => $nama_jabatan,
 			'jawaban' => json_encode($jawaban)
 		);
 

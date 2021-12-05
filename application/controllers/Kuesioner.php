@@ -53,21 +53,28 @@ class Kuesioner extends CI_Controller {
 		$sheet->mergeCells('B2:B3');
 		$sheet->mergeCells('C2:C3');
 		$sheet->mergeCells('D2:D3');
+		$sheet->mergeCells('E2:E3');
+		$sheet->mergeCells('F2:F3');
+		$sheet->mergeCells('G2:G3');
+
 
 		// Buat header tabel nya pada baris ke 3
 		$sheet->setCellValue('A2', "No"); // Set kolom A3 dengan tulisan "NO"
 		$sheet->setCellValue('B2', "Email"); // Set kolom B3 dengan tulisan "NIS"
 		$sheet->setCellValue('C2', "Asal perusahaan"); // Set kolom C3 dengan tulisan "NAMA"
 		$sheet->setCellValue('D2', "Nama karyawan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+		$sheet->setCellValue('E2', "Unit Kerja"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+		$sheet->setCellValue('F2', "Job Grade"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+		$sheet->setCellValue('G2', "Nama Jabatan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
 		
 		$ld = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
 
-		$col = 4;
+		$col = 8;
 		foreach ($ld as $key => $value) {
-			$sheet->setCellValue(getNameFromNumber($col).'2', $value->detail_diskusi); // Set kolom E3 dengan tulisan
-			$sheet->setCellValue(getNameFromNumber($col++).'2', $value->detail_diskusi); // Set kolom E3 dengan tulisan
-			$sheet->setCellValue(getNameFromNumber($col--).'3', 'Harapan'); // Set kolom E3 dengan tulisan "TELEPON"
-			$sheet->setCellValue(getNameFromNumber($col++).'3', 'Pengalaman'); // Set kolom E3 dengan tulisan "TELEPON"
+			$sheet->setCellValueByColumnAndRow($col, 2, $value->detail_diskusi); // Set kolom E3 dengan tulisan
+			$sheet->setCellValueByColumnAndRow($col++, 2, $value->detail_diskusi); // Set kolom E3 dengan tulisan
+			$sheet->setCellValueByColumnAndRow($col--, 3, 'Harapan'); // Set kolom E3 dengan tulisan "TELEPON"
+			$sheet->setCellValueByColumnAndRow($col++, 3, 'Pengalaman'); // Set kolom E3 dengan tulisan "TELEPON"
 			$col++;
 		}
 
@@ -97,17 +104,20 @@ class Kuesioner extends CI_Controller {
 		    $sheet->setCellValue('B' . $row, $value->email);
 		    $sheet->setCellValue('C' . $row, $this->Asal_perusahaan_model->get_by_id($value->asal_perusahaan)->nama_perusahaan);
 		    $sheet->setCellValue('D' . $row, $value->nama_karyawan);
+		    $sheet->setCellValue('E' . $row, $value->unit_kerja);
+		    $sheet->setCellValue('F' . $row, $value->job_grade);
+		    $sheet->setCellValue('G' . $row, $value->nama_jabatan);
 
 		    $anujawaban = json_decode($value->jawaban, true);
-		    $cul = 4;
+		    $cul = 8;
 		    foreach ($anujawaban as $key => $value) {
-		    	$sheet->setCellValue(getNameFromNumber($cul++) . $row, $value['pengalaman']);
+		    	$sheet->setCellValueByColumnAndRow($cul++, $row, $value['pengalaman']);
 		    	$cul++;
 		    }
 
-		    $culsec = 5;
+		    $culsec = 9;
 		    foreach ($anujawaban as $key => $value) {
-		    	$sheet->setCellValue(getNameFromNumber($culsec++) . $row, $value['harapan']);
+		    	$sheet->setCellValueByColumnAndRow($culsec++, $row, $value['harapan']);
 		    	$culsec++;
 		    }
 
@@ -120,9 +130,6 @@ class Kuesioner extends CI_Controller {
 
 		// Set width kolom
 		$sheet->getColumnDimension('A')->setWidth(5); // Set width kolom A
-		$sheet->getColumnDimension('B')->setWidth(15); // Set width kolom B
-		$sheet->getColumnDimension('C')->setWidth(25); // Set width kolom C
-		$sheet->getColumnDimension('D')->setWidth(20); // Set width kolom D
 
 		// Set orientasi kertas jadi LANDSCAPE
 		$sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
