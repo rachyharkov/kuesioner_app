@@ -161,64 +161,44 @@
         var btnselected = $(document.activeElement)
 
         btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
-        
-        var iseverythingchecked = 1;
-        $('.card-body').find('.alert-wrapper').html('')
-        $('.choicenya').each(function() {
-        	var thiselsinglechoice = $(this)
+                
+        if ($(this).valid) return false;
 
-        	var choicesname = $(`input[name="${thiselsinglechoice.attr('name')}"]:checked`)
+        Swal.fire({
+          title: 'Konfirmasi Tindakan',
+          text: "Yakin disimpan?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            dataString = $("#form_create_action").serialize();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url().'Survey/save'?>",
+                data: dataString,
+                success: function(data){
+                    Swal.fire({
+                      icon: 'success',
+                      title: "Sukses",
+                      text: 'Survey tercatat'
+                    })
+                    $('#body').html(data);
+                },
+                error: function(error) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: "Oops!",
+                      text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+                    })
+                    btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
+                }
+            });
 
-        	if (!choicesname.val()) {
-        		thiselsinglechoice.parents('.card-body').find('.alert-wrapper').html(`<div class="alert alert-danger">
-				  		<b>Perhatian</b> Isian kosong, silahkan pilih salah satu
-				  	</div>`)
-				  	iseverythingchecked = 0;
-        	}
+          }
         })
-
-        if (iseverythingchecked == 1) {
-        	Swal.fire({
-	          title: 'Konfirmasi Tindakan',
-	          text: "Yakin disimpan?",
-	          icon: 'warning',
-	          showCancelButton: true,
-	          confirmButtonColor: '#3085d6',
-	          cancelButtonColor: '#d33',
-	          confirmButtonText: 'Yes'
-	        }).then((result) => {
-	          if (result.isConfirmed) {
-	            dataString = $("#form_create_action").serialize();
-	            $.ajax({
-	                type: "POST",
-	                url: "<?php echo base_url().'Survey/save'?>",
-	                data: dataString,
-	                success: function(data){
-	                    Swal.fire({
-	                      icon: 'success',
-	                      title: "Sukses",
-	                      text: 'Survey tercatat'
-	                    })
-	                    $('#body').html(data);
-	                },
-	                error: function(error) {
-	                    Swal.fire({
-	                      icon: 'error',
-	                      title: "Oops!",
-	                      text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
-	                    })
-	                    btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
-	                }
-	            });
-
-	          } else {
-	          	btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
-	          }
-	        })
-        } else {
-        	alert('Ada isian yang kosong, mohon di cek kembali')
-        	btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
-        }
 
     })
 

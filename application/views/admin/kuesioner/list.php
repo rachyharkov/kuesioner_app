@@ -58,7 +58,7 @@ if (!$list_kuesioner) {
 			?>
 			<div class="column-card">
 				<div class="card-custom">
-					<h2><?php echo $value->judul_kuesioner ?></h2>
+					<h3 style="font-size: 1.2rem; font-weight: bold;"><?php echo $value->judul_kuesioner ?></h3>
 					<p>Lorem ipsum</p>
 					<a href="<?php echo base_url().'kuesioner/export/'.$value->id_kuesioner ?>">Excel</a>
 				</div>

@@ -8,7 +8,7 @@ class Survey extends CI_Controller {
         parent::__construct();
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
-        $this->load->model('Asal_perusahaan_model');
+        $this->load->model('Direktorat_model');
         $this->load->model('Jawaban_model');
     }
 
@@ -32,7 +32,7 @@ class Survey extends CI_Controller {
 			$this->load->view('error_404');
 		} else {
 			$data = array(
-				'asal_perusahaan' => $this->Asal_perusahaan_model->get_all(),
+				'direktorat' => $this->Direktorat_model->get_all(),
 				'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id),
 				'data_kuesioner' => $this->Kuesioner_model->get_by_id($id)
 			);
@@ -46,10 +46,11 @@ class Survey extends CI_Controller {
 	{
 		$id_kuesioner = $this->input->post('id_kuesioner');
 		$email = $this->input->post('email');
-		$asal_perusahaan = $this->input->post('asal_perusahaan');
+		$direktorat = $this->input->post('direktorat');
 		$nama_karyawan = $this->input->post('nama_karyawan');
 		$unit_kerja = $this->input->post('unit_kerja');
 		$job_grade = $this->input->post('job_grade');
+		$status_karyawan = $this->input->post('status_karyawan');
 		$nama_jabatan = $this->input->post('nama_jabatan');
 
 		$jawaban = [];
@@ -72,10 +73,11 @@ class Survey extends CI_Controller {
 		// $jawaban = '';
 		$datanya = array(
 			'email' => $email,
-			'asal_perusahaan' => $asal_perusahaan,
+			'direktorat' => $direktorat,
 			'nama_karyawan' => $nama_karyawan,
 			'unit_kerja' => $unit_kerja,
 			'job_grade' => $job_grade,
+			'status_karyawan' => $status_karyawan,
 			'nama_jabatan' => $nama_jabatan,
 			'jawaban' => json_encode($jawaban)
 		);

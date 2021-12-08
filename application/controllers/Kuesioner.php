@@ -14,7 +14,7 @@ class Kuesioner extends CI_Controller {
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
         $this->load->model('Jawaban_model');
-        $this->load->model('Asal_perusahaan_model');
+        $this->load->model('Direktorat_model');
     }
 
 	public function index()
@@ -56,20 +56,22 @@ class Kuesioner extends CI_Controller {
 		$sheet->mergeCells('E2:E3');
 		$sheet->mergeCells('F2:F3');
 		$sheet->mergeCells('G2:G3');
+		$sheet->mergeCells('H2:H3');
 
 
 		// Buat header tabel nya pada baris ke 3
 		$sheet->setCellValue('A2', "No"); // Set kolom A3 dengan tulisan "NO"
 		$sheet->setCellValue('B2', "Email"); // Set kolom B3 dengan tulisan "NIS"
-		$sheet->setCellValue('C2', "Asal perusahaan"); // Set kolom C3 dengan tulisan "NAMA"
+		$sheet->setCellValue('C2', "Direktorat"); // Set kolom C3 dengan tulisan "NAMA"
 		$sheet->setCellValue('D2', "Nama karyawan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
 		$sheet->setCellValue('E2', "Unit Kerja"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
 		$sheet->setCellValue('F2', "Job Grade"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
-		$sheet->setCellValue('G2', "Nama Jabatan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+		$sheet->setCellValue('G2', "Status Karyawan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+		$sheet->setCellValue('H2', "Nama Jabatan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
 		
 		$ld = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
 
-		$col = 8;
+		$col = 9;
 		foreach ($ld as $key => $value) {
 			$sheet->setCellValueByColumnAndRow($col, 2, $value->detail_diskusi); // Set kolom E3 dengan tulisan
 			$sheet->setCellValueByColumnAndRow($col++, 2, $value->detail_diskusi); // Set kolom E3 dengan tulisan
@@ -102,20 +104,21 @@ class Kuesioner extends CI_Controller {
 		foreach ($list_jawaban as $value) {
 			$sheet->setCellValue('A' . $row, $no);
 		    $sheet->setCellValue('B' . $row, $value->email);
-		    $sheet->setCellValue('C' . $row, $this->Asal_perusahaan_model->get_by_id($value->asal_perusahaan)->nama_perusahaan);
+		    $sheet->setCellValue('C' . $row, $this->Direktorat_model->get_by_id($value->nama_direktorat)->direktorat);
 		    $sheet->setCellValue('D' . $row, $value->nama_karyawan);
 		    $sheet->setCellValue('E' . $row, $value->unit_kerja);
 		    $sheet->setCellValue('F' . $row, $value->job_grade);
-		    $sheet->setCellValue('G' . $row, $value->nama_jabatan);
+		    $sheet->setCellValue('G' . $row, $value->status_karyawan);
+		    $sheet->setCellValue('H' . $row, $value->nama_jabatan);
 
 		    $anujawaban = json_decode($value->jawaban, true);
-		    $cul = 8;
+		    $cul = 9;
 		    foreach ($anujawaban as $key => $value) {
 		    	$sheet->setCellValueByColumnAndRow($cul++, $row, $value['pengalaman']);
 		    	$cul++;
 		    }
 
-		    $culsec = 9;
+		    $culsec = 10;
 		    foreach ($anujawaban as $key => $value) {
 		    	$sheet->setCellValueByColumnAndRow($culsec++, $row, $value['harapan']);
 		    	$culsec++;
