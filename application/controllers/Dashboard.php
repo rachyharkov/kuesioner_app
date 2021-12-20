@@ -15,7 +15,7 @@ class Dashboard extends CI_Controller {
 		$data = array(
             'sett_apps' =>$this->Setting_app_model->get_by_id(1),
         );
-		$this->load->view('v_wrapper',$data);
+		$this->load->view('admin/v_wrapper',$data);
 	}
 
 }

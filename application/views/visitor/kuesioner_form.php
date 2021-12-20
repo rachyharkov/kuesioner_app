@@ -44,9 +44,8 @@
 
 <form id="form_create_action" method="post" enctype="multipart/form-data">
 	
-	<div class="container" style="padding: 23vh 0;
-display: block;
-scroll-snap-align: start;">
+	<div class="container" style="padding: 1vh 0;
+display: block;">
 		<div class="card" style="width: 100%;">
 		  <div class="card-body">
 		  	<div style="width: 100%;
@@ -63,7 +62,7 @@ margin: 2vh 0;">
 		</div>
 	</div>
 
-	<div class="container" style="padding: 8vh 0; display: block;scroll-snap-align: start;">
+	<div class="container" style="padding: 1vh 0; display: block;">
 		<div class="card" style="width: 100%;">
 		  <div class="card-body">
 		  	<div style="width: 100%;
@@ -185,7 +184,7 @@ margin: 2vh 0;">
 
 			?>
 			<input type="hidden" name="soal<?php echo $value->urutan ?>id" value="<?php echo $value->id ?>">
-			<div class="container container-<?php echo $value->urutan ?>" style="padding: 30vh 0; display: block;scroll-snap-align: start;">
+			<div class="container container-<?php echo $value->urutan ?>" style="padding: 1vh 0; display: block;">
 				<div class="card" style="width: 100%; position: relative;">
 					<span class="badge rounded-pill bg-secondary" style="position: absolute;
 left: 50%;

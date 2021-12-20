@@ -23,6 +23,7 @@
   padding: 16px;
   text-align: left;
   background-color: #f1f1f1;
+  position: relative;
 }
 
 /* Responsive column-cards - one column-card layout (vertical) on small screens */
@@ -61,6 +62,14 @@ if (!$list_kuesioner) {
 					<h3 style="font-size: 1.2rem; font-weight: bold;"><?php echo $value->judul_kuesioner ?></h3>
 					<p>Lorem ipsum</p>
 					<a href="<?php echo base_url().'kuesioner/export/'.$value->id_kuesioner ?>">Excel</a>
+					<button id="<?php echo $value->id_kuesioner ?>" class="btn btn-xs btn-primary link_kelola_kuesioner" style="font-size: 12px;padding: 5px;
+position: absolute;
+bottom: 7px;
+right: 8px;"><i class="fas fa-edit"></i></button>
+<button id="<?php echo $value->id_kuesioner ?>" class="btn btn-xs btn-danger link_delete_kuesioner" style="font-size: 12px;padding: 5px;
+position: absolute;
+bottom: 7px;
+right: 37px;"><i class="fas fa-trash-alt"></i></button>
 				</div>
 			</div>
 			<?php

@@ -112,27 +112,28 @@
                 getAllKuesioner()
             })
 
+            //tambah dan kurangi dimensi//
+
             $(document).on('click','#add_dimensi',function() {
-		        var x = $('.baris_dimensi').length + 1
-		        $('#dynamic_field').append(`<tr id="row` + x +
-		            `" class="baris_dimensi"><td><input type="text" name="dimensi[]" placeholder="Dimensi" class="form-control" required="" /><table class="tabel_indicator_row"></table><span style="font-size: 11px;">Dimensi memiliki indikator? <a href="#" class="add_indicator">Tambah Indikator</a></span></td><td><button type="button" name="remove" id="` +
-		            x + `" class="btn btn-danger btn_remove_dimensi">X</button></td></tr>`)
+		        var x = $('.baris_dimensi').length
+		        $('#dimensi_table').append(`<tr id="row` + x +
+		            `" class="baris_dimensi"><td><input type="text" name="dimensi[]" placeholder="Dimensi" class="form-control" required="" /><table class="tabel_indicator_row"></table><span style="font-size: 11px;">Dimensi memiliki indikator? <a href="#" class="add_indicator">Tambah Indikator</a></span></td><td><button type="button" name="remove" id="` + x + `" class="btn btn-danger btn_remove_dimensi">X</button></td></tr>`)
 		    });
 
 		    $(document).on('click', '.btn_remove_dimensi', function() {
 		      var button_id = $(this).attr("id")
-		      $('#row' + button_id + '').remove()
+		      $('.baris_dimensi#row' + button_id + '').remove()
 		    });
 
 		    $(document).on('click','.add_indicator', function() {
 		      var whatrow = $(this).parents('tr').attr('id')
 
-		      var tabelindikator = $('#' + whatrow).find('.tabel_indicator_row')
+		      var tabelindikator = $('#' + whatrow + '.baris_dimensi').find('.tabel_indicator_row')
 		      var indicatorinputelementlength = tabelindikator.find('tr').length
 
 		      tabelindikator.append(`
 		        <tr id="indicator${whatrow}ke${indicatorinputelementlength}">
-		          <td><input type="text" name="indikator[]" placeholder="Indikator" class="form-control" required="" /></td>
+		          <td><input type="text" name="indikator_dimensi_${whatrow}[]" placeholder="Indikator" class="form-control" required="" /></td>
 		          <td><a class="remove_indicator" id="${whatrow}ke${indicatorinputelementlength}"><i class="fas fa-times"></i></a></td>
 		        </tr>
 		        `)
@@ -146,7 +147,45 @@
 		      $('#indicator' + button_id + '').remove()
 		    })
 
-		    //teruskeun
+		    //tambah dan kurangi dimensi end here
+
+		    //tambah dna kurangi kategori jawaban dan pilihan
+
+		    $(document).on('click','#add_kategori_respon',function() {
+		        var x = $('.baris_kategori_respon').length
+		        $('#kategori_response_table').append(`<tr id="row` + x +
+		            `" class="baris_kategori_respon"><td><input type="text" name="kategori_respon[]" placeholder="kategori_respon" class="form-control" required="" /><table class="tabel_pilihan_row"></table><span style="font-size: 11px;">Memiliki pilihan? <a href="#" class="add_pilihan">Tambah Pilihan</a></span></td><td><button type="button" name="remove" id="` + x + `" class="btn btn-danger btn_remove_kategori_respon">X</button></td></tr>`)
+		    });
+
+		    $(document).on('click', '.btn_remove_kategori_respon', function() {
+		      var button_id = $(this).attr("id")
+		      $('.baris_kategori_respon#row' + button_id + '').remove()
+		    });
+
+		    $(document).on('click','.add_pilihan', function() {
+		      var whatrow = $(this).parents('tr').attr('id')
+
+		      var tabelpilihan = $('#' + whatrow + '.baris_kategori_respon').find('.tabel_pilihan_row')
+		      var pilihaninputelementlength = tabelpilihan.find('tr').length
+
+		      console.log(tabelpilihan)
+		      tabelpilihan.append(`
+		        <tr id="kategori${whatrow}pilihanke${pilihaninputelementlength}">
+		          <td><input type="text" name="pilihan_kategori_respon${whatrow}[]" placeholder="pilihan" class="form-control" required="" /></td>
+		          <td><a class="remove_pilihan" id="${whatrow}pilihanke${pilihaninputelementlength}"><i class="fas fa-times"></i></a></td>
+		        </tr>
+		        `)
+
+		      console.log(`kategori${whatrow}pilihanke${pilihaninputelementlength} added`)
+		    })
+
+		    $(document).on('click','.remove_pilihan', function() {
+		      var button_id = $(this).attr("id")
+		      console.log(button_id + 'removed')
+		      $('#kategori' + button_id + '').remove()
+		    })
+		    //end
+
 
 		    $(document).on('submit','#form_create_kuesioner', function(e) {
 
@@ -155,7 +194,6 @@
 		        var btnselected = $(document.activeElement)
 
 		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
-
 
 	        	Swal.fire({
 		          title: 'Konfirmasi Tindakan',
@@ -167,18 +205,19 @@
 		          confirmButtonText: 'Yes'
 		        }).then((result) => {
 					if (result.isConfirmed) {
-						dataString = $("#form_create_action").serialize();
+						dataString = $("#form_create_kuesioner").serialize();
 						$.ajax({
 						    type: "POST",
-						    url: "<?php echo base_url().'Survey/save'?>",
+						    url: "<?php echo base_url().'Kuesioner/create_action'?>",
 						    data: dataString,
 						    success: function(data){
 						        Swal.fire({
 						          icon: 'success',
 						          title: "Sukses",
-						          text: 'Survey tercatat'
+						          text: 'Berhasil disimpan'
 						        })
-						        $('#body').html(data);
+						        getAllKuesioner()
+						        btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
 						    },
 						    error: function(error) {
 						        Swal.fire({
@@ -189,8 +228,54 @@
 						        btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
 						    }
 						});
+					} else {
+						btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
 					}
 		    	})
+		    })
+
+		    $(document).on('click','.link_kelola_kuesioner',function() {
+		    	var id_diskusi = $(this).attr('id')
+		    	$.ajax({
+				    type: "GET",
+				    url: "<?php echo base_url().'diskusi/get_all_diskusi_by_kuesioner'?>" + "/" + id_diskusi,
+				    success: function(data){
+				        $('.body').html(data)
+				    },
+				    error: function(error) {
+				        Swal.fire({
+				          icon: 'error',
+				          title: "Oops!",
+				          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+				        })
+				    }
+				});
+		    })
+
+		    $(document).on('click','.link_delete_kuesioner', function(e) {
+		    	e.preventDefault()
+
+		    	var id_diskusi = $(this).attr('id')
+
+		        var btnselected = $(document.activeElement)
+
+		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
+
+	        	Swal.fire({
+		          title: 'Konfirmasi Tindakan',
+		          text: "Yakin Menghapus kuesioner id: " + id_diskusi,
+		          icon: 'warning',
+		          showCancelButton: true,
+		          confirmButtonColor: '#3085d6',
+		          cancelButtonColor: '#d33',
+		          confirmButtonText: 'Yes'
+		        }).then((result) => {
+					if (result.isConfirmed) {
+
+					} else {
+						btnselected.html('<i class="fas fa-trash-alt"></i>').removeClass('disabled').removeAttr('disabled')
+					}
+				})
 		    })
 
 		</script>

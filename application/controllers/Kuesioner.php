@@ -39,6 +39,63 @@ class Kuesioner extends CI_Controller {
 		$this->load->view('admin/kuesioner/form');
 	}
 
+	public function create_action()
+	{
+		$judul_kuesioner = $this->input->post('judul_kuesioner');
+		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
+		
+		$dimensi = $this->input->post('dimensi');
+
+		$kategori_respon = $this->input->post('kategori_respon');
+
+		$dimensi_temp = [];
+
+		$kategori_respon_temp = [];
+
+		for ($i=0; $i < count($dimensi); $i++) {
+			$indikatordimensi = $this->input->post('indikator_dimensi_row'.$i);
+
+			$indikatordimensi_temp = [];
+
+			for ($y=0; $y < count($indikatordimensi); $y++) { 
+				$indikatordimensi_temp[] = $indikatordimensi[$y];
+			}
+
+
+			$dimensinyak = array(
+				'name' => $dimensi[$i],
+				'indikator' => $indikatordimensi_temp
+			);
+			$dimensi_temp[] = $dimensinyak;
+		}
+
+		for ($i=0; $i < count($kategori_respon); $i++) {
+			$pilihan_kategori_respon = $this->input->post('pilihan_kategori_responrow'.$i);
+
+			$pilihan_kategori_respon_temp = [];
+
+			for ($y=0; $y < count($pilihan_kategori_respon); $y++) { 
+				$pilihan_kategori_respon_temp[] = $pilihan_kategori_respon[$y];
+			}
+
+			$kategoripilihanyak = array(
+				'nama' => $kategori_respon[$i],
+				'respon_list' => $pilihan_kategori_respon_temp
+			);
+			$kategori_respon_temp[] = $kategoripilihanyak;
+		}
+
+		$datanya = array(
+			'judul_kuesioner' => $judul_kuesioner,
+			'deskripsi_kuesioner' => $deskripsi_kuesioner,
+			'dimensi' => json_encode($dimensi_temp),
+			'kategori_respon' => json_encode($kategori_respon_temp),
+			'created_by' => $this->session->userdata('userid')
+		);
+
+		$this->Kuesioner_model->insert($datanya);
+	}
+
 	public function export($id_kuesioner)
 	{
 		$spreadsheet = new Spreadsheet();

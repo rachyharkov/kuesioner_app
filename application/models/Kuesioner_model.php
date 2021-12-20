@@ -22,4 +22,9 @@ class Kuesioner_model extends CI_Model {
         $this->db->where('id_kuesioner', $id_kuesioner);
         return $this->db->get('tbl_kuesioner')->row();
     }
+
+    function insert($data)
+    {
+        $this->db->insert('tbl_kuesioner', $data);
+    }
 }
