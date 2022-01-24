@@ -1,400 +1,291 @@
-
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<title><?= $sett_apps->nama_aplikasi ?> - <?= $sett_apps->company ?> </title>
-		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-		<meta content="" name="description" />
-		<meta content="" name="author" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-		<style type="text/css">
-				
-			.login {
-			  min-height: 100vh;
-			}
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="<?php echo base_url() ?>assets/admin/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="<?php echo base_url() ?>assets/admin/img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title><?= $sett_apps->nama_aplikasi ?> - <?= $sett_apps->company ?> </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <!-- CSS Files -->
+  <link href="<?php echo base_url() ?>assets/admin/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+  <link href="<?php echo base_url() ?>assets/admin/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="<?php echo base_url() ?>assets/admin/demo/demo.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 
-			.bg-image {
-			  background-image: url('https://source.unsplash.com/WEQbe2jBg40/600x1200');
-			  background-size: cover;
-			  background-position: center;
-			}
+  <script src="<?php echo base_url().'assets/js/jquery-ui/jquery-ui.min.js' ?>"></script>
+</head>
 
-			.login-heading {
-			  font-weight: 300;
-			}
+<body class="">
+  <div class="wrapper ">
+    <div class="sidebar" data-color="orange">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red | yellow"
+    -->
+      <div class="logo">
+        <a href="<?php echo base_url().'dashboard' ?>" class="simple-text logo-mini">
+          <i class="now-ui-icons business_chart-pie-36"></i>
+        </a>
+        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+          Kuesioner Sys
+        </a>
+      </div>
+      <div>
+      	Welcome <?php echo $this->session->userdata('userid') ?>
+      </div>
+      <div class="sidebar-wrapper" id="sidebar-wrapper">
+        <ul class="nav">
 
-			.btn-login {
-			  font-size: 0.9rem;
-			  letter-spacing: 0.05rem;
-			  padding: 0.75rem 1rem;
-			}
+        	<?php
+        		$arrmenu = [
+        			0 => [
+        				'nama_menu' => 'Dashboard',
+        				'url' => 'dashboard',
+        				'icon' => 'now-ui-icons design_app' 
+        			],
+        			1 => [
+        				'nama_menu' => 'Kuesioner',
+        				'url' => 'kuesioner',
+        				'icon' => 'now-ui-icons education_atom' 
+        			],
+        			2 => [
+        				'nama_menu' => 'Laporan',
+        				'url' => 'laporan',
+        				'icon' => 'now-ui-icons location_map-big' 
+        			],
+        			3 => [
+        				'nama_menu' => 'Laporan',
+        				'url' => 'profil',
+        				'icon' => 'now-ui-icons users_single-02' 
+        			],
+
+        		];
+
+        		foreach ($arrmenu as $key => $value) {
+        			?>
+        			<li class="<?php echo $this->uri->segment(1) == $value['url'] ? 'active' : '' ?>">
+			            <a href="<?php echo base_url().$value['url'] ?>">
+							<i class="<?php echo $value['icon'] ?>"></i>
+							<p><?php echo $value['nama_menu'] ?></p>
+			            </a>
+			        </li>
+        			<?php
+        		}
+        	?>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel" id="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-toggle">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            <a class="navbar-brand" href="#pablo"><?php echo $menu ?></a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navigation">
+            <form>
+              <div class="input-group no-border">
+                <input type="text" value="" class="form-control" placeholder="Search...">
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <i class="now-ui-icons ui-1_zoom-bold"></i>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="#pablo">
+                  <i class="now-ui-icons media-2_sound-wave"></i>
+                  <p>
+                    <span class="d-lg-none d-md-block">Stats</span>
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="now-ui-icons location_world"></i>
+                  <p>
+                    <span class="d-lg-none d-md-block">Some Actions</span>
+                  </p>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="#">Help</a>
+                  <a class="dropdown-item" href="#">History Log</a>
+                  <a class="dropdown-item" href="<?php echo base_url().'auth/logout' ?>">Logout</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#pablo">
+                  <i class="now-ui-icons users_single-02"></i>
+                  <p>
+                    <span class="d-lg-none d-md-block">Account</span>
+                  </p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+  	<?php
+  		if ($this->uri->segment(1) == 'dashboard') {
+  			?>
+  			<div class="panel-header panel-header-lg">
+    			<canvas id="bigDashboardChart"></canvas>
+  			</div>
+  			<?php
+  		} else {
+  			?>
+      			<div class="panel-header panel-header-sm"></div>
+  			<?php
+  		}
+  	?>
+
+      <div class="content">
+
+      	<?php echo $contentnya ?>
+      
+      </div>
+
+      <footer class="footer">
+        <div class=" container-fluid ">
+          <div class="copyright" id="copyright">
+            &copy; <script>
+              document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
+            </script>, LSP P2 Pupuk Indonensia | <a href="https://www.rach-nh.xyz" target="_blank">RNH</a>.
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="<?php echo base_url() ?>assets/admin/js/core/jquery.min.js"></script>
+  <script src="<?php echo base_url() ?>assets/admin/js/core/popper.min.js"></script>
+  <script src="<?php echo base_url() ?>assets/admin/js/core/bootstrap.min.js"></script>
+  <script src="<?php echo base_url() ?>assets/admin/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!-- Chart JS -->
+  <script src="<?php echo base_url() ?>assets/admin/js/plugins/chartjs.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="<?php echo base_url() ?>assets/admin/js/plugins/bootstrap-notify.js"></script>
+  <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="<?php echo base_url() ?>assets/admin/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script><!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
+  <script src="<?php echo base_url() ?>assets/admin/demo/demo.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initDashboardPageCharts();
+
+    });
 
 
-		</style>
-	</head>
-	<body>
-		<!-- example 2 - using auto margins -->
-		<nav class="navbar navbar-expand-md navbar-light bg-light">
-		    <div class="container-fluid">
-		    	<a class="navbar-brand" href="#">
-		      		<img src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24">
-		    	</a>
-		        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-		            <ul class="navbar-nav ms-auto">
-		                <li class="nav-item">
-		                	Welcome <?php echo $this->session->userdata('userid') ?>
-			            </li>
-			            <li class="nav-item">
-			                <a href="<?php echo base_url().'auth/logout' ?>"><i class="fas fa-sign-out-alt"></i></a>
-			            </li>
-		            </ul>
-		        </div>
-		        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".dual-collapse2">
-                	<span class="navbar-toggler-icon"></span>
-            	</button>
-		    </div>
-		</nav>
-		<div class="container-fluid">
-			<div class="container-sm" style="max-width: 678px;">
-				<div class="body">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> <!-- untuk sweet alret -->
+	<script src="<?php echo base_url() ?>assets/js/dataflash.js"></script>
+	<script>
 
-					
-				</div>
-			</div>
-		</div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> <!-- untuk sweet alret -->
-		<script>
+	    //tambah dan kurangi dimensi//
 
-			function getAllKuesioner() {
-				$.ajax({
-	                type: "GET",
-	                url: "<?php echo base_url() ?>kuesioner/get_all_kuesioner",
-	                success: function(data){
-	                    $('.body').html(data)
-	                },
-	                error: function(e) {
-	                    alert('Terjadi kesalahan: X01')
-	                }
-	            });
-			}
+	   
+	    //end
 
-			$(document).ready(function() {
-				getAllKuesioner()
-			})
+	  //   $(document).on('click','.link_kelola_kuesioner',function() {
+	  //   	var id_diskusi = $(this).attr('id')
+	  //   	$.ajax({
+			//     type: "GET",
+			//     url: "<?php echo base_url().'diskusi/get_all_diskusi_by_kuesioner'?>" + "/" + id_diskusi,
+			//     success: function(data){
+			//         $('.body').html(data)
+			//     },
+			//     error: function(error) {
+			//         Swal.fire({
+			//           icon: 'error',
+			//           title: "Oops!",
+			//           text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+			//         })
+			//     }
+			// });
+	  //   })
 
+	    $(document).on('submit','#form_diskusi_edit', function(e) {
 
-			$(document).on('click','.tambah_data', function() {
-                $('.btn-loading').click()
-                $.ajax({
-                    type: "GET",
-                    url: "<?php echo base_url() ?>kuesioner/create",
-                    success: function(data){
-                        $('.body').html(data);
-                    },
-                    error: function(error) {
-                        Swal.fire({
-							icon: 'error',
-							title: "Oops!",
-							text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi, hubungi IT'
-                        })
-                    }
-                });
-            })
+	        e.preventDefault()
 
-            $(document).on('click','.list-data', function(e) {
-                e.preventDefault()
-                getAllKuesioner()
-            })
+	        var btnselected = $(document.activeElement)
 
-            //tambah dan kurangi dimensi//
+	        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
 
-            $(document).on('click','#add_dimensi',function() {
-		        var x = $('.baris_dimensi').length
-		        $('#dimensi_table').append(`<tr id="row` + x +
-		            `" class="baris_dimensi"><td><input type="text" name="dimensi[]" placeholder="Dimensi" class="form-control" required="" /><table class="tabel_indicator_row"></table><span style="font-size: 11px;">Dimensi memiliki indikator? <a href="#" class="add_indicator">Tambah Indikator</a></span></td><td><button type="button" name="remove" id="` + x + `" class="btn btn-danger btn_remove_dimensi">X</button></td></tr>`)
-		    });
-
-		    $(document).on('click', '.btn_remove_dimensi', function() {
-		      var button_id = $(this).attr("id")
-		      $('.baris_dimensi#row' + button_id + '').remove()
-		    });
-
-		    $(document).on('click','.add_indicator', function() {
-		      var whatrow = $(this).parents('tr').attr('id')
-
-		      var tabelindikator = $('#' + whatrow + '.baris_dimensi').find('.tabel_indicator_row')
-		      var indicatorinputelementlength = tabelindikator.find('tr').length
-
-		      tabelindikator.append(`
-		        <tr id="indicator${whatrow}ke${indicatorinputelementlength}">
-		          <td><input type="text" name="indikator_dimensi_${whatrow}[]" placeholder="Indikator" class="form-control" required="" /></td>
-		          <td><a class="remove_indicator" id="${whatrow}ke${indicatorinputelementlength}"><i class="fas fa-times"></i></a></td>
-		        </tr>
-		        `)
-
-		      console.log(`indicator${whatrow}ke${indicatorinputelementlength} added`)
-		    })
-
-		    $(document).on('click','.remove_indicator', function() {
-		      var button_id = $(this).attr("id")
-		      console.log(button_id + 'removed')
-		      $('#indicator' + button_id + '').remove()
-		    })
-
-		    //tambah dan kurangi dimensi end here
-
-		    //tambah dna kurangi kategori jawaban dan pilihan
-
-		    $(document).on('click','#add_kategori_respon',function() {
-		        var x = $('.baris_kategori_respon').length
-		        $('#kategori_response_table').append(`<tr id="row` + x +
-		            `" class="baris_kategori_respon"><td><input type="text" name="kategori_respon[]" placeholder="kategori_respon" class="form-control" required="" /><table class="tabel_pilihan_row"></table><span style="font-size: 11px;">Memiliki pilihan? <a href="#" class="add_pilihan">Tambah Pilihan</a></span></td><td><button type="button" name="remove" id="` + x + `" class="btn btn-danger btn_remove_kategori_respon">X</button></td></tr>`)
-		    });
-
-		    $(document).on('click', '.btn_remove_kategori_respon', function() {
-		      var button_id = $(this).attr("id")
-		      $('.baris_kategori_respon#row' + button_id + '').remove()
-		    });
-
-		    $(document).on('click','.add_pilihan', function() {
-		      var whatrow = $(this).parents('tr').attr('id')
-
-		      var tabelpilihan = $('#' + whatrow + '.baris_kategori_respon').find('.tabel_pilihan_row')
-		      var pilihaninputelementlength = tabelpilihan.find('tr').length
-
-		      console.log(tabelpilihan)
-		      tabelpilihan.append(`
-		        <tr id="kategori${whatrow}pilihanke${pilihaninputelementlength}">
-		          <td><input type="text" name="pilihan_kategori_respon${whatrow}[]" placeholder="pilihan" class="form-control" required="" /></td>
-		          <td><a class="remove_pilihan" id="${whatrow}pilihanke${pilihaninputelementlength}"><i class="fas fa-times"></i></a></td>
-		        </tr>
-		        `)
-
-		      console.log(`kategori${whatrow}pilihanke${pilihaninputelementlength} added`)
-		    })
-
-		    $(document).on('click','.remove_pilihan', function() {
-		      var button_id = $(this).attr("id")
-		      console.log(button_id + 'removed')
-		      $('#kategori' + button_id + '').remove()
-		    })
-		    //end
-
-
-		    $(document).on('submit','#form_create_kuesioner', function(e) {
-
-		        e.preventDefault()
-
-		        var btnselected = $(document.activeElement)
-
-		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
-
-	        	Swal.fire({
-		          title: 'Konfirmasi Tindakan',
-		          text: "Yakin disimpan?",
-		          icon: 'warning',
-		          showCancelButton: true,
-		          confirmButtonColor: '#3085d6',
-		          cancelButtonColor: '#d33',
-		          confirmButtonText: 'Yes'
-		        }).then((result) => {
-					if (result.isConfirmed) {
-						dataString = $("#form_create_kuesioner").serialize();
-						$.ajax({
-						    type: "POST",
-						    url: "<?php echo base_url().'Kuesioner/create_action'?>",
-						    data: dataString,
-						    success: function(data){
+	    	Swal.fire({
+	          title: 'Konfirmasi Tindakan',
+	          text: "Simpan perubahan yang terjadi pada kuesioner?",
+	          icon: 'warning',
+	          showCancelButton: true,
+	          confirmButtonColor: '#3085d6',
+	          cancelButtonColor: '#d33',
+	          confirmButtonText: 'Yes'
+	        }).then((result) => {
+				if (result.isConfirmed) {
+					dataString = $("#form_diskusi_edit").serialize();
+					$.ajax({
+					    type: "POST",
+					    url: "<?php echo base_url().'Diskusi/update_diskusi'?>",
+					    data: dataString,
+					    success: function(data){
+					    	var dt = JSON.parse(data)
+					        	
+					        if (dt.status == 'ok') {
 						        Swal.fire({
 						          icon: 'success',
 						          title: "Sukses",
-						          text: 'Berhasil disimpan'
+						          text: 'Perubahan berhasil disimpan'
 						        })
-						        getAllKuesioner()
-						        btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
-						    },
-						    error: function(error) {
-						        Swal.fire({
+					        } else {
+					        	Swal.fire({
 						          icon: 'error',
-						          title: "Oops!",
-						          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+						          title: "Oh no!",
+						          text: 'Ga bisa disimpan, au knapa...'
 						        })
-						        btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
-						    }
-						});
-					} else {
-						btnselected.html('Selesai').removeClass('disabled').removeAttr('disabled')
-					}
-		    	})
-		    })
+					        }
 
-		    $(document).on('click','.link_kelola_kuesioner',function() {
-		    	var id_diskusi = $(this).attr('id')
-		    	$.ajax({
-				    type: "GET",
-				    url: "<?php echo base_url().'diskusi/get_all_diskusi_by_kuesioner'?>" + "/" + id_diskusi,
-				    success: function(data){
-				        $('.body').html(data)
-				    },
-				    error: function(error) {
-				        Swal.fire({
-				          icon: 'error',
-				          title: "Oops!",
-				          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
-				        })
-				    }
-				});
-		    })
+					        //getAllKuesioner()
+					        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+					    },
+					    error: function(error) {
+					        Swal.fire({
+					          icon: 'error',
+					          title: "Oops!",
+					          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+					        })
+					        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+					    }
+					});
+				} else {
+					btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+				}
+	    	})
+	    })
 
-		    $(document).on('click','.link_delete_kuesioner', function(e) {
-		    	e.preventDefault()
-
-		    	var id_diskusi = $(this).attr('id')
-
-		        var btnselected = $(document.activeElement)
-
-		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
-
-	        	Swal.fire({
-		          title: 'Konfirmasi Tindakan',
-		          text: "Yakin Menghapus kuesioner id: " + id_diskusi,
-		          icon: 'warning',
-		          showCancelButton: true,
-		          confirmButtonColor: '#3085d6',
-		          cancelButtonColor: '#d33',
-		          confirmButtonText: 'Yes'
-		        }).then((result) => {
-					if (result.isConfirmed) {
-
-					} else {
-						btnselected.html('<i class="fas fa-trash-alt"></i>').removeClass('disabled').removeAttr('disabled')
-					}
-				})
-		    })
-
-		    $(document).on('submit','#form_diskusi_new', function(e) {
-
-		        e.preventDefault()
-
-		        var btnselected = $(document.activeElement)
-
-		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
-
-	        	Swal.fire({
-		          title: 'Konfirmasi Tindakan',
-		          text: "Yakin disimpan?",
-		          icon: 'warning',
-		          showCancelButton: true,
-		          confirmButtonColor: '#3085d6',
-		          cancelButtonColor: '#d33',
-		          confirmButtonText: 'Yes'
-		        }).then((result) => {
-					if (result.isConfirmed) {
-						dataString = $("#form_diskusi_new").serialize();
-						$.ajax({
-						    type: "POST",
-						    url: "<?php echo base_url().'Diskusi/save_diskusi'?>",
-						    data: dataString,
-						    success: function(data){
-						    	var dt = JSON.parse(data)
-						        	
-						        if (dt.status == 'ok') {
-							        Swal.fire({
-							          icon: 'success',
-							          title: "Sukses",
-							          text: 'Berhasil disimpan'
-							        })
-						        } else {
-						        	Swal.fire({
-							          icon: 'error',
-							          title: "Oh no!",
-							          text: 'Ga bisa disimpan, au knapa...'
-							        })
-						        }
-
-						        //getAllKuesioner()
-						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
-						    },
-						    error: function(error) {
-						        Swal.fire({
-						          icon: 'error',
-						          title: "Oops!",
-						          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
-						        })
-						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
-						    }
-						});
-					} else {
-						btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
-					}
-		    	})
-		    })
-
-		    $(document).on('submit','#form_diskusi_edit', function(e) {
-
-		        e.preventDefault()
-
-		        var btnselected = $(document.activeElement)
-
-		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
-
-	        	Swal.fire({
-		          title: 'Konfirmasi Tindakan',
-		          text: "Simpan perubahan yang terjadi pada kuesioner?",
-		          icon: 'warning',
-		          showCancelButton: true,
-		          confirmButtonColor: '#3085d6',
-		          cancelButtonColor: '#d33',
-		          confirmButtonText: 'Yes'
-		        }).then((result) => {
-					if (result.isConfirmed) {
-						dataString = $("#form_diskusi_edit").serialize();
-						$.ajax({
-						    type: "POST",
-						    url: "<?php echo base_url().'Diskusi/update_diskusi'?>",
-						    data: dataString,
-						    success: function(data){
-						    	var dt = JSON.parse(data)
-						        	
-						        if (dt.status == 'ok') {
-							        Swal.fire({
-							          icon: 'success',
-							          title: "Sukses",
-							          text: 'Perubahan berhasil disimpan'
-							        })
-						        } else {
-						        	Swal.fire({
-							          icon: 'error',
-							          title: "Oh no!",
-							          text: 'Ga bisa disimpan, au knapa...'
-							        })
-						        }
-
-						        //getAllKuesioner()
-						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
-						    },
-						    error: function(error) {
-						        Swal.fire({
-						          icon: 'error',
-						          title: "Oops!",
-						          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
-						        })
-						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
-						    }
-						});
-					} else {
-						btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
-					}
-		    	})
-		    })
-
-		</script>
-	</body>
+	</script>
+</body>
 
 </html>

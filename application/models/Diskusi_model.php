@@ -19,5 +19,26 @@ class Diskusi_model extends CI_Model {
         $this->db->update('tbl_diskusi', $data);
     }
 
-    
+    function get_by_id($id_diskusi)
+    {
+        $this->db->where('id', $id_diskusi);
+        return $this->db->get('tbl_diskusi')->row();
+    }
+
+    function delete($id_diskusi)
+    {
+        $this->db->where('id', $id_diskusi);
+        $this->db->delete('tbl_diskusi');
+    }
+
+    function delete_all_by_kuesioner($id_kuesioner)
+    {
+        $this->db->where('id_kuesioner', $id_kuesioner);
+        $this->db->delete('tbl_diskusi');
+    }
+
+    function get_alldiskusi_by_id_kuesioner($id_kuesioner) {
+        $this->db->where('id_kuesioner', $id_kuesioner);
+        return $this->db->get('tbl_diskusi')->row();
+    }
 }

@@ -27,4 +27,17 @@ class Kuesioner_model extends CI_Model {
     {
         $this->db->insert('tbl_kuesioner', $data);
     }
+
+    function delete($id_kuesioner)
+    {
+        $this->db->where('id_kuesioner', $id_kuesioner);
+        $this->db->delete('tbl_kuesioner');
+    }
+
+    // update data
+    function update($id, $data)
+    {
+        $this->db->where('id_kuesioner', $id);
+        $this->db->update('tbl_kuesioner', $data);
+    }
 }

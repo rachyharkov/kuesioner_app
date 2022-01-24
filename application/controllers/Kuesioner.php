@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+date_default_timezone_set('Asia/Jakarta');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -13,30 +14,31 @@ class Kuesioner extends CI_Controller {
         is_login();
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
+        $this->load->model('Diskusi_model');
         $this->load->model('Jawaban_model');
         $this->load->model('Direktorat_model');
+        $this->load->library('Template');
     }
 
 	public function index()
 	{
-		$id_kuesioner = $this->input->get('id');
-
-		echo $id_kuesioner;
-	}
-
-	public function get_all_kuesioner()
-	{
 		$user_id = $this->session->userdata('userid');
 		$data = array(
-			'list_kuesioner' => $this->Kuesioner_model->get_all_by_createdby($user_id)
+			'list_kuesioner' => $this->Kuesioner_model->get_all_by_createdby($user_id),
+			'menu' => 'Kuesioner',
+			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
 		);
-
-		$this->load->view('admin/kuesioner/list',$data);
+		$this->template->load('admin/kuesioner/kuesioner_list', $data);
 	}
 
 	public function create()
 	{
-		$this->load->view('admin/kuesioner/form');
+		$data = array(
+			'aksi' => 'Buat',
+			'menu' => 'Kuesioner',
+			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
+		);
+		$this->template->load('admin/kuesioner/kuesioner_form', $data);
 	}
 
 	public function create_action()
@@ -90,10 +92,35 @@ class Kuesioner extends CI_Controller {
 			'deskripsi_kuesioner' => $deskripsi_kuesioner,
 			'dimensi' => json_encode($dimensi_temp),
 			'kategori_respon' => json_encode($kategori_respon_temp),
-			'created_by' => $this->session->userdata('userid')
+			'created_by' => $this->session->userdata('userid'),
+			'created_at' => date('Y-m-d H:i:s')
 		);
 
 		$this->Kuesioner_model->insert($datanya);
+		$e = array(
+			'response' => 'ok'
+		);
+		echo json_encode($e);
+	}
+
+	public function success()
+	{
+		$doing = $this->input->get('thing');
+		$operation = $this->input->get('operation');
+
+		if ($operation == 'add') {
+			$this->session->set_flashdata('success', $doing.' berhasil ditambahkan');
+		}
+
+		if ($operation == 'update') {
+			$this->session->set_flashdata('success', $doing.' berhasil diupdate');
+		}
+
+		if ($operation == 'delete') {
+			$this->session->set_flashdata('success', $doing.' berhasil dihapus');
+		}
+
+		redirect(site_url('kuesioner'));
 	}
 
 	public function export($id_kuesioner)
@@ -206,5 +233,147 @@ class Kuesioner extends CI_Controller {
 		ob_end_clean();
 		ob_start();
 		$writer->save('php://output');
+	}
+
+	public function delete($id_kuesioner)
+	{
+		$cek = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		if ($cek) {
+
+			$cekdiskusiygudahdibuat = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
+			if ($cekdiskusiygudahdibuat) {
+				$this->Diskusi_model->delete_all_by_kuesioner($id_kuesioner);
+			}
+
+			$this->Kuesioner_model->delete($id_kuesioner);
+			$this->session->set_flashdata('success', 'Kuesioner berhasil dihapus');
+			redirect(site_url('kuesioner'));
+		} else {
+			$this->session->set_flashdata('failed', 'Gagal Menghapus Kuesioner');
+			redirect(site_url('kuesioner'));
+		}
+	}
+
+	public function edit($id_kuesioner)
+	{
+		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		$data = array(
+			'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner),
+			'data_kuesioner' => $data_kuesioner,
+			'aksi' => 'Kelola',
+			'menu' => 'Kuesioner',
+			'action' => site_url('kuesioner/update_action'),
+			'classnyak' => $this,
+			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
+		);
+
+		$this->template->load('admin/kuesioner/kuesioner_read', $data);
+	}
+
+	public function auto_save()
+	{
+		$id_kuesioner = $this->input->post('id_kuesioner');
+		$urutan = $this->input->post('urutan');
+		$action = $this->input->post('action');
+		$id_diskusi = $this->input->post('id_diskusi');
+
+		$message = '';
+
+		if ($id_diskusi) {
+			if ($action == 'delete') {
+				$message = 'hapus diskusi berhasil';
+			}
+
+			if ($action == 'update') {
+				$dimensi = $this->input->post('dimensi');
+				$indikator = $this->input->post('indikator');
+				$isi_diskusi = $this->input->post('isi_diskusi');
+
+				$datatoupdate = array(
+					'urutan' => $urutan,
+					'dimensi' => $dimensi,
+					'indikator' => $indikator,
+					'isi_diskusi' => $isi_diskusi
+				);
+
+				$this->Diskusi_model->update($id_diskusi, $datatoupdate);
+				$message = 'update diskusi berhasil';
+			}
+		} else {
+			if ($action == 'add') {
+				$datatoinsert = array(
+					'id_kuesioner' => $id_kuesioner,
+					'urutan' => $urutan,
+					'dimensi' => '',
+					'indikator' => '',
+					'isi_diskusi' => ''
+				);
+
+				$this->Diskusi_model->insert($datatoinsert);
+
+				$id_diskusi = $this->db->insert_id();
+
+				$message = 'tambah diskusi berhasil';
+			}
+		}
+
+		$arr = array(
+			'response' => 'ok',
+			'message' => $message,
+			'id_diskusi' => $id_diskusi
+		);
+
+		echo json_encode($arr);
+	}
+
+	public function update_manual()
+	{
+		$id_kuesioner = $this->input->post('id_kuesioner');
+		$judul_kuesioner = $this->input->post('judul_kuesioner');
+		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
+
+		$datatoupdate = array(
+			'judul_kuesioner' => $judul_kuesioner,
+			'deskripsi_kuesioner' => $deskripsi_kuesioner
+		);
+
+		$this->Kuesioner_model->update($id_kuesioner, $datatoupdate);
+
+		$arr = array(
+			'response' => 'ok',
+		);
+
+		echo json_encode($arr);
+	}
+
+	public function get_indikator($ik = NULL, $d = NULL, $indikator = NULL)
+	{
+
+		$id_kuesioner = $this->input->post('id_kuesioner');
+		$dimensi = $this->input->post('dimensi');
+		if ($ik || $d) {
+			$id_kuesioner = $ik;
+			$dimensi = $d;
+		}
+
+		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		$dataindikator = [];
+
+		$processfindingdataindikator = json_decode($data_kuesioner->dimensi, true);
+
+		foreach ($processfindingdataindikator as $s) {
+			if ($s['name'] == $dimensi) {
+				foreach ($s['indikator'] as $yaik) {
+					$dataindikator[] = $yaik;
+				}
+			}
+		}
+		echo '<option>- pilih indikator -</option>';
+		foreach ($dataindikator as $deee) {
+			echo $deee == $indikator ? '<option value="'.$deee.'" selected>'.$deee.'</option>' : '<option value="'.$deee.'">'.$deee.'</option>';
+		}
 	}
 }

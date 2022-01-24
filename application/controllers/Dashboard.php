@@ -8,14 +8,19 @@ class Dashboard extends CI_Controller {
         parent::__construct();
         is_login();
         $this->load->model('Setting_app_model');
+        $this->load->model('Kuesioner_model');
+        $this->load->library('template');
     }
 
 	public function index()
 	{
+        $user_id = $this->session->userdata('userid');
 		$data = array(
-            'sett_apps' =>$this->Setting_app_model->get_by_id(1),
-        );
-		$this->load->view('admin/v_wrapper',$data);
+			'list_kuesioner' => $this->Kuesioner_model->get_all_by_createdby($user_id),
+			'menu' => 'Dashboard',
+			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
+		);
+		$this->template->load('admin/v_dashboard',$data);
 	}
 
 }

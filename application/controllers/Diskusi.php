@@ -59,39 +59,23 @@ class Diskusi extends CI_Controller {
 				}
 			}
 		}
-
+		echo '<option>- pilih indikator -</option>';
 		foreach ($dataindikator as $deee) {
 			echo '<option value="'.$deee.'">'.$deee.'</option>';
 		}
 	}
 
-	public function save_diskusi()
+	public function delete_diskusi()
 	{
-		$id_kuesioner = $this->input->post('id_kuesioner', TRUE);
-		$barisdiskusi = $this->input->post('barisdiskusi', true);
+		$id_diskusi = $this->input->post('id_diskusi', TRUE);
 
-		// $datadiskusi = [];
+		$this->Diskusi_model->delete($id_diskusi);
 
-		for ($i=1; $i <= count($barisdiskusi); $i++) { 
-
-			$datatoinsert = array(
-				'id_kuesioner' => $id_kuesioner,
-				'urutan' => $i,
-				'dimensi' => $this->input->post('dimensidiskusi'.$i),
-				'indikator' => $this->input->post('indikatordiskusi'.$i),
-				'isi_diskusi' => $this->input->post('isidiskusi'.$i)
-			);
-
-			$this->Diskusi_model->insert($datatoinsert);
-
-			// $datadiskusi[] = $datatoinsert;
-		}
-
-		$json = array(
-			'status' => 'ok'
+		$arr = array(
+			'response' => 'ok'
 		);
 
-		echo json_encode($json);
+		echo json_encode($arr);
 	}
 
 	public function update_diskusi()
@@ -99,36 +83,79 @@ class Diskusi extends CI_Controller {
 		$id_kuesioner = $this->input->post('id_kuesioner', TRUE);
 		$barisdiskusi = $this->input->post('barisdiskusi', true);
 
-		// $datadiskusi = [];
+		$id_diskusi = $this->input->post('id_diskusi', TRUE);
 
-		$getdatafromdb = $this->Diskusi_model->
+		$cekdiskusiygudahdibuat = $this->Diskusi_model->get_alldiskusi_by_id_kuesioner($id_kuesioner);
 
+		if ($cekdiskusiygudahdibuat) {
+			// code...
+		} else {
+			$datadiskusi = [];
 
-		for ($i=1; $i <= count($barisdiskusi); $i++) { 
-			$id_diskusi = $this->input->post('id_diskusi'.$i, TRUE);
-
-			$cek = $this->Kuesioner_model->get_by_id($id_kuesioner);
-
-			if ($id_diskusi) {
-				
-				$datatoupdate = array(
-					'urutan' => $i,
-					'dimensi' => $this->input->post('dimensidiskusi'.$i),
-					'indikator' => $this->input->post('indikatordiskusi'.$i),
-					'isi_diskusi' => $this->input->post('isidiskusi'.$i)
-				);
-
-				$this->Diskusi_model->update($id_diskusi, $datatoupdate);
-			} else {
-				$
-			}
-			// $datadiskusi[] = $datatoinsert;
+			
 		}
 
+		// $datadiskusi = [];
+
+		// $getdatafromdb = $this->Diskusi_model->
+
+		
+		$datatoupdate = array(
+			'urutan' => $i,
+			'dimensi' => $this->input->post('dimensidiskusi'.$i),
+			'indikator' => $this->input->post('indikatordiskusi'.$i),
+			'isi_diskusi' => $this->input->post('isidiskusi'.$i)
+		);
+
+		$this->Diskusi_model->update($id_diskusi, $datatoupdate);
+
+
+		// for ($i=1; $i <= count($barisdiskusi); $i++) { 
+		// 	$id_diskusi = $this->input->post('id_diskusi'.$i, TRUE);
+
+		// 	$cek = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		// 	if ($id_diskusi) {
+				
+		// 		$datatoupdate = array(
+		// 			'urutan' => $i,
+		// 			'dimensi' => $this->input->post('dimensidiskusi'.$i),
+		// 			'indikator' => $this->input->post('indikatordiskusi'.$i),
+		// 			'isi_diskusi' => $this->input->post('isidiskusi'.$i)
+		// 		);
+
+		// 		$this->Diskusi_model->update($id_diskusi, $datatoupdate);
+
+		// 		$status = 'ok';
+		// 	} else {
+		// 		$status = 'no';
+		// 	}
+		// 	// $datadiskusi[] = $datatoinsert;
+		// }
+
 		$json = array(
-			'status' => 'ok'
+			'status' => $status
 		);
 
 		echo json_encode($json);
+	}
+
+	public function save_all_diskusi()
+	{
+		$arrayofdiskusi = $this->input->post('jsonString');
+
+		$arrayofdiskusitemp = json_decode($arrayofdiskusi);
+
+		foreach ($arrayofdiskusitemp as $key => $value) {
+			$datatoupdate = array(
+				'urutan' => $value->urutan,
+				'dimensi' => $value->dimensi,
+				'indikator' => $value->indikator,
+				'isi_diskusi' => $value->isi_diskusi
+			);
+			$this->Diskusi_model->update($value->id_diskusi, $datatoupdate);
+		}
+
+		// print_r($arrayofdiskusitemp);
 	}
 }
