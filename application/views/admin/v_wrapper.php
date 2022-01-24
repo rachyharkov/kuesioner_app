@@ -278,6 +278,122 @@
 				})
 		    })
 
+		    $(document).on('submit','#form_diskusi_new', function(e) {
+
+		        e.preventDefault()
+
+		        var btnselected = $(document.activeElement)
+
+		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
+
+	        	Swal.fire({
+		          title: 'Konfirmasi Tindakan',
+		          text: "Yakin disimpan?",
+		          icon: 'warning',
+		          showCancelButton: true,
+		          confirmButtonColor: '#3085d6',
+		          cancelButtonColor: '#d33',
+		          confirmButtonText: 'Yes'
+		        }).then((result) => {
+					if (result.isConfirmed) {
+						dataString = $("#form_diskusi_new").serialize();
+						$.ajax({
+						    type: "POST",
+						    url: "<?php echo base_url().'Diskusi/save_diskusi'?>",
+						    data: dataString,
+						    success: function(data){
+						    	var dt = JSON.parse(data)
+						        	
+						        if (dt.status == 'ok') {
+							        Swal.fire({
+							          icon: 'success',
+							          title: "Sukses",
+							          text: 'Berhasil disimpan'
+							        })
+						        } else {
+						        	Swal.fire({
+							          icon: 'error',
+							          title: "Oh no!",
+							          text: 'Ga bisa disimpan, au knapa...'
+							        })
+						        }
+
+						        //getAllKuesioner()
+						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+						    },
+						    error: function(error) {
+						        Swal.fire({
+						          icon: 'error',
+						          title: "Oops!",
+						          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+						        })
+						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+						    }
+						});
+					} else {
+						btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+					}
+		    	})
+		    })
+
+		    $(document).on('submit','#form_diskusi_edit', function(e) {
+
+		        e.preventDefault()
+
+		        var btnselected = $(document.activeElement)
+
+		        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
+
+	        	Swal.fire({
+		          title: 'Konfirmasi Tindakan',
+		          text: "Simpan perubahan yang terjadi pada kuesioner?",
+		          icon: 'warning',
+		          showCancelButton: true,
+		          confirmButtonColor: '#3085d6',
+		          cancelButtonColor: '#d33',
+		          confirmButtonText: 'Yes'
+		        }).then((result) => {
+					if (result.isConfirmed) {
+						dataString = $("#form_diskusi_edit").serialize();
+						$.ajax({
+						    type: "POST",
+						    url: "<?php echo base_url().'Diskusi/update_diskusi'?>",
+						    data: dataString,
+						    success: function(data){
+						    	var dt = JSON.parse(data)
+						        	
+						        if (dt.status == 'ok') {
+							        Swal.fire({
+							          icon: 'success',
+							          title: "Sukses",
+							          text: 'Perubahan berhasil disimpan'
+							        })
+						        } else {
+						        	Swal.fire({
+							          icon: 'error',
+							          title: "Oh no!",
+							          text: 'Ga bisa disimpan, au knapa...'
+							        })
+						        }
+
+						        //getAllKuesioner()
+						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+						    },
+						    error: function(error) {
+						        Swal.fire({
+						          icon: 'error',
+						          title: "Oops!",
+						          text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+						        })
+						        btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+						    }
+						});
+					} else {
+						btnselected.html('<i class="fas fa-save"></i>').removeClass('disabled').removeAttr('disabled')
+					}
+		    	})
+		    })
+
 		</script>
 	</body>
 
