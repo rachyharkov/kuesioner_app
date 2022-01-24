@@ -157,5 +157,11 @@ class Diskusi extends CI_Controller {
 		}
 
 		// print_r($arrayofdiskusitemp);
+
+		$arr = array(
+			'response' => 'ok'
+		);
+
+		echo json_encode($arr);
 	}
 }

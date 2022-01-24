@@ -146,8 +146,12 @@
 			</ul>			
 		</div>
 		<div class="col-12" style="max-width: 640px; margin: auto;">
-			<button type="button" class="btn btn-primary btn-tambah-diskusi" data-action="add" style="position: fixed;bottom: 1rem;right: 1rem;"><i class="fas fa-plus"></i></button>
-			<button type="button" class="btn btn-success btn-save" style="position: fixed;bottom: 1rem;right: 4rem;"><i class="fas fa-save"></i></button>
+			<div class="btn-group" role="group" aria-label="Basic example" style="position: fixed;bottom: 1rem;right: 1rem;">
+				<a href="<?php echo base_url().'kuesioner' ?>" class="btn btn-secondary" ><i class="fas fa-chevron-left fa-fw"></i></a>
+				<a href="<?php echo base_url().'survey?id='.encrypt_url($data_kuesioner->id_kuesioner) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-warning" ><i class="fas fa-eye fa-fw"></i></a>
+				<button type="button" class="btn btn-primary btn-tambah-diskusi" data-action="add" ><i class="fas fa-plus"></i></button>
+				<button type="button" class="btn btn-success btn-save"><i class="fas fa-save"></i></button>
+			</div>
 		</div>
 	</div>
 </form>
@@ -206,7 +210,7 @@
 		    	if (dt.response == 'ok') {
 		    		Toast.fire({
 						icon: 'success',
-						title: 'Berhasil Menyimpan'
+						title: 'Auto Saved'
                     })
 		    	}
 		    },

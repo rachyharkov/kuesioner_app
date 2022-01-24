@@ -17,7 +17,7 @@ class Survey extends CI_Controller {
 		$id_kuesioner = $this->input->get('id');
 
 		$data = array(
-			'id_kuesioner' => $id_kuesioner,
+			'id_kuesioner' => decrypt_url($id_kuesioner),
 			'classnyak' => $this
 		);
 
