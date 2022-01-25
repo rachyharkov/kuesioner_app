@@ -36,30 +36,48 @@
 		</style>
 	</head>
 	<body>
+		<?php
+			if ($this->session->userdata('success')) {
+				?>
+					<div class="flash-data" data-flashdata="<?= $this->session->userdata('success'); ?>"></div>
+				<?php
+			}
+
+			if ($this->session->userdata('failed')) {
+				?>
+					<div class="flash-data2" data-flashdata2="<?= $this->session->userdata('failed'); ?>"></div>
+				<?php
+			}
+		?>
 		<div class="container-fluid ps-md-0">
 		  <div class="row g-0">
-		    <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+		    <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image" style="position: relative;">
+		    	
+		    </div>
 		    <div class="col-md-8 col-lg-6">
 		      <div class="login d-flex align-items-center py-5">
 		        <div class="container">
 		          <div class="row">
 		            <div class="col-md-9 col-lg-8 mx-auto">
-		              <h3 class="login-heading mb-4">Welcome back!</h3>
+		            	<div class="mb-4">
+		            		<img src="<?php echo base_url().'assets/images/logo_perusahaan.png' ?>" style="width: 140px;">
+		            	</div>
+						<h3 class="login-heading mb-4">Selamat Datang</h3>
 
-		              <!-- Sign In Form -->
-		              <form action="<?=site_url('auth/process')?>" method="post">
-		                <div class="form-floating mb-3">
-		                  <input type="text" name="username" class="form-control" id="floatingInput" placeholder="username">
-		                  <label for="floatingInput">Username</label>
-		                </div>
-		                <div class="form-floating mb-3">
-		                  <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-		                  <label for="floatingPassword">Password</label>
-		                </div>
+						<!-- Sign In Form -->
+						<form action="<?=site_url('auth/process')?>" method="post">
+						<div class="form-floating mb-3">
+						  <input type="text" name="username" class="form-control" id="floatingInput" placeholder="username">
+						  <label for="floatingInput">Username</label>
+						</div>
+						<div class="form-floating mb-3">
+						  <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+						  <label for="floatingPassword">Password</label>
+						</div>
 
-		                <div class="d-grid">
-		                  <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit" name="login">Sign in</button>
-		                </div>
+						<div class="d-grid">
+						  <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit" name="login">Sign in</button>
+						</div>
 
 		              </form>
 		            </div>
@@ -70,5 +88,7 @@
 		  </div>
 		</div>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> <!-- untuk sweet alret -->
+	<script src="<?php echo base_url() ?>assets/js/dataflash.js"></script>
 	</body>
 </html>

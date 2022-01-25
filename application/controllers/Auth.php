@@ -29,9 +29,16 @@ class Auth extends CI_Controller {
             'userid'=>$row->id_user
           );
           $this->session->set_userdata($params);
-        echo "<script>window.location='".site_url('dashboard')."'</script>";
+          echo "<script>window.location='".site_url('dashboard')."'</script>";
         } else{
-           redirect(site_url('auth'));
+          if ($post['username'] == NULL || $post['password'] == NULL) {
+            // code...
+            $this->session->set_flashdata('failed', 'Kolom username atau password tidak boleh kosong');
+            redirect(site_url('auth'));
+          } else {
+            $this->session->set_flashdata('failed', 'Username dan Password Salah');
+            redirect(site_url('auth'));
+          }
         }
      }
   }
@@ -40,8 +47,8 @@ class Auth extends CI_Controller {
   {
     $params = array('userid');
     $this->session->unset_userdata($params);
+    $this->session->set_flashdata('success', 'Logout berhasil');
     redirect('auth');
-
   }
 
   public function edit_profil($id){

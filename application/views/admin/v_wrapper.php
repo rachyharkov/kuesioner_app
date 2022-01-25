@@ -21,6 +21,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 
   <script src="<?php echo base_url().'assets/js/jquery-ui/jquery-ui.min.js' ?>"></script>
+  <script src="<?php echo base_url().'assets/js/jquery.ui.touch-punch.min.js' ?>"></script>
 </head>
 
 <body class="">
@@ -188,8 +189,8 @@
   <!--  Notifications Plugin    -->
   <script src="<?php echo base_url() ?>assets/admin/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="<?php echo base_url() ?>assets/admin/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script><!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
-  <script src="<?php echo base_url() ?>assets/admin/demo/demo.js"></script>
+  <script src="<?php echo base_url() ?>assets/admin/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+  
   <script>
     $(document).ready(function() {
       // Javascript method's body can be found in assets/js/demos.js

@@ -194,62 +194,39 @@ transform: scale(1.4);"><?php echo $value->urutan ?></span>
 				  	<div class="alert-wrapper">
 				  		
 				  	</div>
-				    <p class="card-text"><?php echo '<b>['.$value->judul_diskusi.']</b> '.$value->detail_diskusi ?></p>
+				    <p class="card-text"><?php echo $value->isi_diskusi ?></p>
 
 				    <div class="container-fluid" style="display: flex;
 flex-direction: row;
 justify-content: space-evenly;">
-				    	<div>
-				    	<span style="width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;">Kesesuaian Pengalaman</span>
-							<div style="display: flex; flex-direction: column;">
-						    <label for="disc<?php echo $value->urutan ?>_col1_1" class="radio">
-							    <input type="radio" value="STS" name="disc<?php echo $value->urutan ?>_col1" id="disc<?php echo $value->urutan ?>_col1_1" class="hidden choicenya disc<?php echo $value->urutan ?>_col1"/>
-							    <span class="label"></span>Sangat Tidak Sesuai
-								</label>
+				    	
+				    	<?php
 
-								<label for="disc<?php echo $value->urutan ?>_col1_2" class="radio">
-									<input type="radio" value="TS" name="disc<?php echo $value->urutan ?>_col1" id="disc<?php echo $value->urutan ?>_col1_2" class="hidden choicenya disc<?php echo $value->urutan ?>_col1"/>
-									<span class="label"></span>Tidak Sesuai
-								</label>
+				    	$kategori_resp = json_decode($data_kuesioner->kategori_respon, TRUE);
 
-								<label for="disc<?php echo $value->urutan ?>_col1_3" class="radio">
-									<input type="radio" value="S" name="disc<?php echo $value->urutan ?>_col1" id="disc<?php echo $value->urutan ?>_col1_3" class="hidden choicenya disc<?php echo $value->urutan ?>_col1"/>
-									<span class="label"></span>Sesuai
-								</label>
+				    	foreach ($kategori_resp as $key => $kr) {
+				    		
+				    		?>
+				    		<div>
+						    	<span style="width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;"><?php echo $kr['nama'] ?></span>
+									<div style="display: flex; flex-direction: column;">
+										<?php
+										foreach ($kr['respon_list'] as $key => $rp) {
+											?>
+											<label for="disc<?php echo $value->urutan ?>_col1_<?php echo $key ?>" class="radio">
+										    <input type="radio" value="STS" name="disc<?php echo $value->urutan ?>_col1" id="disc<?php echo $value->urutan ?>_col1_<?php echo $key ?>" class="hidden choicenya disc<?php echo $value->urutan ?>_col1"/>
+										    <span class="label"></span><?php echo $rp ?>
+											</label>
+											<?php
+										}
+										?>
+									</div>
+					    	</div>
+				    		<?php
 
-								<label for="disc<?php echo $value->urutan ?>_col1_4" class="radio">
-									<input type="radio" value="SS" name="disc<?php echo $value->urutan ?>_col1" id="disc<?php echo $value->urutan ?>_col1_4" class="hidden choicenya disc<?php echo $value->urutan ?>_col1"/>
-									<span class="label"></span>Sangat Sesuai
-								</label>
-							</div>
-				    	</div>
+				    	}
+				    	?>
 
-				    	<div>
-				    		<span style="width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;">Tingkat Kepentingan</span>
-						    <div style="display: flex; flex-direction: column;">
-						    	
-							    <label for="disc<?php echo $value->urutan ?>_col2_1" class="radio">
-								    <input type="radio" value="STP" name="disc<?php echo $value->urutan ?>_col2" id="disc<?php echo $value->urutan ?>_col2_1" class="hidden choicenya disc<?php echo $value->urutan ?>_col2"/>
-								    <span class="label"></span>Sangat Tidak Penting
-								</label>
-
-								<label for="disc<?php echo $value->urutan ?>_col2_2" class="radio">
-									<input type="radio" value="TP" name="disc<?php echo $value->urutan ?>_col2" id="disc<?php echo $value->urutan ?>_col2_2" class="hidden choicenya disc<?php echo $value->urutan ?>_col2"/>
-									<span class="label"></span>Tidak Penting
-								</label>
-
-								<label for="disc<?php echo $value->urutan ?>_col2_3" class="radio">
-									<input type="radio" value="P" name="disc<?php echo $value->urutan ?>_col2" id="disc<?php echo $value->urutan ?>_col2_3" class="hidden choicenya disc<?php echo $value->urutan ?>_col2"/>
-									<span class="label"></span>Penting
-								</label>
-
-								<label for="disc<?php echo $value->urutan ?>_col2_4" class="radio">
-									<input type="radio" value="SP" name="disc<?php echo $value->urutan ?>_col2" id="disc<?php echo $value->urutan ?>_col2_4" class="hidden choicenya disc<?php echo $value->urutan ?>_col2"/>
-									<span class="label"></span>Sangat Penting
-								</label>
-						    </div>
-
-				    	</div>
 				    </div>
 				    
 				  </div>
@@ -260,10 +237,7 @@ justify-content: space-evenly;">
 
 	?>
 	<input type="hidden" name="id_kuesioner" value="<?php echo $data_kuesioner->id_kuesioner ?>">
-	<button type="submit" class="btn btn-primary" style="position: absolute;
-	right: 3vh;
-	bottom: 19vh;
-	width: 35vw;">Selesai</button>
+	<button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 10vh; font-size: 1.2rem;">Selesai</button>
 </form>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
