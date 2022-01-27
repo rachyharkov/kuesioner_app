@@ -205,7 +205,7 @@ justify-content: space-evenly;">
 				    	$kategori_resp = json_decode($data_kuesioner->kategori_respon, TRUE);
 
 				    	foreach ($kategori_resp as $keykr => $kr) {
-				    		
+
 				    		?>
 				    		<div>
 						    	<span style="width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;"><?php echo $kr['nama'] ?></span>
