@@ -204,7 +204,7 @@ justify-content: space-evenly;">
 
 				    	$kategori_resp = json_decode($data_kuesioner->kategori_respon, TRUE);
 
-				    	foreach ($kategori_resp as $key => $kr) {
+				    	foreach ($kategori_resp as $keykr => $kr) {
 				    		
 				    		?>
 				    		<div>
@@ -213,8 +213,8 @@ justify-content: space-evenly;">
 										<?php
 										foreach ($kr['respon_list'] as $key => $rp) {
 											?>
-											<label for="disc<?php echo $value->urutan ?>_col1_<?php echo $key ?>" class="radio">
-										    <input type="radio" value="STS" name="disc<?php echo $value->urutan ?>_col1" id="disc<?php echo $value->urutan ?>_col1_<?php echo $key ?>" class="hidden choicenya disc<?php echo $value->urutan ?>_col1"/>
+											<label for="disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>_<?php echo $key ?>" class="radio">
+										    <input type="radio" value="<?php echo $rp ?>" name="disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>" id="disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>_<?php echo $key ?>" class="hidden choicenya disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>"/>
 										    <span class="label"></span><?php echo $rp ?>
 											</label>
 											<?php

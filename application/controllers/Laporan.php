@@ -9,6 +9,7 @@ class Laporan extends CI_Controller {
         is_login();
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
+        $this->load->model('Laporan_model');
         $this->load->library('template');
     }
 
@@ -21,5 +22,25 @@ class Laporan extends CI_Controller {
 			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
 		);
 		$this->template->load('admin/laporan/v_wrapper',$data);
+	}
+
+	public function detail_kuesioner($id_kuesioner)
+	{
+		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		$data = array(
+			'id_kuesioner' => $id_kuesioner,
+			'judul_kuesioner' => $data_kuesioner->judul_kuesioner,
+			'total_responden' => $this->Laporan_model->count_total_respond($id_kuesioner),
+			'todays_responden' => $this->Laporan_model->count_total_rows_by_date($id_kuesioner, date('Y-m-d')),
+			'list_diskusi_jawaban' => $this->laporan_model->get_all_rows_by_id_kuesioner($id_kuesioner)
+		);
+
+		$arr = array(
+			'response' => 'ok',
+			'page' => $this->load->view('admin/laporan/insight_detail', $data, TRUE)
+		);
+
+		echo json_encode($arr);
 	}
 }

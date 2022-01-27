@@ -61,7 +61,7 @@
 						?>
 						<tr>
 							<td hidden><?php echo $value->id_kuesioner ?></td>
-							<td><a href="<?php echo base_url().'preview/'.$value->id_kuesioner ?>"><?php echo $value->judul_kuesioner; ?></a></td>
+							<td><a href="<?php echo base_url().'survey?id='.encrypt_url($value->id_kuesioner) ?>" target="_blank" rel="noopener noreferrer"><?php echo $value->judul_kuesioner; ?></a></td>
 							<td><?php echo 0; ?> </td>
 							<td><?php echo $value->created_at ?></td>
 							<td><?php echo $value->created_by ?></td>

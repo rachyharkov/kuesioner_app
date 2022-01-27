@@ -62,13 +62,26 @@ class Survey extends CI_Controller {
 		$jumlah = count($datasoal);
 
 		for ($i=1; $i <= $jumlah ; $i++) { 
-			$jawaban[] = array(
+			$jawabantemp = array(
 				'id_kuesioner' => $id_kuesioner,
 				'id_diskusi' => $this->input->post('soal'.$i.'id'),
-				'pengalaman' => $this->input->post('disc'.$i.'_col1'),
-				'harapan' => $this->input->post('disc'.$i.'_col2')
 			);
+
+			$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
+
+			foreach ($kategori_respon as $key => $value) {
+				$kategorirespwithanswer = [
+					$value['nama'] => $this->input->post('disc'.$i.'_col'.$key)
+				];
+
+				$jawabantemp = array_merge($jawabantemp, $kategorirespwithanswer);
+			}
+
+			$jawaban[] = $jawabantemp;
 		}
+		echo "<pre>";
+		print_r($jawaban);
+		echo "</pre>";
 
 		// $jawaban = '';
 		$datanya = array(
