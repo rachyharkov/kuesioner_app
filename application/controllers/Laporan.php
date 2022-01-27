@@ -30,10 +30,11 @@ class Laporan extends CI_Controller {
 
 		$data = array(
 			'id_kuesioner' => $id_kuesioner,
-			'judul_kuesioner' => $data_kuesioner->judul_kuesioner,
 			'total_responden' => $this->Laporan_model->count_total_respond($id_kuesioner),
 			'todays_responden' => $this->Laporan_model->count_total_rows_by_date($id_kuesioner, date('Y-m-d')),
-			'list_diskusi_jawaban' => $this->laporan_model->get_all_rows_by_id_kuesioner($id_kuesioner)
+			'list_diskusi_jawaban' => $this->Laporan_model->get_all_rows_by_id_kuesioner($id_kuesioner),
+			'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner),
+			'data_kuesioner' => $data_kuesioner,
 		);
 
 		$arr = array(

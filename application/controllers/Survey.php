@@ -79,9 +79,9 @@ class Survey extends CI_Controller {
 
 			$jawaban[] = $jawabantemp;
 		}
-		echo "<pre>";
-		print_r($jawaban);
-		echo "</pre>";
+		// echo "<pre>";
+		// print_r($jawaban);
+		// echo "</pre>";
 
 		// $jawaban = '';
 		$datanya = array(
