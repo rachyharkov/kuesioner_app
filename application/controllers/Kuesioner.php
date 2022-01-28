@@ -144,51 +144,42 @@ class Kuesioner extends CI_Controller {
 
 
 		// Buat header tabel nya pada baris ke 3
-		$sheet->setCellValue('A2', "No"); // Set kolom A3 dengan tulisan "NO"
-		$sheet->setCellValue('B2', "Email"); // Set kolom B3 dengan tulisan "NIS"
-		$sheet->setCellValue('C2', "Direktorat"); // Set kolom C3 dengan tulisan "NAMA"
-		$sheet->setCellValue('D2', "Nama karyawan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
-		$sheet->setCellValue('E2', "Unit Kerja"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
-		$sheet->setCellValue('F2', "Job Grade"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
-		$sheet->setCellValue('G2', "Status Karyawan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
-		$sheet->setCellValue('H2', "Nama Jabatan"); // Set kolom D3 dengan tulisan "JENIS KELAMIN"
+		$sheet->setCellValue('A2', "No");
+		$sheet->setCellValue('B2', "Email");
+		$sheet->setCellValue('C2', "Direktorat");
+		$sheet->setCellValue('D2', "Nama karyawan");
+		$sheet->setCellValue('E2', "Unit Kerja");
+		$sheet->setCellValue('F2', "Job Grade");
+		$sheet->setCellValue('G2', "Status Karyawan");
+		$sheet->setCellValue('H2', "Nama Jabatan");
 		
 		$ld = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
 
+		$kategoriresponbykuesioner = json_decode($this->Kuesioner_model->get_by_id($id_kuesioner)->kategori_respon, TRUE);
+
+		$jumlahkategorirespon = count($kategoriresponbykuesioner);
+
 		$col = 9;
 		foreach ($ld as $key => $value) {
-			$sheet->setCellValueByColumnAndRow($col, 2, $value->detail_diskusi); // Set kolom E3 dengan tulisan
-			$sheet->setCellValueByColumnAndRow($col++, 2, $value->detail_diskusi); // Set kolom E3 dengan tulisan
-			$sheet->setCellValueByColumnAndRow($col--, 3, 'Harapan'); // Set kolom E3 dengan tulisan "TELEPON"
-			$sheet->setCellValueByColumnAndRow($col++, 3, 'Pengalaman'); // Set kolom E3 dengan tulisan "TELEPON"
-			$col++;
+			$sheet->setCellValueByColumnAndRow($col, 2, $value->isi_diskusi);
+
+			foreach ($kategoriresponbykuesioner as $key => $krbk) {
+				$sheet->setCellValueByColumnAndRow($col++, 3, $krbk['nama']);
+			}
 		}
 
-		
-		// $sheet->setCellValue('F3', "ALAMAT"); // Set kolom F3 dengan tulisan "ALAMAT"
-
-		// Apply style header yang telah kita buat tadi ke masing-masing kolom header
-		// $sheet->getStyle('A3')->applyFromArray($style_col);
-		// $sheet->getStyle('B3')->applyFromArray($style_col);
-		// $sheet->getStyle('C3')->applyFromArray($style_col);
-		// $sheet->getStyle('D3')->applyFromArray($style_col);
-		// $sheet->getStyle('E3')->applyFromArray($style_col);
-		// $sheet->getStyle('F3')->applyFromArray($style_col);
-
-		// Set height baris ke 1, 2 dan 3
 		$sheet->getRowDimension('1')->setRowHeight(20);
 		$sheet->getRowDimension('2')->setRowHeight(20);
 		$sheet->getRowDimension('3')->setRowHeight(20);
 
-		// Buat query untuk menampilkan semua data siswa
 		$list_jawaban = $this->Jawaban_model->get_by_kuesioner($id_kuesioner);
 
-		$no = 1; // Untuk penomoran tabel, di awal set dengan 1
-		$row = 4; // Set baris pertama untuk isi tabel adalah baris ke 4
+		$no = 1;
+		$row = 4;
 		foreach ($list_jawaban as $value) {
 			$sheet->setCellValue('A' . $row, $no);
 		    $sheet->setCellValue('B' . $row, $value->email);
-		    $sheet->setCellValue('C' . $row, $this->Direktorat_model->get_by_id($value->nama_direktorat)->direktorat);
+		    $sheet->setCellValue('C' . $row, $this->Direktorat_model->get_by_id($value->direktorat)->nama_direktorat);
 		    $sheet->setCellValue('D' . $row, $value->nama_karyawan);
 		    $sheet->setCellValue('E' . $row, $value->unit_kerja);
 		    $sheet->setCellValue('F' . $row, $value->job_grade);
@@ -196,17 +187,20 @@ class Kuesioner extends CI_Controller {
 		    $sheet->setCellValue('H' . $row, $value->nama_jabatan);
 
 		    $anujawaban = json_decode($value->jawaban, true);
-		    $cul = 9;
-		    foreach ($anujawaban as $key => $value) {
-		    	$sheet->setCellValueByColumnAndRow($cul++, $row, $value['pengalaman']);
-		    	$cul++;
-		    }
+			
+			$cul = 9;
+			foreach ($anujawaban as $aj) {
 
-		    $culsec = 10;
-		    foreach ($anujawaban as $key => $value) {
-		    	$sheet->setCellValueByColumnAndRow($culsec++, $row, $value['harapan']);
-		    	$culsec++;
-		    }
+				foreach ($kategoriresponbykuesioner as $kr) {
+					$sheet->setCellValueByColumnAndRow($cul++, $row, $aj[$kr['nama']]);
+				}
+			}
+
+		    // $culsec = 10;
+		    // foreach ($anujawaban as $key => $value) {
+		    // 	$sheet->setCellValueByColumnAndRow($culsec++, $row, $value['harapan']);
+		    // 	$culsec++;
+		    // }
 
 
 		    $sheet->getRowDimension($row)->setRowHeight(20); // Set height tiap row
