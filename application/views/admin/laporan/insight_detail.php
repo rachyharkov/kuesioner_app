@@ -1,3 +1,6 @@
+<!-- Chart JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
 <?php
 /**
  * @param array      $array
@@ -17,6 +20,8 @@ function array_insert(&$array, $position, $insert)
         );
     }
 }
+
+$datadiskusidanjumlahjawabannya = [];
 ?>
 
 <h4><?php echo $data_kuesioner->judul_kuesioner ?></h4>
@@ -101,7 +106,7 @@ function array_insert(&$array, $position, $insert)
 
 				$i = 1;
 				foreach ($list_diskusi as $diskusi) {
-
+					$datadiskusidanjumlahjawabannya[$diskusi->id] = [];
 					?>
 					<!-- create card element only with body -->
 					<div class="card">
@@ -114,13 +119,22 @@ function array_insert(&$array, $position, $insert)
 									$id_diskusi = $diskusi->id;
 									$kr = json_decode($data_kuesioner->kategori_respon, true);
 
-									foreach ($kr as $key => $v) {
+									foreach ($kr as $keykategorirespon => $v) {
+										
 										?>
 										<div class="col">
 										<?php
 										echo "<p>".$v['nama']."</p>"; //kategori responnya
 										$namakategorirespon = $v['nama']; 
 										$rl = $v['respon_list'];
+
+										$datadiskusidanjumlahjawabannya[$id_diskusi][] = [
+											'namakategorirespon' => $namakategorirespon,
+											'detail' => [
+												'label' => [],
+												'datanya' => []
+											]
+										];
 
 										$arrayresponlistdantotaljawaban = [];
 
@@ -140,17 +154,27 @@ function array_insert(&$array, $position, $insert)
 										}
 
 										$highest_value = max($arrayresponlistdantotaljawaban);
-										foreach ($arrayresponlistdantotaljawaban as $key => $rp) {
+										foreach ($arrayresponlistdantotaljawaban as $keynamaresponnya => $rp) {
 											?>
 											<div style="display: grid;grid-template-columns: 0.2fr 1fr 0.3fr;">
 												<!-- create a percent progressbar using php-->
 											<?php 
 												// find highest value of array $arrayresponlistdantotaljawaban[$key]
-												echo $key;
+												echo $keynamaresponnya;
 												$totalresponini = $rp;
-												// create a percent
-												$percent = ($totalresponini / $highest_value) * 100;
-												// $percent = $totalresponini;
+												foreach ($datadiskusidanjumlahjawabannya[$id_diskusi] as $key => $value) {
+													if($value['namakategorirespon'] == $namakategorirespon){
+														array_push($datadiskusidanjumlahjawabannya[$id_diskusi][$key]['detail']['label'], $keynamaresponnya);
+														array_push($datadiskusidanjumlahjawabannya[$id_diskusi][$key]['detail']['datanya'], $totalresponini);
+													}
+												}
+												// create percent and handle error
+												$percent = 0;
+												if ($highest_value != 0) {
+													$percent = ($rp / $highest_value) * 100;
+												}
+												$percent = number_format($percent, 2);
+
 											?>
 												<div class="progress">
 													<div class="progress-bar bg-success" role="progressbar" style="width: <?php echo round($percent,2) ?>%;" aria-valuenow="<?php echo round($percent,2) ?>" aria-valuemin="0" aria-valuemax="100"><?php echo round($percent,2).'%' ?></div>
@@ -160,6 +184,9 @@ function array_insert(&$array, $position, $insert)
 											<?php
 										}
 											?>
+											<div>
+												<canvas id="myChart<?= $id_diskusi.$keykategorirespon ?>"></canvas>
+											</div>
 										</div>
 										<?php
 									}
@@ -179,3 +206,59 @@ function array_insert(&$array, $position, $insert)
 		</div>
 	</div>
 </div>
+<?php
+echo "<pre>";
+	print_r($datadiskusidanjumlahjawabannya);
+echo "</pre>";
+?>
+
+<script>
+	$(document).ready(function(){
+		<?php
+		foreach($datadiskusidanjumlahjawabannya as $keyiddiskusi => $value){
+			foreach ($value as $key => $x) {
+				?>
+				var ctx<?= $keyiddiskusi.$key ?> = document.getElementById('myChart<?= $keyiddiskusi.$key ?>').getContext('2d');
+				var myChart<?= $keyiddiskusi.$key ?> = new Chart(ctx<?= $keyiddiskusi.$key ?>, {
+					type: 'pie',
+					data: {
+						labels: <?php echo json_encode($x['detail']['label']) ?>,
+						datasets: [{
+							data: <?php echo json_encode($x['detail']['datanya']) ?>,
+							backgroundColor: [
+								'rgba(41, 121, 255, 1)',
+								'rgba(38, 198, 218, 1)',
+								'rgba(138, 178, 248, 1)',
+								'rgba(255, 100, 200, 1)',
+								'rgba(116, 96, 238, 1)',
+								'rgba(215, 119, 74, 1)',
+								'rgba(173, 92, 210, 1)',
+								'rgba(255, 159, 64, 1)',
+								'rgba(247, 247, 247, 1)',
+								'rgba(227, 247, 227, 1)',
+							],
+						}]
+					},
+					options: {
+						tooltips: {
+							enabled: true
+						},
+						plugins: {
+							datalabels: {
+							formatter: (value, ctx) => {
+
+								let sum = ctx.dataset._meta[0].total;
+								let percentage = (value * 100 / sum).toFixed(2) + "%";
+								return percentage;
+							},
+								color: '#000000	',
+							}
+						}
+					}
+				});
+				<?php
+			}
+		}
+		?>
+	})
+</script>

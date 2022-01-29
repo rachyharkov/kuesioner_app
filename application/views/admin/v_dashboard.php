@@ -201,7 +201,8 @@
     </div>
   </div>
 </div>
-
+<!-- Chart JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js" integrity="sha256-Y26AMvaIfrZ1EQU49pf6H4QzVTrOI8m9wQYKkftBt4s=" crossorigin="anonymous"></script>
 <script type="text/javascript">
   demo = {
     initPickColor: function() {

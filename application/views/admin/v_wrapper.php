@@ -185,8 +185,7 @@
   <script src="<?php echo base_url() ?>assets/admin/js/core/popper.min.js"></script>
   <script src="<?php echo base_url() ?>assets/admin/js/core/bootstrap.min.js"></script>
   <script src="<?php echo base_url() ?>assets/admin/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-  <!-- Chart JS -->
-  <script src="<?php echo base_url() ?>assets/admin/js/plugins/chartjs.min.js"></script>
+  
   <!--  Notifications Plugin    -->
   <script src="<?php echo base_url() ?>assets/admin/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
