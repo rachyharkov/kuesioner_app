@@ -21,4 +21,10 @@ class Laporan_model extends CI_Model {
 		$this->db->like('jawaban','"id_kuesioner":"'.$id_kuesioner.'"');
 		return $this->db->get('tbl_jawaban')->result();
 	}
+
+	public function get_all_jawaban_by_id_diskusi($id_kuesioner)
+	{
+		$this->db->like('jawaban','"id_diskusi":"'.$id_kuesioner.'"');
+		return $this->db->get('tbl_jawaban')->result();
+	}
 }
