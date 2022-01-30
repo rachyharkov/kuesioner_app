@@ -69,11 +69,16 @@ $datadiskusidanjumlahjawabannya = [];
 	<div class="card">
 		<div class="card-body">
 		<?php
-			$datadimensi = json_decode($data_kuesioner->dimensi, TRUE);
+			$query = "SELECT *
+				FROM tbl_jawaban
+				WHERE jawaban LIKE '%\"id_kuesioner\":\"".$data_kuesioner->id_kuesioner."\"%'";
+			$jawabanlist = $this->db->query($query)->result();
 
+			$datadimensi = json_decode($data_kuesioner->dimensi, TRUE);
+			
 			$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
 
-			$datakategorirespondannilai = [];
+			$pacuannilai = [];
 			
 			$anu = [];
 
@@ -85,12 +90,47 @@ $datadiskusidanjumlahjawabannya = [];
 						$rl => $p + 1
 					]);
 				}
-				// array_insert($respon, $kresp['nama'], $respon);
-				$datakategorirespondannilai[$kresp['nama']] = $respon;
+				$pacuannilai[$kresp['nama']] = $respon;
 			}
 			
 			echo '<pre>';
-			// print_r($bbb);
+			print_r($pacuannilai);
+			
+			$datakategorirespondannilai = [];
+			foreach ($datadimensi as $key => $value) {
+				$temp = [
+					"nama_dimensi" => $value['name'],
+					"indikator" => []
+				];
+				
+				foreach ($value['indikator'] as $key => $value) {
+					$temp['indikator'][$value] = 0;
+				}
+				
+				$datakategorirespondannilai[] = $temp;
+			}
+
+			foreach ($jawabanlist as $key => $value) {
+				$json_decode = json_decode($value->jawaban, TRUE);
+
+				foreach ($json_decode as $key => $value) {
+					
+					$query = "SELECT * FROM tbl_diskusi WHERE id = '".$value['id_diskusi']."'";
+					$diskusi = $this->db->query($query)->row();
+					
+
+					if($value['id_diskusi'] == $diskusi->id) {
+						// find the index of the $datakategorirespondannilai by value
+						$index = array_search($diskusi->dimensi, array_column($datakategorirespondannilai, 'nama_dimensi'));
+
+						foreach ($kategori_respon as $key => $kresp) {
+							$nama_kategori_respon = $kresp['nama'];
+							$datakategorirespondannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+						}
+						// find the index of the $datakategorirespondannilai by value
+					}
+				}
+			}
 
 			print_r($datakategorirespondannilai);
 			echo '</pre>';
@@ -100,10 +140,6 @@ $datadiskusidanjumlahjawabannya = [];
 	<div class="row">
 		<div class="col-12">
 			<?php
-				$query = "SELECT *
-					FROM tbl_jawaban
-					WHERE jawaban LIKE '%\"id_kuesioner\":\"".$data_kuesioner->id_kuesioner."\"%'";
-				$jawabanlist = $this->db->query($query)->result();
 
 				$i = 1;
 				foreach ($list_diskusi as $diskusi) {
@@ -148,11 +184,8 @@ $datadiskusidanjumlahjawabannya = [];
 										foreach ($jawabanlist as $key => $jl) {
 											$json_decode = json_decode($jl->jawaban, TRUE);
 											
-											$maxjawabanperuser = count($json_decode);
-											
 											$find_array_by_value = array_search($id_diskusi, array_column($json_decode, 'id_diskusi'));
 
-											
 											$arrjawabanfound = $json_decode[$find_array_by_value];
 
 											if($arrjawabanfound['id_diskusi'] == $id_diskusi){
