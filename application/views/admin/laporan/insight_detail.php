@@ -1,6 +1,7 @@
 <!-- Chart JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 <?php
 /**
  * @param array      $array
@@ -142,14 +143,24 @@ $datadiskusidanjumlahjawabannya = [];
 											$arrayresponlistdantotaljawaban[$v] = 0;
 										}
 										
+										
+										//should be fixed!
 										foreach ($jawabanlist as $key => $jl) {
 											$json_decode = json_decode($jl->jawaban, TRUE);
-											// find array by value of key id_diskusi from json_decode
+											
+											$maxjawabanperuser = count($json_decode);
+											
 											$find_array_by_value = array_search($id_diskusi, array_column($json_decode, 'id_diskusi'));
+
+											
 											$arrjawabanfound = $json_decode[$find_array_by_value];
 
-											$jawabannyaterkategori = $arrjawabanfound[$namakategorirespon];
-											$arrayresponlistdantotaljawaban[$jawabannyaterkategori] += 1;
+											if($arrjawabanfound['id_diskusi'] == $id_diskusi){
+												$jawabannyaterkategori = $arrjawabanfound[$namakategorirespon];
+										
+												$arrayresponlistdantotaljawaban[$jawabannyaterkategori] += 1;
+											}
+									
 											
 										}
 
@@ -157,7 +168,7 @@ $datadiskusidanjumlahjawabannya = [];
 										foreach ($arrayresponlistdantotaljawaban as $keynamaresponnya => $rp) {
 											?>
 											<div style="display: grid;grid-template-columns: 0.2fr 1fr 0.3fr;">
-												<!-- create a percent progressbar using php-->
+											
 											<?php 
 												// find highest value of array $arrayresponlistdantotaljawaban[$key]
 												echo $keynamaresponnya;
@@ -214,6 +225,7 @@ echo "</pre>";
 
 <script>
 	$(document).ready(function(){
+		
 		<?php
 		foreach($datadiskusidanjumlahjawabannya as $keyiddiskusi => $value){
 			foreach ($value as $key => $x) {
@@ -225,18 +237,6 @@ echo "</pre>";
 						labels: <?php echo json_encode($x['detail']['label']) ?>,
 						datasets: [{
 							data: <?php echo json_encode($x['detail']['datanya']) ?>,
-							backgroundColor: [
-								'rgba(41, 121, 255, 1)',
-								'rgba(38, 198, 218, 1)',
-								'rgba(138, 178, 248, 1)',
-								'rgba(255, 100, 200, 1)',
-								'rgba(116, 96, 238, 1)',
-								'rgba(215, 119, 74, 1)',
-								'rgba(173, 92, 210, 1)',
-								'rgba(255, 159, 64, 1)',
-								'rgba(247, 247, 247, 1)',
-								'rgba(227, 247, 227, 1)',
-							],
 						}]
 					},
 					options: {
@@ -245,13 +245,19 @@ echo "</pre>";
 						},
 						plugins: {
 							datalabels: {
-							formatter: (value, ctx) => {
-
-								let sum = ctx.dataset._meta[0].total;
-								let percentage = (value * 100 / sum).toFixed(2) + "%";
-								return percentage;
+								formatter: (value, ctx) => {
+									let sum = 0;
+									let dataArr = ctx.chart.data.datasets[0].data;
+									dataArr.map(data => {
+										sum += data;
+									});
+									let percentage = (value*100 / sum).toFixed(2)+"%";
+									return percentage;
+								},
+								color: '#000',
 							},
-								color: '#000000	',
+							colorschemes: {
+								scheme: 'brewer.Paired12'
 							}
 						}
 					}
