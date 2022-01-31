@@ -1,7 +1,6 @@
 <!-- Chart JS -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
 <style>
 	@media (min-width: 576px) {
 		.custom-auto-width {
@@ -16,6 +15,68 @@
 	}
 </style>
 <?php
+
+
+function hue2rgb($p, $q, $t){
+    if($t < 0) { $t++; }
+    if($t > 1) { $t--; }
+    if($t < 1/6) { return $p + ($q - $p) * 6 * $t; }
+    if($t < 1/2) { return $q; }
+    if($t < 2/3) { return $p + ($q - $p) * (2/3 - $t) * 6; }
+    return $p;
+}
+
+function hslToRgb($h, $s, $l){
+#    var r, g, b;
+	if($s == 0){
+		$r = $g = $b = $l; // achromatic
+	}else{
+		if($l < 0.5){
+			$q =$l * (1 + $s);
+		} else {
+			$q =$l + $s - $l * $s;
+		}
+		$p = 2 * $l - $q;
+		$r = hue2rgb($p, $q, $h + 1/3);
+		$g = hue2rgb($p, $q, $h);
+		$b = hue2rgb($p, $q, $h - 1/3);
+	}
+	$return=array(floor($r * 255), floor($g * 255), floor($b * 255));
+	return $return;
+}
+
+/**
+ * Convert a number to a color using hsl, with range definition.
+ * Example: if min/max are 0/1, and i is 0.75, the color is closer to green.
+ * Example: if min/max are 0.5/1, and i is 0.75, the color is in the middle between red and green.
+ * @param i (floating point, range 0 to 1)
+ * param min (floating point, range 0 to 1, all i at and below this is red)
+ * param max (floating point, range 0 to 1, all i at and above this is green)
+ */
+function numberToColorHsl($i, $min, $max) {
+    $ratio = $i;
+    if ($min> 0 || $max < 1) {
+        if ($i < $min) {
+            $ratio = 0;
+        } elseif ($i > $max) {
+            $ratio = 1;
+        } else {
+            $range = $max - $min;
+            $ratio = ($i-$min) / $range;
+        }
+    }
+    // as the function expects a value between 0 and 1, and red = 0° and green = 120°
+    // we convert the input to the appropriate hue value
+    $hue = $ratio * 1.2 / 3.60;
+    //if (minMaxFactor!=1) hue /= minMaxFactor;
+    //console.log(hue);
+
+    // we convert hsl to rgb (saturation 100%, lightness 50%)
+    $rgb = hslToRgb($hue, 1, .5);
+    // we format to css value and return
+    return 'rgb('.$rgb[0].','.$rgb[1].','.$rgb[2].')'; 
+}
+
 /**
  * @param array      $array
  * @param int|string $position
@@ -36,6 +97,87 @@ function array_insert(&$array, $position, $insert)
 }
 
 $datadiskusidanjumlahjawabannya = [];
+
+$query = "SELECT *
+	FROM tbl_jawaban
+	WHERE jawaban LIKE '%\"id_kuesioner\":\"".$data_kuesioner->id_kuesioner."\"%'";
+$jawabanlist = $this->db->query($query)->result();
+
+$datadimensi = json_decode($data_kuesioner->dimensi, TRUE);
+
+$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
+
+$pacuannilai = [];
+
+$anu = [];
+
+foreach ($kategori_respon as $key => $kresp) {
+	$respon = [];	
+
+	foreach ($kresp['respon_list'] as $p => $rl) {
+		array_insert($respon, $rl, [
+			$rl => $p + 1
+		]);
+	}
+	$pacuannilai[$kresp['nama']] = $respon;
+}
+
+// echo '<pre>';
+
+
+$datakategorirespondannilai = [];
+foreach ($datadimensi as $key => $value) {
+	$temp = [
+		"nama_dimensi" => $value['name'],
+		"indikator" => []
+	];
+	
+	foreach ($value['indikator'] as $key => $value) {
+		$temp['indikator'][$value] = 0;
+	}
+	
+	$datakategorirespondannilai[] = $temp;
+}
+
+foreach ($jawabanlist as $key => $value) {
+	$json_decode = json_decode($value->jawaban, TRUE);
+
+	foreach ($json_decode as $key => $value) {
+		
+		$query = "SELECT * FROM tbl_diskusi WHERE id = '".$value['id_diskusi']."'";
+		$diskusi = $this->db->query($query)->row();
+		
+
+		if($value['id_diskusi'] == $diskusi->id) {
+			// find the index of the $datakategorirespondannilai by value
+			$index = array_search($diskusi->dimensi, array_column($datakategorirespondannilai, 'nama_dimensi'));
+
+			foreach ($kategori_respon as $key => $kresp) {
+				$nama_kategori_respon = $kresp['nama'];
+				$datakategorirespondannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+			}
+		}
+	}
+}
+
+// print_r($datakategorirespondannilai);
+// echo '</pre>';
+
+$highest_gap = [];
+
+// find the highest value from the $datakategorirespondannilai[$indikator] and return key with the highest value
+foreach ($datakategorirespondannilai as $key => $value) {
+	$highest_gap[$value['nama_dimensi']] = max($value['indikator']);
+}
+
+$totalhighestgap = count($highest_gap);
+$hg = [];
+foreach ($highest_gap as $name => $value) {
+	$hg[$name] = $value;
+}
+
+// print_r($hg);
+
 ?>
 
 <h4><?php echo $data_kuesioner->judul_kuesioner ?></h4>
@@ -73,7 +215,13 @@ $datadiskusidanjumlahjawabannya = [];
 			<div class="align-self-stretch card" style="margin: 0;">
 				<div class="card-body">
 					<p style="margin: 0;">Highest Gap</p>
-					<span class="badge bg-info text-white">Responsiveness</span>
+					<?php
+					// generate random color based on length of $hg
+					foreach ($hg as $key => $value) {
+						$color = '#' . substr(md5(rand()), 0, 6);
+						echo '<span class="badge text-white" style="background-color:'.$color.'">'.$key.'</span>';
+					}
+					?>
 				</div>
 			</div>
 		</div>
@@ -81,72 +229,31 @@ $datadiskusidanjumlahjawabannya = [];
 
 	<div class="card">
 		<div class="card-body">
-		<?php
-			$query = "SELECT *
-				FROM tbl_jawaban
-				WHERE jawaban LIKE '%\"id_kuesioner\":\"".$data_kuesioner->id_kuesioner."\"%'";
-			$jawabanlist = $this->db->query($query)->result();
-
-			$datadimensi = json_decode($data_kuesioner->dimensi, TRUE);
-			
-			$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
-
-			$pacuannilai = [];
-			
-			$anu = [];
-
-			foreach ($kategori_respon as $key => $kresp) {
-				$respon = [];	
-
-				foreach ($kresp['respon_list'] as $p => $rl) {
-					array_insert($respon, $rl, [
-						$rl => $p + 1
-					]);
+			<!-- create table with borderless -->
+			<table>	
+				<?php
+				foreach($pacuannilai as $key => $value) {
+					$maxscale = count($value);	
+					?>
+					<tr>
+						<td><?= $key ?></td>
+						<td>:</td>
+						<td>
+						<?php
+							$urutanwarna = $maxscale;
+							foreach ($value as $key => $value) {
+								?>
+								<span class="badge text-white" style="background-color:<?php echo numberToColorHsl($urutanwarna/$maxscale, 0, 1) ?>"><?php echo $key.'('.$value.')' ?></span>
+								<?php
+								$urutanwarna--;
+							}
+						?>
+						</td>
+					</tr>	
+					<?php
 				}
-				$pacuannilai[$kresp['nama']] = $respon;
-			}
-			
-			echo '<pre>';
-			print_r($pacuannilai);
-			
-			$datakategorirespondannilai = [];
-			foreach ($datadimensi as $key => $value) {
-				$temp = [
-					"nama_dimensi" => $value['name'],
-					"indikator" => []
-				];
-				
-				foreach ($value['indikator'] as $key => $value) {
-					$temp['indikator'][$value] = 0;
-				}
-				
-				$datakategorirespondannilai[] = $temp;
-			}
-
-			foreach ($jawabanlist as $key => $value) {
-				$json_decode = json_decode($value->jawaban, TRUE);
-
-				foreach ($json_decode as $key => $value) {
-					
-					$query = "SELECT * FROM tbl_diskusi WHERE id = '".$value['id_diskusi']."'";
-					$diskusi = $this->db->query($query)->row();
-					
-
-					if($value['id_diskusi'] == $diskusi->id) {
-						// find the index of the $datakategorirespondannilai by value
-						$index = array_search($diskusi->dimensi, array_column($datakategorirespondannilai, 'nama_dimensi'));
-
-						foreach ($kategori_respon as $key => $kresp) {
-							$nama_kategori_respon = $kresp['nama'];
-							$datakategorirespondannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
-						}
-					}
-				}
-			}
-
-			print_r($datakategorirespondannilai);
-			echo '</pre>';
-		?>
+				?>
+			</table>
 		</div>
 	</div>		
 	<div class="row">
@@ -163,7 +270,7 @@ $datadiskusidanjumlahjawabannya = [];
 							<p><?=  $diskusi->isi_diskusi; ?></p>
 							
 							<div class="container">
-								<div class="row">
+								<div class="d-flex">
 								<?php
 									$id_diskusi = $diskusi->id;
 									$kr = json_decode($data_kuesioner->kategori_respon, true);
@@ -171,7 +278,7 @@ $datadiskusidanjumlahjawabannya = [];
 									foreach ($kr as $keykategorirespon => $v) {
 										
 										?>
-										<div class="col">
+										<div class="w-50">
 										<?php
 										echo "<p>".$v['nama']."</p>"; //kategori responnya
 										$namakategorirespon = $v['nama']; 
@@ -241,7 +348,7 @@ $datadiskusidanjumlahjawabannya = [];
 										}
 											?>
 											<div>
-												<canvas id="myChart<?= $id_diskusi.$keykategorirespon ?>"></canvas>
+												<canvas id="myChart<?= $id_diskusi.$keykategorirespon ?>" height="250"></canvas>
 											</div>
 										</div>
 										<?php
@@ -263,9 +370,9 @@ $datadiskusidanjumlahjawabannya = [];
 	</div>
 </div>
 <?php
-echo "<pre>";
-	print_r($datadiskusidanjumlahjawabannya);
-echo "</pre>";
+// echo "<pre>";
+// 	print_r($datadiskusidanjumlahjawabannya);
+// echo "</pre>";
 ?>
 
 <script>
@@ -282,6 +389,15 @@ echo "</pre>";
 						labels: <?php echo json_encode($x['detail']['label']) ?>,
 						datasets: [{
 							data: <?php echo json_encode($x['detail']['datanya']) ?>,
+							backgroundColor: [<?php
+								$datany = $pacuannilai[$x['namakategorirespon']];
+								$maxscale = count($datany);
+								$urutanwarna = 1;
+								foreach ($datany as $key => $value) {
+									echo '"'.numberToColorHsl($urutanwarna/$maxscale, 0, 1).'",';
+									$urutanwarna++;
+								}
+							?>]
 						}]
 					},
 					options: {
@@ -300,9 +416,6 @@ echo "</pre>";
 									return percentage;
 								},
 								color: '#000',
-							},
-							colorschemes: {
-								scheme: 'brewer.Paired12'
 							}
 						}
 					}
