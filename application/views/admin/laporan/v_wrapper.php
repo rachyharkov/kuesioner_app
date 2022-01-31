@@ -16,6 +16,9 @@
 	    background-color: #1a344a !important;
 	}
 
+
+	
+
 </style>
 
 <div class="row">
@@ -27,15 +30,9 @@
 			<div class="card-body">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-sm-12 col-md-7 col-lg-7 kuesioner-info-overview">
-							<div class="container" style="display: flex; flex-direction: column; justify-content: center; text-align: center; min-height: 40vh; color: gray;">
-								<i class="now-ui-icons ui-2_chat-round mb-2" style="font-size: 3.5rem"></i>
-								<p style="font-size: 0.8rem">Informasi terkait kuesioner akan muncul disini, pilih kuesioner yang tersedia di bagian kanan layar</p>
-							</div>
-						</div>
-						<div class="col-sm-12 col-md-5 col-lg-5">
+						<div class="col-sm-12 col-md-4 col-lg-4">
 							<div class="container-fluid">
-								<table class="table" id="tabel_kuesioner">
+								<table class="table" id="tabel_kuesioner" style="width: 100%;">
 						            <thead class=" text-primary">
 						              	<tr>
 						              		<th hidden>
@@ -71,6 +68,13 @@
 										?>
 						            </tbody>
 						        </table>
+							</div>
+						</div>
+
+						<div class="col-sm-12 col-md-8 col-lg-8 kuesioner-info-overview">
+							<div class="container" style="display: flex; flex-direction: column; justify-content: center; text-align: center; min-height: 40vh; color: gray;">
+								<i class="now-ui-icons ui-2_chat-round mb-2" style="font-size: 3.5rem"></i>
+								<p style="font-size: 0.8rem">Informasi terkait kuesioner akan muncul disini, pilih kuesioner yang tersedia di bagian kanan layar</p>
 							</div>
 						</div>
 					</div>

@@ -2,6 +2,19 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-colorschemes"></script>
+<style>
+	@media (min-width: 576px) {
+		.custom-auto-width {
+			width: auto;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.custom-auto-width {
+			width: 31%;
+		}
+	}
+</style>
 <?php
 /**
  * @param array      $array
@@ -27,40 +40,40 @@ $datadiskusidanjumlahjawabannya = [];
 
 <h4><?php echo $data_kuesioner->judul_kuesioner ?></h4>
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-12 col-md-4 col-lg-4">
-			<div class="card">
+	<div class="d-flex flex-column flex-md-row mb-4">
+		<div class="align-self-stretch custom-auto-width" style="height: 100%;">
+			<div class="card" style="height: 100%; display: flex; margin: 0;">
 				<div class="card-body">
 					<p>Total Responden</p>
-					<h2><?php echo $total_responden ?></h2>
+					<h2 style="margin: 0;"><?php echo $total_responden ?></h2>
+				</div>
+				<div class="card-footer text-right" style="font-size: 11px;">
+					<a href="#">Detail</a>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-12 col-md-4 col-lg-4">
-			<div class="card">
+		<div class="align-self-stretch custom-auto-width m-md-auto" style="height: 100%;">
+			<div class="card" style="height: 100%; display: flex; margin: 0;">
 				<div class="card-body">
 					<p>Today's Respond</p>
-					<h2><?php print_r($todays_responden) ?></h2>
+					<h2 style="margin: 0;"><?php print_r($todays_responden) ?></h2>
+				</div>
+				<div class="card-footer text-right" style="font-size: 11px;">
+					<a href="#">Detail</a>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-12 col-md-4 col-lg-4">
-			<div class="row">
-				<div class="col-sm-6 col-md-12 col-lg-12">
-					<div class="card">
-						<div class="card-body">
-							<p>Status</p>
-							<span class="badge bg-success text-white">Active</span>
-						</div>
-					</div>
+		<div class="align-self-stretch custom-auto-width d-flex flex-row flex-md-column justify-content-between" style="">
+			<div class="align-self-stretch card" style="margin: 0;">
+				<div class="card-body">
+					<p style="margin: 0;">Status</p>
+					<span class="badge bg-success text-white">Active</span>
 				</div>
-				<div class="col-sm-6 col-md-12 col-lg-12">
-					<div class="card">
-						<div class="card-body">
-							<p>Highest Gap</p>
-							<span class="badge bg-info text-white">Responsiveness</span>
-						</div>
-					</div>
+			</div>
+			<div class="align-self-stretch card" style="margin: 0;">
+				<div class="card-body">
+					<p style="margin: 0;">Highest Gap</p>
+					<span class="badge bg-info text-white">Responsiveness</span>
 				</div>
 			</div>
 		</div>
@@ -127,7 +140,6 @@ $datadiskusidanjumlahjawabannya = [];
 							$nama_kategori_respon = $kresp['nama'];
 							$datakategorirespondannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
 						}
-						// find the index of the $datakategorirespondannilai by value
 					}
 				}
 			}
