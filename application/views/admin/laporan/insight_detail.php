@@ -124,8 +124,9 @@ foreach ($kategori_respon as $key => $kresp) {
 
 // echo '<pre>';
 
-
 $datakategorirespondannilai = [];
+
+$datadimensiindikatordannilai = [];
 foreach ($datadimensi as $key => $value) {
 	$temp = [
 		"nama_dimensi" => $value['name'],
@@ -136,47 +137,67 @@ foreach ($datadimensi as $key => $value) {
 		$temp['indikator'][$value] = 0;
 	}
 	
-	$datakategorirespondannilai[] = $temp;
+	$datadimensiindikatordannilai[] = $temp;
+}
+
+foreach ($kategori_respon as $key => $kresp) {
+	$respon = [];
+
+	foreach ($kresp['respon_list'] as $p => $rl) {
+		array_insert($respon, $rl, [
+			$rl => 0
+		]);
+	}
+	$datakategorirespondannilai[$kresp['nama']] = $respon;
 }
 
 foreach ($jawabanlist as $key => $value) {
 	$json_decode = json_decode($value->jawaban, TRUE);
-
-	foreach ($json_decode as $key => $value) {
+	foreach ($json_decode as $keyjd => $value) {
 		
 		$query = "SELECT * FROM tbl_diskusi WHERE id = '".$value['id_diskusi']."'";
 		$diskusi = $this->db->query($query)->row();
 		
 
 		if($value['id_diskusi'] == $diskusi->id) {
-			// find the index of the $datakategorirespondannilai by value
-			$index = array_search($diskusi->dimensi, array_column($datakategorirespondannilai, 'nama_dimensi'));
+			// find the index of the $datadimensiindikatordannilai by value
+			$index = array_search($diskusi->dimensi, array_column($datadimensiindikatordannilai, 'nama_dimensi'));
 
 			foreach ($kategori_respon as $key => $kresp) {
 				$nama_kategori_respon = $kresp['nama'];
-				$datakategorirespondannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+				$datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+				
+				$jawabannya = $json_decode[$keyjd][$nama_kategori_respon];
+				$datakategorirespondannilai[$nama_kategori_respon][$jawabannya] += $pacuannilai[$nama_kategori_respon][$jawabannya];
 			}
 		}
 	}
 }
 
+// print_r($datadimensiindikatordannilai);
 // print_r($datakategorirespondannilai);
-// echo '</pre>';
 
 $highest_gap = [];
 
-// find the highest value from the $datakategorirespondannilai[$indikator] and return key with the highest value
-foreach ($datakategorirespondannilai as $key => $value) {
-	$highest_gap[$value['nama_dimensi']] = max($value['indikator']);
+// find the highest value from the $datadimensiindikatordannilai[$indikator] and return key with the highest value
+foreach ($datadimensiindikatordannilai as $key => $v) {
+	$highest_gap[$v['nama_dimensi']] = max($v['indikator']);
 }
 
-$totalhighestgap = count($highest_gap);
+// print_r($highest_gap);
 $hg = [];
 foreach ($highest_gap as $name => $value) {
 	$hg[$name] = $value;
 }
 
-// print_r($hg);
+$datakategorirespondannilai = array_map(function($item) {
+	$sum = array_sum($item);
+	return $sum;
+}, $datakategorirespondannilai);
+
+// print_r($datakategorirespondannilai);
+
+// echo '</pre>';
 
 ?>
 
@@ -208,19 +229,22 @@ foreach ($highest_gap as $name => $value) {
 		<div class="align-self-stretch custom-auto-width d-flex flex-row flex-md-column justify-content-between" style="">
 			<div class="align-self-stretch card" style="margin: 0;">
 				<div class="card-body">
-					<p style="margin: 0;">Status</p>
-					<span class="badge bg-success text-white">Active</span>
-				</div>
-			</div>
-			<div class="align-self-stretch card" style="margin: 0;">
-				<div class="card-body">
 					<p style="margin: 0;">Highest Gap</p>
 					<?php
-					// generate random color based on length of $hg
 					foreach ($hg as $key => $value) {
 						$color = '#' . substr(md5(rand()), 0, 6);
 						echo '<span class="badge text-white" style="background-color:'.$color.'">'.$key.'</span>';
 					}
+					?>
+				</div>
+			</div>
+			<div class="align-self-stretch card" style="margin: 0;">
+				<div class="card-body">
+					<p style="margin: 0;">Highest Focus</p>
+					<?php
+					// generate random color based on length of $hg
+					$color = '#' . substr(md5(rand()), 0, 6);
+					echo '<span class="badge text-white" style="background-color:'.$color.'">'.array_keys($datakategorirespondannilai, max($datakategorirespondannilai))[0].'</span>';
 					?>
 				</div>
 			</div>
@@ -308,9 +332,9 @@ foreach ($highest_gap as $name => $value) {
 											$arrjawabanfound = $json_decode[$find_array_by_value];
 
 											if($arrjawabanfound['id_diskusi'] == $id_diskusi){
-												$jawabannyaterkategori = $arrjawabanfound[$namakategorirespon];
+												$jawabannya = $arrjawabanfound[$namakategorirespon];
 										
-												$arrayresponlistdantotaljawaban[$jawabannyaterkategori] += 1;
+												$arrayresponlistdantotaljawaban[$jawabannya] += 1;
 											}
 									
 											

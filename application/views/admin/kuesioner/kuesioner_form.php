@@ -76,6 +76,7 @@
 </div>
 
 <script>
+	$('[data-toggle="tooltip"]').tooltip()
 	 $(document).on('click','#add_dimensi',function(e) {
 		e.preventDefault()
         var x = $('.baris_dimensi').length
