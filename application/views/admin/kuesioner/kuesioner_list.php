@@ -1,3 +1,6 @@
+<link href="<?php echo base_url() ?>assets\admin\js\core\bootstrap-switch-3.3.4\dist\css\bootstrap3\bootstrap-switch.min.css" 
+rel="stylesheet" />
+<script src="<?php echo base_url().'assets\admin\js\core\bootstrap-switch-3.3.4\dist\js\bootstrap-switch.min.js' ?>"></script>
 <?php
 	if ($this->session->userdata('success')) {
 		?>
@@ -22,28 +25,6 @@
       <div class="card-body">
         <div class="table-responsive">
           <table class="table">
-            <thead class=" text-primary">
-              	<tr>
-              		<th hidden>
-              			ID
-              		</th>
-	              	<th>
-	                	Judul Kuesioner
-		            </th>
-		            <th>
-		                Responded
-					</th>
-					<th>
-		                Date
-					</th>
-					<th>
-		                Created by
-					</th>
-		            <th>
-		                Action
-					</th>
-	           	</tr>
-	        </thead>
             <tbody>
             	<?php
 				if (!$list_kuesioner) {
@@ -65,6 +46,7 @@
 							<td><?php echo 0; ?> </td>
 							<td><?php echo $value->created_at ?></td>
 							<td><?php echo $value->created_by ?></td>
+							<td class="text-center"><input type="checkbox" checked name="checkbox" class="bootstrap-switch" data-on-label="ON" data-off-label="OFF" data-size="mini"/></td>
 							<td class="text-center">
 								<div class="btn-group" role="group">
 									<a href="<?php echo base_url().'kuesioner/edit/'.$value->id_kuesioner ?>" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit fa-fw"></i></a>
@@ -84,8 +66,12 @@
     </div>
   </div>
 </div>
-
 <script type="text/javascript">
+	$(".bootstrap-switch").bootstrapSwitch({
+		onSwitchChange: function(e, state) { 
+			alert(state);
+		}
+	});
 	$(document).on('click','.link_delete_kuesioner', function(e) {
     	e.preventDefault()
 
