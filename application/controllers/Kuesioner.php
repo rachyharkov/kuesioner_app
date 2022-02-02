@@ -370,4 +370,22 @@ class Kuesioner extends CI_Controller {
 			echo $deee == $indikator ? '<option value="'.$deee.'" selected>'.$deee.'</option>' : '<option value="'.$deee.'">'.$deee.'</option>';
 		}
 	}
+
+	public function update_status()
+	{
+		$id_kuesioner = $this->input->post('id');
+		$status = $this->input->post('status');
+
+		$datatoupdate = array(
+			'status' => $status
+		);
+
+		$this->Kuesioner_model->update($id_kuesioner, $datatoupdate);
+
+		$arr = array(
+			'response' => 'ok',
+		);
+
+		echo json_encode($arr);
+	}
 }

@@ -31,13 +31,23 @@ class Survey extends CI_Controller {
 		if (!$list_diskusi) {
 			$this->load->view('error_404');
 		} else {
-			$data = array(
-				'direktorat' => $this->Direktorat_model->get_all(),
-				'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id),
-				'data_kuesioner' => $this->Kuesioner_model->get_by_id($id)
-			);
-
-			$this->load->view('visitor/kuesioner_form',$data);
+			$getdatakuesioner = $this->Kuesioner_model->get_by_id($id);
+			// detect status of kuesioner
+			$status = $getdatakuesioner->status;
+			if($status == 0) {
+				$data = array(
+					'judul_kuesioner' => $getdatakuesioner->judul_kuesioner,
+				);
+				$this->load->view('error_kuesionerdeactivate', $data);
+			} else {
+				$data = array(
+					'direktorat' => $this->Direktorat_model->get_all(),
+					'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id),
+					'data_kuesioner' => $this->Kuesioner_model->get_by_id($id)
+				);
+	
+				$this->load->view('visitor/kuesioner_form',$data);
+			}
 		}
 
 	}

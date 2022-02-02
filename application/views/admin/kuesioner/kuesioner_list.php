@@ -46,7 +46,7 @@ rel="stylesheet" />
 							<td><?php echo 0; ?> </td>
 							<td><?php echo $value->created_at ?></td>
 							<td><?php echo $value->created_by ?></td>
-							<td class="text-center"><input type="checkbox" checked name="checkbox" class="bootstrap-switch" data-on-label="ON" data-off-label="OFF" data-size="mini"/></td>
+							<td class="text-center"><input type="checkbox" <?php echo $value->status == 0 ? '' : 'checked'; ?> name="checkbox" id="<?php echo $value->id_kuesioner ?>" class="bootstrap-switch" data-on-label="ON" data-off-label="OFF" data-size="mini" data-onstyle="success"/></td>
 							<td class="text-center">
 								<div class="btn-group" role="group">
 									<a href="<?php echo base_url().'kuesioner/edit/'.$value->id_kuesioner ?>" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit fa-fw"></i></a>
@@ -69,7 +69,35 @@ rel="stylesheet" />
 <script type="text/javascript">
 	$(".bootstrap-switch").bootstrapSwitch({
 		onSwitchChange: function(e, state) { 
-			alert(state);
+			// alert(state)
+			var st = 0
+			if(state == true) {
+				st = 1
+			}
+			var id = $(this).attr('id')
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url().'Kuesioner/update_status'?>",
+				data: {
+					id: id,
+					status: st
+				},
+				success: function(data){
+
+					var dt = JSON.parse(data)
+
+					if (dt.response == 'ok') {
+						console.log('updated')
+					}
+				},
+				error: function(error) {
+					Swal.fire({
+						icon: 'error',
+						title: "Oops!",
+						text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+					})
+				}
+			});
 		}
 	});
 	$(document).on('click','.link_delete_kuesioner', function(e) {
