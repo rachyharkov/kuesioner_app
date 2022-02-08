@@ -11,12 +11,12 @@
                     $arrsettinglist = [
                         0 => [
                             'nama_menu' => 'Import',
-                            'url' => '#',
+                            'url' => 'backup?action=import',
                             'icon' => 'now-ui-icons arrows-1_cloud-upload-94' 
                         ],
                         1 => [
                             'nama_menu' => 'Export',
-                            'url' => '#',
+                            'url' => 'backup?action=export',
                             'icon' => 'now-ui-icons arrows-1_cloud-download-93' 
                         ],
                         2 => [
