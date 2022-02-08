@@ -27,4 +27,16 @@ class Laporan_model extends CI_Model {
 		$this->db->like('jawaban','"id_diskusi":"'.$id_kuesioner.'"');
 		return $this->db->get('tbl_jawaban')->result();
 	}
+
+	public function count_incoming_respon_month($month)
+	{
+		$q = "SELECT COUNT(*) as 'total' FROM `tbl_jawaban` WHERE month(tanggal) = '".$month."';";
+		return $this->db->query($q)->row();
+	}
+
+	public function count_incoming_respon_by_hours_today($hours)
+	{
+		$q = "SELECT COUNT(*) as 'total' FROM `tbl_jawaban` WHERE hour(tanggal) = '".$hours."' AND day(tanggal) = day(now());";
+		return $this->db->query($q)->row();
+	}
 }

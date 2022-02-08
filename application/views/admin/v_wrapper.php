@@ -14,7 +14,6 @@
   <!-- CSS Files -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/r-2.2.9/sl-1.3.4/datatables.min.css"/>
   <link href="<?php echo base_url() ?>assets/admin/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="<?php echo base_url() ?>assets/admin/css/now-ui-kit.css?v=1.2.0" rel="stylesheet" />
   <link href="<?php echo base_url() ?>assets/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
   <link href="<?php echo base_url() ?>assets/admin/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -63,9 +62,14 @@
         				'url' => 'laporan',
         				'icon' => 'now-ui-icons location_map-big' 
         			],
-        			3 => [
-        				'nama_menu' => 'Laporan',
-        				'url' => 'profil',
+              3 => [
+        				'nama_menu' => 'Pengaturan',
+        				'url' => 'pengaturan',
+        				'icon' => 'now-ui-icons loader_gear' 
+        			],
+        			4 => [
+        				'nama_menu' => 'Akun',
+        				'url' => 'akun',
         				'icon' => 'now-ui-icons users_single-02' 
         			],
 

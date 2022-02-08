@@ -2,7 +2,7 @@
   <div class="col-lg-4">
     <div class="card card-chart">
       <div class="card-header">
-        <h5 class="card-category">Resp. Statistic</h5>
+        <h5 class="card-category">Resp. Statistik</h5>
         <h4 class="card-title">Jumlah Respon</h4>
         <div class="dropdown">
           <button type="button" class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
@@ -443,7 +443,7 @@
             fill: true,
             backgroundColor: gradientFill,
             borderWidth: 2,
-            data: [60, 160, 200, 110, 130, 90, 150, 160, 120, 140, 190, 95]
+            data: <?php echo $total_respon_month_to_month ?>
           }]
         },
         options: {
@@ -556,9 +556,9 @@
         type: 'line',
         responsive: true,
         data: {
-          labels: ["12pm,", "3pm", "6pm", "9pm", "12am", "3am", "6am", "9am"],
+          labels: <?php echo $list_last_8_hours ?>,
           datasets: [{
-            label: "Email Stats",
+            label: "Responden/Jam",
             borderColor: "#18ce0f",
             pointBorderColor: "#FFF",
             pointBackgroundColor: "#18ce0f",
@@ -569,7 +569,7 @@
             fill: true,
             backgroundColor: gradientFill,
             borderWidth: 2,
-            data: [40, 500, 650, 700, 1200, 1250, 1300, 1900]
+            data: <?php echo $total_respon_by_hours_today ?>
           }]
         },
         options: gradientChartOptionsConfigurationWithNumbersAndGrid

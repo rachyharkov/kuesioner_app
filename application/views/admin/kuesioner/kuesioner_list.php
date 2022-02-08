@@ -46,7 +46,7 @@ rel="stylesheet" />
 							<td><?php echo 0; ?> </td>
 							<td><?php echo $value->created_at ?></td>
 							<td><?php echo $value->created_by ?></td>
-							<td class="text-center"><input type="checkbox" <?php echo $value->status == 0 ? '' : 'checked'; ?> name="checkbox" id="<?php echo $value->id_kuesioner ?>" class="bootstrap-switch" data-on-label="ON" data-off-label="OFF" data-size="mini" data-onstyle="success"/></td>
+							<td class="text-center"><input type="checkbox" <?php echo $value->status == 0 ? '' : 'checked'; ?> name="checkbox" id="<?php echo $value->id_kuesioner ?>" class="bootstrap-switch" data-on-label="ON" data-off-label="OFF" data-size="mini"/></td>
 							<td class="text-center">
 								<div class="btn-group" role="group">
 									<a href="<?php echo base_url().'kuesioner/edit/'.$value->id_kuesioner ?>" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit fa-fw"></i></a>
@@ -68,6 +68,7 @@ rel="stylesheet" />
 </div>
 <script type="text/javascript">
 	$(".bootstrap-switch").bootstrapSwitch({
+		onColor: 'success',
 		onSwitchChange: function(e, state) { 
 			// alert(state)
 			var st = 0

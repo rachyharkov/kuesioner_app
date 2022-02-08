@@ -93,7 +93,8 @@ class Kuesioner extends CI_Controller {
 			'dimensi' => json_encode($dimensi_temp),
 			'kategori_respon' => json_encode($kategori_respon_temp),
 			'created_by' => $this->session->userdata('userid'),
-			'created_at' => date('Y-m-d H:i:s')
+			'created_at' => date('Y-m-d H:i:s'),
+			'status' => 0
 		);
 
 		$this->Kuesioner_model->insert($datanya);
