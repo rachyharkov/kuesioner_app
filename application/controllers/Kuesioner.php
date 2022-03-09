@@ -104,6 +104,70 @@ class Kuesioner extends CI_Controller {
 		echo json_encode($e);
 	}
 
+	public function create_kuesioner_full()
+	{
+		$judul_kuesioner = $this->input->post('judul_kuesioner');
+		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
+		
+		$dimensi = $this->input->post('dimensi');
+
+		$datadiskusi = json_decode($this->input->post('diskusilist'), true);
+
+		$kategori_respon = $this->input->post('kategori_respon');
+
+		$kategori_respon_temp = [];		
+
+		for ($i=0; $i < count($kategori_respon); $i++) {
+			$pilihan_kategori_respon = $this->input->post('pilihan_kategori_responrow'.$i);
+
+			$pilihan_kategori_respon_temp = [];
+
+			for ($y=0; $y < count($pilihan_kategori_respon); $y++) { 
+				$pilihan_kategori_respon_temp[] = $pilihan_kategori_respon[$y];
+			}
+
+			$kategoripilihanyak = array(
+				'nama' => $kategori_respon[$i],
+				'respon_list' => $pilihan_kategori_respon_temp
+			);
+			$kategori_respon_temp[] = $kategoripilihanyak;
+		}
+
+		$datanya = array(
+			'judul_kuesioner' => $judul_kuesioner,
+			'deskripsi_kuesioner' => $deskripsi_kuesioner,
+			'dimensi' => $dimensi,
+			'kategori_respon' => json_encode($kategori_respon_temp),
+			'created_by' => $this->session->userdata('userid'),
+			'created_at' => date('Y-m-d H:i:s'),
+			'status' => 0
+		);
+
+		// print_r($datanya);
+
+
+
+		$this->Kuesioner_model->insert($datanya);
+
+		// get last inserted id
+		$last_id = $this->db->insert_id();
+
+		foreach($datadiskusi as $value){
+			$datadiskusinyak = array(
+				'id_kuesioner' => $last_id,
+				'urutan' => $value['urutan'],
+				'dimensi' => $value['dimensi'],
+				'indikator' => $value['indikator'],
+				'isi_diskusi' => $value['diskusi']
+			);
+			$this->Diskusi_model->insert($datadiskusinyak);
+		}
+		$e = array(
+			'response' => 'ok'
+		);
+		echo json_encode($e);
+	}
+
 	public function success()
 	{
 		$doing = $this->input->get('thing');

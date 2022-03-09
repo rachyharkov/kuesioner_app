@@ -1,13 +1,15 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 date_default_timezone_set('Asia/Jakarta');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-class Backup extends CI_Controller {
 
-	function __construct()
+class Backup extends CI_Controller
+{
+
+    function __construct()
     {
         parent::__construct();
         is_login();
@@ -17,21 +19,21 @@ class Backup extends CI_Controller {
         $this->load->library('template');
     }
 
-	public function index()
-	{
+    public function index()
+    {
         $user_id = $this->session->userdata('userid');
-		$data = array(
-			'menu' => 'Backup',
-			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
-		);
-		$this->template->load('admin/backup/v_wrapper',$data);
-	}
+        $data = array(
+            'menu' => 'Backup',
+            'sett_apps' => $this->Setting_app_model->get_by_id(1),
+        );
+        $this->template->load('admin/backup/v_wrapper', $data);
+    }
 
     public function export()
     {
         $type = $this->input->get('type_export');
 
-        if($type == "0"){
+        if ($type == "0") {
             $selectdata = $this->Kuesioner_model->get_all();
             $file = $this->export_excel($selectdata);
             $arr = array(
@@ -49,7 +51,8 @@ class Backup extends CI_Controller {
         }
     }
 
-    public function export_excel($data){
+    public function export_excel($data)
+    {
         // get list of keys from array $data
         $keys = array_keys($data[0]);
         // create a new spreadsheet object
@@ -64,10 +67,10 @@ class Backup extends CI_Controller {
         $sheet->fromArray($keys, NULL, 'A1');
         // download
         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-        $filename = 'data-'.date('Ymd').'.xlsx';
+        $filename = 'data-' . date('Ymd') . '.xlsx';
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'.$filename.'"');
-        
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+
         // return as url string of exported excel file
         $writer->save('php://output');
     }
@@ -86,6 +89,10 @@ class Backup extends CI_Controller {
         $spreadsheet->getActiveSheet()->mergeCells('C2:C3');
         $spreadsheet->getActiveSheet()->mergeCells('D2:D3');
         // set cell value
+
+        $sheet->setCellValue('A1', 'KUESIONER');
+        $sheet->setCellValue('B1', chiperencrypt('Kuesioner'));
+
         $sheet->setCellValue('A2', 'Dimensi');
         $sheet->setCellValue('B2', 'Indikator');
         $sheet->setCellValue('C2', 'No');
@@ -93,7 +100,7 @@ class Backup extends CI_Controller {
 
         // set row 2 as bold
         $spreadsheet->getActiveSheet()->getStyle('A2:D2')->getFont()->setBold(true);
-        
+
         // set text align of column A
         $spreadsheet->getActiveSheet()->getStyle('A2:A3')->getAlignment()->setHorizontal(
             \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
@@ -104,7 +111,7 @@ class Backup extends CI_Controller {
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(7);
         $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(36);
-        
+
         $spreadsheet->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
         $spreadsheet->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
         $spreadsheet->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
@@ -112,20 +119,20 @@ class Backup extends CI_Controller {
 
         // loop until 10 rows and fill with text
         for ($i = 3; $i <= 10; $i++) {
-            $sheet->setCellValue('A'.$i, 'Nama Dimensi '.$i);
-            $sheet->setCellValue('B'.$i, 'Nama Indikator Dimensi '.$i);
-            $sheet->setCellValue('C'.$i, $i - 2);
-            $sheet->setCellValue('D'.$i, 'Isi Diskusi '.$i);
+            $sheet->setCellValue('A' . $i, 'Nama Dimensi ' . $i);
+            $sheet->setCellValue('B' . $i, 'Nama Indikator Dimensi ' . $i);
+            $sheet->setCellValue('C' . $i, $i - 2);
+            $sheet->setCellValue('D' . $i, 'Isi Diskusi ' . $i);
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment; filename="ImportKuesionerTemplate.xlsx"'); // Set nama file excel nya
-		header('Cache-Control: max-age=0');
+        header('Content-Disposition: attachment; filename="ImportKuesionerTemplate.xlsx"'); // Set nama file excel nya
+        header('Cache-Control: max-age=0');
 
-		$writer = new Xlsx($spreadsheet);
-		ob_end_clean();
-		ob_start();
-		$writer->save('php://output');
+        $writer = new Xlsx($spreadsheet);
+        ob_end_clean();
+        ob_start();
+        $writer->save('php://output');
     }
 
     public function import()
@@ -134,64 +141,99 @@ class Backup extends CI_Controller {
         $spreadsheet = IOFactory::load($file);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-        $datany = array(
-            
-        );
+        $datany = array();
 
         $dimensinamelist = [];
 
-        // cells B2
-        $verifytokenfromexcel = $sheetData[1]['B'];
+        $diskusilist = [];
 
-        
+        // get cell B1
 
-        foreach ($sheetData as $key => $value) {
-            if($key > 2){                      
-                if($value['A']){
+        $cellA1 = $spreadsheet->getActiveSheet()->getCell('A1')->getValue();
 
-                    if(!in_array($value['A'], $dimensinamelist)){
-                        // push to array
-                        array_push($dimensinamelist, $value['A']);
-                    }
-                }
-            }
-        }
-        
+        if ($cellA1 === 'KUESIONER') {
+            $cellB1 = $spreadsheet->getActiveSheet()->getCell('B1')->getValue();
 
-        foreach ($dimensinamelist as $key => $value) {
-            $temp = array(
-                'nama'=>$value,
-                'indikator' => []
-            );
+            $decrypt = chiperdecrypt($cellB1);
 
-            $indikator = [];
+            if ($decrypt == 'Kuesioner') {
+                foreach ($sheetData as $key => $value) {
+                    if ($key > 2) {
+                        if ($value['A']) {
 
-            foreach ($sheetData as $key => $valueowo) {
-                if($key > 2){                      
-                    if($value == $valueowo['A']){
-                        if(!in_array($valueowo['B'], $indikator)){
-                            // push to array
-                            array_push($indikator, $valueowo['B']);
+                            if (!in_array($value['A'], $dimensinamelist)) {
+                                // push to array
+                                array_push($dimensinamelist, $value['A']);
+                            }
                         }
                     }
                 }
+
+                foreach ($sheetData as $key => $value) {
+                    if ($key > 3) {
+                        $diskusilist[] = array(
+                            'urutan' => $value['C'],
+                            'dimensi' => $value['A'],
+                            'indikator' => $value['B'],
+                            'diskusi' => $value['D'],
+                        );
+                    }
+                }
+
+
+                foreach ($dimensinamelist as $key => $value) {
+                    $temp = array(
+                        'name' => $value,
+                        'indikator' => []
+                    );
+
+                    $indikator = [];
+
+                    foreach ($sheetData as $key => $valueowo) {
+                        if ($key > 2) {
+                            if ($value == $valueowo['A']) {
+                                if (!in_array($valueowo['B'], $indikator)) {
+                                    // push to array
+                                    array_push($indikator, $valueowo['B']);
+                                }
+                            }
+                        }
+                    }
+
+                    $temp['indikator'] = $indikator;
+
+                    $datany[] = $temp;
+                }
+
+
+                // echo '<pre>';
+                // echo json_encode($datany);
+                // echo '</pre>';
+
+                // $this->Akun_model->insert_batch($data);
+                $arr = array(
+                    'response' => 'ok',
+                    'jenis' => 'Kuesioner',
+                    'message' => 'Confirming data',
+                    'datakuesioner' => json_encode($datany),
+                    'datadiskusi' => json_encode($diskusilist),
+                );
+                echo json_encode($arr);
+            } else {
+                $arr = array(
+                    'response' => 'error',
+                    'jenis' => 'Kuesioner',
+                    'message' => 'File yang anda upload bukan template kuesioner yang sah',
+                );
+                echo json_encode($arr);
             }
-
-            $temp['indikator'] = $indikator;
-
-            $datany[] = $temp;
+        } else {
+            $arr = array(
+                'response' => 'error',
+                'jenis' => 'Unknown',
+                'message' => 'File yang anda upload bukan file yang sah',
+            );
+            echo json_encode($arr);
         }
-        
-
-        echo '<pre>';
-        echo json_encode($datany);
-        echo '</pre>';
-
-        // $this->Akun_model->insert_batch($data);
-        // $arr = array(
-        //     'response' => 'ok',
-        //     'message' => 'Data berhasil di import',
-        // );
-        // echo json_encode($data);
     }
 }
