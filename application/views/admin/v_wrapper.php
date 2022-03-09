@@ -35,7 +35,7 @@
         <a href="<?php echo base_url().'dashboard' ?>" class="simple-text logo-mini">
           <i class="now-ui-icons business_chart-pie-36"></i>
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+        <a href="<?php echo base_url() ?>" class="simple-text logo-normal">
           Kuesioner Sys
         </a>
       </div>
