@@ -24,7 +24,7 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="export">
-                        <form id="form-export" target="_blank" action="<?= base_url().'backup/export' ?>">
+                        <form id="form-export" target="_blank" action="<?= base_url() . 'backup/export' ?>">
                             <table class="table table-borderless">
                                 <thead>
                                     <tr style="font-size: 12px;">
@@ -35,51 +35,51 @@
                                     </tr>
                                 </thead>
                                 <?php
-                                    $arrthingstoexport = [
-                                        0 => [
-                                            'nama' => 'Kuesioner'
-                                        ],
-                                        1 => [
-                                            'nama' => 'Respon'
-                                        ],
-                                        2 => [
-                                            'nama' => 'Form Individu'
-                                        ],
-                                    ]
+                                $arrthingstoexport = [
+                                    0 => [
+                                        'nama' => 'Kuesioner'
+                                    ],
+                                    1 => [
+                                        'nama' => 'Respon'
+                                    ],
+                                    2 => [
+                                        'nama' => 'Form Individu'
+                                    ],
+                                ]
                                 ?>
                                 <tbody>
-                                <tr>
-                                    <td style="width: 20rem;">
-                                        <select class="form-control" name="type_export">
-                                            <option value="">- pilih -</option>
-                                            <?php
+                                    <tr>
+                                        <td style="width: 20rem;">
+                                            <select class="form-control" name="type_export">
+                                                <option value="">- pilih -</option>
+                                                <?php
                                                 foreach ($arrthingstoexport as $key => $value) {
-                                                    ?>
+                                                ?>
                                                     <option value="<?= $key ?>"><?= $value['nama'] ?></option>
-                                                    <?php
+                                                <?php
                                                 }
-                                            ?>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="">- pilih -</option>
-                                            <option value="all">Semuanya</option>
-                                            <option value="few">Beberapa</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="">- pilih -</option>
-                                            <option value="json">.json</option>
-                                            <option value="excel">.xls</option>
-                                            <option value="kap">.kap</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary">Export</button>
-                                    </td>
-                                </tr>
+                                                ?>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control">
+                                                <option value="">- pilih -</option>
+                                                <option value="all">Semuanya</option>
+                                                <option value="few">Beberapa</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control">
+                                                <option value="">- pilih -</option>
+                                                <option value="json">.json</option>
+                                                <option value="excel">.xls</option>
+                                                <option value="kap">.kap</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-primary">Export</button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </form>
@@ -90,32 +90,26 @@
                                 <thead>
                                     <tr style="font-size: 12px;">
                                         <th>Upload</th>
-                                        <th>Jumlah</th>
                                         <th>Jenis</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td style="width: 20rem;">
-                                        <input type="file" class="form-control">
-                                    </td>
-                                    <td>
-                                        <select class="form-control">
-                                            <option value="">- pilih -</option>
-                                            <option value="all">Semuanya</option>
-                                            <option value="few">Beberapa</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <p>-</p>
-                                    </td>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary">Import</button>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td style="width: 20rem;">
+                                            <input type="file" class="form-control" accept=".xlsx,.xls" name="input-upload" id="input-upload">
+                                        </td>
+                                        <td>
+                                            <p>-</p>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <button type="button" class="btn btn-danger btn-delete"><i class="fas fa-trash-alt"></i></button>
+                                            <button type="submit" class="btn btn-primary">Import</button>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
+                            <a href="<?php echo base_url() ?>backup/import_template" target="_blank">Unduh Template Kuesioner</a>
                         </form>
                     </div>
                 </div>
@@ -125,28 +119,27 @@
 </div>
 
 <div class="modal fade" id="modal-export" tabindex="-1" aria-labelledby="modal-exportLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modal-exportLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-exportLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
-
-    function show_modal_export(){
+    function show_modal_export() {
         $('#modal-export').modal('show');
     }
 
@@ -186,9 +179,47 @@
     //         alert('Ada isian yang tidak lengkap');
     //     }
     // })
+    
+    $(document).on('change','#input-upload', function(e) {
+        var file = $(this).val();
+        var ext = file.split('.').pop();
+        var ext_allow = ['xlsx','xls'];
+        if(ext_allow.indexOf(ext) < 0){
+            alert('File yang diperbolehkan hanya .xlsx dan .xls');
+            $(this).val('');
+        } else {
+            // create ajax
 
-    $(document).on('click','.btn-init-export', function() {
-        
+            // get this file
+            var formData = new FormData();
+            formData.append('file', $(this)[0].files[0]);
+
+            $.ajax({
+                url: "<?= base_url('backup/import') ?>",
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // console.log(response);
+                    var dt = JSON.parse(response);
+                    if (dt.response == 'ok') {
+                        console.log(dt);
+                    } else {
+                        alert('Import gagal');
+                    }
+                }
+            });
+        }
     })
 
+    $(document).on('click', '.btn-delete', function() {
+        // empty file input
+        $('#input-upload').val('');
+
+    })
+    
+    $(document).on('click', '.btn-init-export', function() {
+
+    })
 </script>

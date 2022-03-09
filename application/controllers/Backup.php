@@ -72,5 +72,126 @@ class Backup extends CI_Controller {
         $writer->save('php://output');
     }
 
-	
+    public function import_template()
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $spreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
+        $spreadsheet->getDefaultStyle()->getFont()->setSize(11);
+
+        // merge cell A2:A3
+        $spreadsheet->getActiveSheet()->mergeCells('A2:A3');
+        $spreadsheet->getActiveSheet()->mergeCells('B2:B3');
+        $spreadsheet->getActiveSheet()->mergeCells('C2:C3');
+        $spreadsheet->getActiveSheet()->mergeCells('D2:D3');
+        // set cell value
+        $sheet->setCellValue('A2', 'Dimensi');
+        $sheet->setCellValue('B2', 'Indikator');
+        $sheet->setCellValue('C2', 'No');
+        $sheet->setCellValue('D2', 'Diskusi');
+
+        // set row 2 as bold
+        $spreadsheet->getActiveSheet()->getStyle('A2:D2')->getFont()->setBold(true);
+        
+        // set text align of column A
+        $spreadsheet->getActiveSheet()->getStyle('A2:A3')->getAlignment()->setHorizontal(
+            \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+        );
+
+        // set column width
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(14);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(16);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(7);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(36);
+        
+        $spreadsheet->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
+        $spreadsheet->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
+        $spreadsheet->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
+        $spreadsheet->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
+
+        // loop until 10 rows and fill with text
+        for ($i = 3; $i <= 10; $i++) {
+            $sheet->setCellValue('A'.$i, 'Nama Dimensi '.$i);
+            $sheet->setCellValue('B'.$i, 'Nama Indikator Dimensi '.$i);
+            $sheet->setCellValue('C'.$i, $i - 2);
+            $sheet->setCellValue('D'.$i, 'Isi Diskusi '.$i);
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="ImportKuesionerTemplate.xlsx"'); // Set nama file excel nya
+		header('Cache-Control: max-age=0');
+
+		$writer = new Xlsx($spreadsheet);
+		ob_end_clean();
+		ob_start();
+		$writer->save('php://output');
+    }
+
+    public function import()
+    {
+        $file = $_FILES['file']['tmp_name'];
+        $spreadsheet = IOFactory::load($file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+        $datany = array(
+            
+        );
+
+        $dimensinamelist = [];
+
+        // cells B2
+        $verifytokenfromexcel = $sheetData[1]['B'];
+
+        
+
+        foreach ($sheetData as $key => $value) {
+            if($key > 2){                      
+                if($value['A']){
+
+                    if(!in_array($value['A'], $dimensinamelist)){
+                        // push to array
+                        array_push($dimensinamelist, $value['A']);
+                    }
+                }
+            }
+        }
+        
+
+        foreach ($dimensinamelist as $key => $value) {
+            $temp = array(
+                'nama'=>$value,
+                'indikator' => []
+            );
+
+            $indikator = [];
+
+            foreach ($sheetData as $key => $valueowo) {
+                if($key > 2){                      
+                    if($value == $valueowo['A']){
+                        if(!in_array($valueowo['B'], $indikator)){
+                            // push to array
+                            array_push($indikator, $valueowo['B']);
+                        }
+                    }
+                }
+            }
+
+            $temp['indikator'] = $indikator;
+
+            $datany[] = $temp;
+        }
+        
+
+        echo '<pre>';
+        echo json_encode($datany);
+        echo '</pre>';
+
+        // $this->Akun_model->insert_batch($data);
+        // $arr = array(
+        //     'response' => 'ok',
+        //     'message' => 'Data berhasil di import',
+        // );
+        // echo json_encode($data);
+    }
 }
