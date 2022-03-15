@@ -7,6 +7,51 @@
         text-align: center;
         padding: 0px;
     }
+
+    .tooltip {
+      position: relative;
+      opacity: 1 !important;
+    }
+    .tooltip:before,
+    .tooltip:after {
+      display: block;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+    .tooltip:after {
+    	border-right: 6px solid transparent;
+    	border-bottom: 6px solid rgba(0,0,0,.75); 
+      border-left: 6px solid transparent;
+      content: '';
+      height: 0;
+        top: 20px;
+        left: 20px;
+      width: 0;
+    }
+    .tooltip:before {
+      background: rgba(0,0,0,.75);
+      border-radius: 2px;
+      color: #fff;
+      content: attr(data-title);
+      font-size: 14px;
+      padding: 6px 10px;
+        top: 26px;
+      white-space: nowrap;
+    }
+
+    /* the animations */
+    /* fade */
+    .tooltip.fade:after,
+    .tooltip.fade:before {
+      transform: translate3d(0,-10px,0);
+      transition: all .15s ease-in-out;
+    }
+    .tooltip.fade:hover:after,
+    .tooltip.fade:hover:before {
+      opacity: 1;
+      transform: translate3d(0,0,0);
+    }
 </style>
 
 <div class="row">
@@ -35,65 +80,55 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane fade" id="export">
-                        <form id="form-export" target="_blank" action="<?= base_url() . 'backup/export' ?>">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr style="font-size: 12px;">
-                                        <th>Apa yang ingin anda export?</th>
-                                        <th>Jumlah Export</th>
-                                        <th>Format</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <?php
-                                $arrthingstoexport = [
-                                    0 => [
-                                        'nama' => 'Kuesioner'
-                                    ],
-                                    1 => [
-                                        'nama' => 'Respon'
-                                    ],
-                                    2 => [
-                                        'nama' => 'Form Individu'
-                                    ],
-                                ]
-                                ?>
-                                <tbody>
-                                    <tr>
-                                        <td style="width: 20rem;">
-                                            <select class="form-control" name="type_export">
-                                                <option value="">- pilih -</option>
-                                                <?php
-                                                foreach ($arrthingstoexport as $key => $value) {
-                                                ?>
-                                                    <option value="<?= $key ?>"><?= $value['nama'] ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control">
-                                                <option value="">- pilih -</option>
-                                                <option value="all">Semuanya</option>
-                                                <option value="few">Beberapa</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control">
-                                                <option value="">- pilih -</option>
-                                                <option value="json">.json</option>
-                                                <option value="excel">.xls</option>
-                                                <option value="kap">.kap</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <button type="submit" class="btn btn-primary">Export</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </form>
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr style="font-size: 12px;">
+                                    <th>Apa yang ingin anda export?</th>
+                                    <th>Format</th>
+                                </tr>
+                            </thead>
+                            <?php
+                            $arrthingstoexport = [
+                                0 => [
+                                    'nama' => 'Kuesioner'
+                                ],
+                                1 => [
+                                    'nama' => 'Respon'
+                                ],
+                                2 => [
+                                    'nama' => 'Form Individu'
+                                ],
+                            ]
+                            ?>
+                            <tbody>
+                                <tr>
+                                    <td style="width: 10rem;">
+                                        <select class="form-control type_export" name="type_export">
+                                            <option value="">- pilih -</option>
+                                            <?php
+                                            foreach ($arrthingstoexport as $key => $value) {
+                                            ?>
+                                                <option value="<?= $key ?>"><?= $value['nama'] ?></option>
+                                            <?php
+                                            }
+                                            ?>
+                                        </select>
+                                    </td>
+                                    <td style="width: 10rem;">
+                                        <select class="form-control">
+                                            <option value="">- pilih -</option>
+                                            <option value="json">.json</option>
+                                            <option value="xls">.xls</option>
+                                            <option value="xlsx">.xlsx</option>
+                                            <option value="csv">.csv</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="container data_wrapper">
+
+                        </div>
                     </div>
                     <div role="tabpanel" class="tab-pane fade" id="import">
                         <div id="step-1">
@@ -200,43 +235,6 @@
         $('#modal-export').modal('show');
     }
 
-    // $(document).on('submit','#form-export', function(e) {
-    //     var id = $(this).find('td:eq(0) select').val();
-    //     var jumlah = $(this).find('td:eq(1) select').val();
-    //     var format = $(this).find('td:eq(2) select').val();
-    //     // var url = "<?= base_url('admin/backup/export') ?>";
-    //     var data = {
-    //         id: id,
-    //         jumlah: jumlah,
-    //         format: format
-    //     };
-
-    //     // if data is not empty, do console log
-    //     if (data.id != '' && data.jumlah != '' && data.format != '') {
-
-    //         if(data.jumlah == 'few'){
-    //             show_modal_export()
-    //         } else {
-    //             $.ajax({
-    //                 url: "<?= base_url('backup/export') ?>",
-    //                 type: 'post',
-    //                 data: data,
-    //                 success: function(response) {
-    //                     // console.log(response);
-    //                     var dt = JSON.parse(response);
-    //                     if (dt.response == 'ok') {
-    //                         window.location.href = dt.redirect;
-    //                     } else {
-    //                         alert('Export gagal');
-    //                     }
-    //                 }
-    //             });
-    //         }
-    //     } else {
-    //         alert('Ada isian yang tidak lengkap');
-    //     }
-    // })
-
     $(document).on('click', '.btn-confirm-import', function() {
         // show modal-importconfirm modal
         $(this).html('<i class="fas fa-spinner fa-spin"></i>').attr('disabled', true);
@@ -275,7 +273,7 @@
                         $('.jenis-msg').html(
                             `
                             ${dt.jenis}
-                            <button class="btn btn-success btn-sm btn-status-status"><i class="fas fa-check-circle"></i></button>    
+                            <button data-title="Hypertext Markup Language" class="btn btn-success btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-check-circle"></i></button>    
                             `
                         );
                         $('.btn-confirm-import').removeAttr('disabled');
@@ -287,7 +285,7 @@
                         $('.jenis-msg').html(
                             `
                             ${dt.jenis}
-                            <button class="btn btn-danger btn-sm btn-status-status"><i class="fas fa-exclamation-circle"></i></button>    
+                            <button data-title="Hypertext Markup Language" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-exclamation-circle"></i></button>    
                             `
                         );
 
@@ -346,8 +344,28 @@
         }
     })
 
-    $(document).on('click', '.btn-init-export', function() {
+    $(document).on('change', '.type_export', function() {
 
+        var type = $(this).val()
+        // alert('Initialized')
+
+        $.ajax({
+            url: "<?= base_url('backup/get_list_backupdata') ?>",
+            type: 'post',
+            data: {
+                type: type,
+            },
+            success: function(response) {
+                // console.log(response);
+
+                var dt = JSON.parse(response);
+
+                $('.data_wrapper').html(dt.html);
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        })
     })
 
 

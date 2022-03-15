@@ -16,6 +16,7 @@ class Backup extends CI_Controller
         $this->load->model('Setting_app_model');
         $this->load->model('Akun_model');
         $this->load->model('Kuesioner_model');
+        $this->load->model('Backup_model');
         $this->load->library('template');
     }
 
@@ -235,5 +236,53 @@ class Backup extends CI_Controller
             );
             echo json_encode($arr);
         }
+    }
+
+    public function get_list_backupdata()
+    {
+
+        $type = $this->input->post('type');
+
+        $data = [];
+
+        $typedata = '';
+        $message = '';
+
+        if($type == 0) 
+        {
+            $typedata = 'Kuesioner';
+            $message = 'Silahkan pilih kuesioner yang ingin di export';
+            $data = $this->Backup_model->list_kuesioner();
+        }
+
+        if($type == 1) {
+            $typedata = 'Respons';
+            $message = 'Silahkan pilih kuesioner yang ingin di export responnya';
+            $data = $this->Backup_model->list_diskusi();
+        }
+
+        if($type == 2) {
+            $typedata = 'Form Individu';
+            $message = 'Silahkan pilih Form identitas yang ingin di export';
+            $data = $this->Backup_model->list_formindividu();
+        }
+
+        $datapass = array(
+            'type' => $type,
+            'typedata' => $typedata,
+            'dataList' => $data,
+            'jenisDatalowercase' => strtolower(str_replace(' ', '_', $typedata)),
+            'jenisData' => $typedata,
+            'messageny' => $message
+        );
+
+        $jsondata = array(
+            'response' => 'ok',
+            'message' => 'Success',
+            'type' => $type,
+            'html' => $this->load->view('admin/backup/list_data', $datapass, true),
+        );
+
+        echo json_encode($jsondata);
     }
 }
