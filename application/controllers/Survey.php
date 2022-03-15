@@ -9,6 +9,7 @@ class Survey extends CI_Controller {
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
         $this->load->model('Direktorat_model');
+		$this->load->model('Formindividu_model');
         $this->load->model('Jawaban_model');
     }
 
@@ -43,7 +44,8 @@ class Survey extends CI_Controller {
 				$data = array(
 					'direktorat' => $this->Direktorat_model->get_all(),
 					'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id),
-					'data_kuesioner' => $this->Kuesioner_model->get_by_id($id)
+					'data_kuesioner' => $this->Kuesioner_model->get_by_id($id),
+					'data_formindividu' => $this->Formindividu_model->get_by_id($getdatakuesioner->id_formindividu)
 				);
 	
 				$this->load->view('visitor/kuesioner_form',$data);
@@ -55,19 +57,14 @@ class Survey extends CI_Controller {
 	public function save()
 	{
 		$id_kuesioner = $this->input->post('id_kuesioner');
-		$email = $this->input->post('email');
-		$direktorat = $this->input->post('direktorat');
-		$nama_karyawan = $this->input->post('nama_karyawan');
-		$unit_kerja = $this->input->post('unit_kerja');
-		$job_grade = $this->input->post('job_grade');
-		$status_karyawan = $this->input->post('status_karyawan');
-		$nama_jabatan = $this->input->post('nama_jabatan');
 
 		$jawaban = [];
 
 		$datasoal = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
 
 		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		$data_formindividu = $this->Formindividu_model->get_by_id($data_kuesioner->id_formindividu);
 
 		$jumlah = count($datasoal);
 
@@ -94,14 +91,18 @@ class Survey extends CI_Controller {
 		// echo "</pre>";
 
 		// $jawaban = '';
+
+		$dataformindividu = json_decode($data_formindividu->design_form, true);
+
+		$datadiriresponden = array();
+
+		foreach ($dataformindividu as $key => $value) {
+			// add $value['elementname'] to $datadiriresponden
+			$datadiriresponden[$value['elementname']] = $this->input->post($value['elementname'], true);
+		}
+
 		$datanya = array(
-			'email' => $email,
-			'direktorat' => $direktorat,
-			'nama_karyawan' => $nama_karyawan,
-			'unit_kerja' => $unit_kerja,
-			'job_grade' => $job_grade,
-			'status_karyawan' => $status_karyawan,
-			'nama_jabatan' => $nama_jabatan,
+			'data_diri' => json_encode($datadiriresponden),
 			'jawaban' => json_encode($jawaban)
 		);
 

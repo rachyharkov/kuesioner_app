@@ -15,6 +15,7 @@ class Kuesioner extends CI_Controller {
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
         $this->load->model('Diskusi_model');
+		$this->load->model('Formindividu_model');
         $this->load->model('Jawaban_model');
         $this->load->model('Direktorat_model');
         $this->load->library('Template');
@@ -198,33 +199,51 @@ class Kuesioner extends CI_Controller {
 		$sheet->getStyle('A1')->getFont()->setBold(true); // Set bold kolom A1
 		$sheet->getStyle('A1')->getFont()->setSize(15); // Set font size 15 untuk kolom A1
 
-		$sheet->mergeCells('A2:A3');
-		$sheet->mergeCells('B2:B3');
-		$sheet->mergeCells('C2:C3');
-		$sheet->mergeCells('D2:D3');
-		$sheet->mergeCells('E2:E3');
-		$sheet->mergeCells('F2:F3');
-		$sheet->mergeCells('G2:G3');
-		$sheet->mergeCells('H2:H3');
+		$alphabet = range('A', 'Z');
+
+		// echo $alphabet[3]; // returns D
+
+		// echo array_search('D', $alphabet); // returns 3
+
+		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		$data_formindividu = json_decode($this->Formindividu_model->get_by_id($data_kuesioner->id_formindividu)->design_form, true);
+
+		$positionny = 0;
+
+		foreach ($data_formindividu as $key => $value) {
+			$positionny++;
+			$sheet->mergeCells($alphabet[$key].'2:'.$alphabet[$key].'3');
+			$sheet->setCellValue($alphabet[$key].'2', $value['placeholder']);
+
+		}
+		// var_dump($positionny);
+
+		// $sheet->mergeCells('A2:A3');
+		// $sheet->mergeCells('B2:B3');
+		// $sheet->mergeCells('C2:C3');
+		// $sheet->mergeCells('D2:D3');
+		// $sheet->mergeCells('E2:E3');
+		// $sheet->mergeCells('F2:F3');
+		// $sheet->mergeCells('G2:G3');
+		// $sheet->mergeCells('H2:H3');
 
 
 		// Buat header tabel nya pada baris ke 3
-		$sheet->setCellValue('A2', "No");
-		$sheet->setCellValue('B2', "Email");
-		$sheet->setCellValue('C2', "Direktorat");
-		$sheet->setCellValue('D2', "Nama karyawan");
-		$sheet->setCellValue('E2', "Unit Kerja");
-		$sheet->setCellValue('F2', "Job Grade");
-		$sheet->setCellValue('G2', "Status Karyawan");
-		$sheet->setCellValue('H2', "Nama Jabatan");
+		// $sheet->setCellValue('A2', "No");
+		// $sheet->setCellValue('B2', "Email");
+		// $sheet->setCellValue('C2', "Direktorat");
+		// $sheet->setCellValue('D2', "Nama karyawan");
+		// $sheet->setCellValue('E2', "Unit Kerja");
+		// $sheet->setCellValue('F2', "Job Grade");
+		// $sheet->setCellValue('G2', "Status Karyawan");
+		// $sheet->setCellValue('H2', "Nama Jabatan");
 		
 		$ld = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
 
 		$kategoriresponbykuesioner = json_decode($this->Kuesioner_model->get_by_id($id_kuesioner)->kategori_respon, TRUE);
 
-		$jumlahkategorirespon = count($kategoriresponbykuesioner);
-
-		$col = 9;
+		$col = $positionny + 1;
 		foreach ($ld as $key => $value) {
 			$sheet->setCellValueByColumnAndRow($col, 2, $value->isi_diskusi);
 
@@ -237,36 +256,28 @@ class Kuesioner extends CI_Controller {
 		$sheet->getRowDimension('2')->setRowHeight(20);
 		$sheet->getRowDimension('3')->setRowHeight(20);
 
-		$list_jawaban = $this->Jawaban_model->get_by_kuesioner($id_kuesioner);
+		$list_jawaban = $this->Jawaban_model->get_by_kuesioner_arr($id_kuesioner);
 
 		$no = 1;
 		$row = 4;
 		foreach ($list_jawaban as $value) {
-			$sheet->setCellValue('A' . $row, $no);
-		    $sheet->setCellValue('B' . $row, $value->email);
-		    $sheet->setCellValue('C' . $row, $this->Direktorat_model->get_by_id($value->direktorat)->nama_direktorat);
-		    $sheet->setCellValue('D' . $row, $value->nama_karyawan);
-		    $sheet->setCellValue('E' . $row, $value->unit_kerja);
-		    $sheet->setCellValue('F' . $row, $value->job_grade);
-		    $sheet->setCellValue('G' . $row, $value->status_karyawan);
-		    $sheet->setCellValue('H' . $row, $value->nama_jabatan);
 
-		    $anujawaban = json_decode($value->jawaban, true);
+			$datadiri = json_decode($value['data_diri'], true);
+
+			foreach ($data_formindividu as $key => $v) {
+
+				$sheet->setCellValue($alphabet[$key].''.$row, $datadiri[$v['elementname']]);
+			}
+
+		    $anujawaban = json_decode($value['jawaban'], true);
 			
-			$cul = 9;
+			$cul = $positionny + 1;
 			foreach ($anujawaban as $aj) {
 
 				foreach ($kategoriresponbykuesioner as $kr) {
 					$sheet->setCellValueByColumnAndRow($cul++, $row, $aj[$kr['nama']]);
 				}
 			}
-
-		    // $culsec = 10;
-		    // foreach ($anujawaban as $key => $value) {
-		    // 	$sheet->setCellValueByColumnAndRow($culsec++, $row, $value['harapan']);
-		    // 	$culsec++;
-		    // }
-
 
 		    $sheet->getRowDimension($row)->setRowHeight(20); // Set height tiap row
 
@@ -283,7 +294,7 @@ class Kuesioner extends CI_Controller {
 		// Set judul file excel nya sheetnya
 		$sheet->setTitle("Responden");
 
-		// Proses file excel
+		// // Proses file excel
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment; filename="Data Responden.xlsx"'); // Set nama file excel nya
 		header('Cache-Control: max-age=0');

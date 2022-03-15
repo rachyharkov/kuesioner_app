@@ -21,4 +21,13 @@ class Jawaban_model extends CI_Model {
     	return $this->db->get('tbl_jawaban')->result();
     }
 
+    function get_by_kuesioner_arr($id_kuesioner)
+    {
+
+    	$like = '"id_kuesioner":"'.$id_kuesioner.'"';
+
+    	$this->db->like('jawaban',$like);
+    	return $this->db->get('tbl_jawaban')->result_array();
+    }
+
 }
