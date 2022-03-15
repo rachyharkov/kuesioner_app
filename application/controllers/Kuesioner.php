@@ -89,6 +89,7 @@ class Kuesioner extends CI_Controller {
 		}
 
 		$datanya = array(
+			'id_formindividu' => 1,
 			'judul_kuesioner' => $judul_kuesioner,
 			'deskripsi_kuesioner' => $deskripsi_kuesioner,
 			'dimensi' => json_encode($dimensi_temp),
@@ -135,6 +136,7 @@ class Kuesioner extends CI_Controller {
 		}
 
 		$datanya = array(
+			'id_formindividu' => 1,
 			'judul_kuesioner' => $judul_kuesioner,
 			'deskripsi_kuesioner' => $deskripsi_kuesioner,
 			'dimensi' => $dimensi,
