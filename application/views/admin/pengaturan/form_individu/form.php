@@ -125,6 +125,18 @@ $secondarycol = $arr2[$ano];
         opacity: 0;
         transition: opacity 0.3s;
     }
+
+    .handle {
+        width: 5%;
+        cursor: move;
+        position: relative;
+    }
+
+    .delete {
+        width: 5%;
+        cursor: pointer;
+        position: relative;
+    }
 </style>
 <div class="container" style="min-height: 60vh;">
     <div class="row">
@@ -159,7 +171,7 @@ $secondarycol = $arr2[$ano];
                         </li>
                     </ul>
                 </div>
-                <button class="btn btn-primary btn-action-editor" href="#">
+                <button class="btn btn-primary btn-action-editor btn-mode-delete" href="#">
                     <i class="fa fa-trash-alt"></i>
                     <span>Mode Hapus</span>
                 </button>
@@ -171,7 +183,7 @@ $secondarycol = $arr2[$ano];
                     <i class="fa fa-redo"></i>
                     <span>Buat Ulang</span>
                 </button>
-                <a class="btn btn-danger btn-action-editor" href="<?php echo base_url() . 'pengaturan/form_individu' ?>">
+                <a class="btn btn-primary btn-action-editor" href="<?php echo base_url() . 'pengaturan/form_individu' ?>">
                     <i class="fa fa-times"></i>
                     <span>Keluar</span>
                 </a>
@@ -179,7 +191,14 @@ $secondarycol = $arr2[$ano];
         </div>
         <div class="col-10">
             <div class="container" style="position: relative;">
-                <h4>Preview</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <h4 class="mt-0">Preview</h4>
+                    </div>
+                    <div class="col-6">
+                        <p style="text-align: right;margin: 0;">Mode: <span class="badge bg-success text-white mode-indicator" style="line-height: 20px;">Edit</span></p>
+                    </div>
+                </div>
                 <div class="card" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
                     <div class="card-body">
                         <div class="card">
@@ -217,17 +236,29 @@ $secondarycol = $arr2[$ano];
     $(document).ready(function() {
 
         function update_design_form() {
-            var form_design = JSON.parse($('.form_design').val())
+            var form_design = []
+            var panjangelement = $('.form__field').length
             // update form_design.position as .form__field index
-            for (var i = 0; i < form_design.length; i++) {
-                var pos = 0
-                $('.form__field').each(function(index){
-                    if ($(this).attr('data-prefix') == form_design[i].prefix) {
-                        pos = index
-                    }
-                })
-                form_design[i].position = pos + 1
-            }
+
+            $('.form__field').each(function(index){
+                
+                var id = $(this).attr('id');
+                var type = $(this).attr('type');
+                var nama_element = $(this).data('elementname')
+                var prefix = $(this).data('prefix')
+                var placeholder = $(this).attr('placeholder')
+                var wajib_diisi = $(this).data('requiredfill')
+
+                form_design.push({
+                    'id': id,
+                    'position':  index + 1,
+                    'elementname': nama_element,
+                    'prefix': prefix,
+                    'elementtype': type,
+                    'placeholder': placeholder,
+                    'required': wajib_diisi
+                });
+            })
             $('.form_design').val(JSON.stringify(form_design))
         }
 
@@ -331,14 +362,20 @@ $secondarycol = $arr2[$ano];
             
             var count_element = $('.form__group').length + 1;
             
+            if(wajib_diisi){
+                wajib_diisi = true
+            } else {
+                wajib_diisi = false
+            }
+
             $('#form_input_preview_wrapper').append(`
                 <div class="preview_element" style="display: flex;">
                     <div class="form__group">
-                        <input type="${type}" id="${count_element}" data-elementname="${nama_element}" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}">
+                        <input type="${type}" id="${count_element}" data-elementname="${nama_element}" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}" data-requiredfill="${wajib_diisi}">
                         <label class="form__label">${nama_element}</label>
                     </div>
-                    <div class="handle" style="width: 5%;cursor: move; position: relative;">
-                        <i class="fas fa-arrows-alt" style="bottom: 12px;   position: absolute;left: 8px;"></i>
+                    <div class="handle">
+                        <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
                     </div>
                 </div>
                 `);
@@ -347,11 +384,6 @@ $secondarycol = $arr2[$ano];
             var form_design = $('.form_design').val();
             var form_design_json = JSON.parse(form_design);
 
-            if(wajib_diisi){
-                wajib_diisi = true
-            } else {
-                wajib_diisi = false
-            }
 
             form_design_json.push({
                 'id':count_element,
@@ -364,10 +396,35 @@ $secondarycol = $arr2[$ano];
             });
 
             var form_design_json_string = JSON.stringify(form_design_json);
-
+            
             $('.form_design').val(form_design_json_string);
-
             $('#modal_add_element').modal('hide');
         });
+
+        $(document).on('click', '.btn-mode-delete', function() {
+            // $(this).removeClass('btn-mode-delete')
+            $('.mode-indicator').removeClass('bg-success')
+            $('.mode-indicator').addClass('bg-danger active').text('Delete')
+
+            $('.handle').removeClass('handle').addClass('delete').html('<i class="fas fa-trash-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>')
+
+        })
+
+        $(document).on('click', '.btn-action-editor', function() {
+
+            // detect index element of clicked
+            var index_element = $(this).index();
+
+            if(index_element != 2){
+                $('.mode-indicator').removeClass('bg-danger')
+                $('.mode-indicator').addClass('bg-success').text('Edit')
+                $('.delete').removeClass('delete').addClass('handle').html('<i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>')
+            }
+        })
+
+        $(document).on('click','.delete', function() {
+            $(this).parents('.preview_element').remove()
+            update_design_form() 
+        })
     })
 </script>
