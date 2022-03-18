@@ -15,8 +15,9 @@ $secondarycol = $arr2[$ano];
 
 <style>
     .wrapper-btn-action-with-context-menu {
-        position: absolute;
-        top: 0;
+        position: sticky;
+        top: 70px;
+        z-index: 999;
     }
 
     .context-menu-wrapper {
@@ -140,7 +141,7 @@ $secondarycol = $arr2[$ano];
 </style>
 <div class="container" style="min-height: 60vh;">
     <div class="row">
-        <div class="col-2" style="position: relative;">
+        <div class="col-1" style="position: relative;">
             <!-- create group of buttons with icon and responsive-->
             <div class="btn-group-vertical wrapper-btn-action wrapper-btn-action-with-context-menu">
                 <button class="btn btn-primary btn-action-editor btn-add-element">
@@ -189,11 +190,14 @@ $secondarycol = $arr2[$ano];
                 </a>
             </div>
         </div>
-        <div class="col-10">
+        <div class="col-11">
             <div class="container" style="position: relative;">
                 <div class="row">
                     <div class="col-6">
-                        <h4 class="mt-0">Preview</h4>
+                        <div style="position:relative;">
+                            <input type="text" value="" placeholder="Nama Form" style="margin-bottom: 18px;border: none;font-size: 22px;padding-right: 2rem;display: inline-block;width: 100%;"/>
+                            <i class="fas fa-edit" style="position: absolute;right: 9px;top: 8px;"></i>
+                        </div>
                     </div>
                     <div class="col-6">
                         <p style="text-align: right;margin: 0;">Mode: <span class="badge bg-success text-white mode-indicator" style="line-height: 20px;">Edit</span></p>
@@ -202,10 +206,16 @@ $secondarycol = $arr2[$ano];
                 <div class="card" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
                     <div class="card-body">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" style="min-height: 60vh;">
                                 <input type="text" name="form_design" class="form_design" value="[]">
                                 <div style="width: 100%;text-align: center;margin: 2vh 0;">
                                     <img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
+                                </div>
+                                <div class="warning-anu">
+                                    <div style="text-align: center;padding: 15vh 0;">
+                                        <i class="fas fa-cat" style="font-size: 92px;color: gray;margin-bottom: 35px;"></i>
+                                        <p style="font-size: 14px;color: gray;text-align: center;">Tidak ada kolom formulir, mulai tambahkan sesuatu disini dengan menambahkan elemen formulir melalui tombol bilah pada bagian kiri laman</p>
+                                    </div>
                                 </div>
                                 <div id="form_input_preview_wrapper">
                                     
@@ -238,6 +248,13 @@ $secondarycol = $arr2[$ano];
         function update_design_form() {
             var form_design = []
             var panjangelement = $('.form__field').length
+
+            if(panjangelement > 0) {
+                $('.warning-anu').hide()
+            } else {
+                $('.warning-anu').show()
+            }
+
             // update form_design.position as .form__field index
 
             $('.form__field').each(function(index){
@@ -381,23 +398,7 @@ $secondarycol = $arr2[$ano];
                 `);
 
 
-            var form_design = $('.form_design').val();
-            var form_design_json = JSON.parse(form_design);
-
-
-            form_design_json.push({
-                'id':count_element,
-                'position': count_element,
-                'elementname': nama_element,
-                'prefix': prefix,
-                'elementtype': type,
-                'placeholder': placeholder,
-                'required': wajib_diisi
-            });
-
-            var form_design_json_string = JSON.stringify(form_design_json);
-            
-            $('.form_design').val(form_design_json_string);
+            update_design_form()
             $('#modal_add_element').modal('hide');
         });
 
