@@ -30,4 +30,12 @@ class Formindividu_model extends CI_Model {
         $this->db->where('id', $id_diskusi);
         $this->db->delete('tbl_formindividu');
     }
+
+    // get all
+    function get_all()
+    {
+        $this->db->where('status_form', 1);
+        $this->db->order_by('id_formindividu', 'ASC');
+        return $this->db->get('tbl_formindividu')->result();
+    }
 }

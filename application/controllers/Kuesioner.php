@@ -268,7 +268,7 @@ class Kuesioner extends CI_Controller {
 
 			foreach ($data_formindividu as $key => $v) {
 
-				$sheet->setCellValue($alphabet[$key].''.$row, $datadiri[$v['elementname']]);
+				$sheet->setCellValue($alphabet[$key].''.$row, $datadiri[$v['prefix']]);
 			}
 
 		    $anujawaban = json_decode($value['jawaban'], true);

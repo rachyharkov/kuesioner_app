@@ -80,29 +80,11 @@ margin: 2vh 0;">
 
 				foreach ($formdata as $key => $value) {
 					
-					if($value['elementtype'] == 'text') {
+					if($value['elementtype'] == 'text' || $value['elementtype'] == 'email' || $value['elementtype'] == 'number') {
 						?>
 						<div class="form__group field">
-							<input type="input" class="form__field" placeholder="<?= 'Masukan '.$value['placeholder'] ?>" name="<?= $value['elementname'] ?>" <?= $value['required'] == true ? 'required' : '' ?> />
-							<label for="<?= $value['elementname'] ?>" class="form__label"><?= $value['placeholder'] ?></label>
-						</div>
-						<?php
-					}
-
-					if($value['elementtype'] == 'email') {
-						?>
-						<div class="form__group field">
-							<input type="email" class="form__field" placeholder="<?= 'Masukan '.$value['placeholder'] ?>" name="<?= $value['elementname'] ?>" <?= $value['required'] == true ? 'required' : '' ?> />
-							<label for="<?= $value['elementname'] ?>" class="form__label"><?= $value['placeholder'] ?></label>
-						</div>
-						<?php
-					}
-
-					if($value['elementtype'] == 'number') {
-						?>
-						<div class="form__group field">
-							<input type="text" class="form__field" placeholder="<?= 'Masukan '.$value['placeholder'] ?>" name="<?= $value['elementname'] ?>" <?= $value['required'] == true ? 'required' : '' ?> />
-							<label for="<?= $value['elementname'] ?>" class="form__label"><?= $value['placeholder'] ?></label>
+							<input type="<?= $value['elementtype'] ?>" class="form__field" placeholder="<?= 'Masukan '.$value['placeholder'] ?>" name="<?= $value['prefix'] ?>" <?= $value['required'] == true ? 'required' : '' ?> />
+							<label for="<?= $value['prefix'] ?>" class="form__label"><?= $value['placeholder'] ?></label>
 						</div>
 						<?php
 					}
@@ -110,7 +92,7 @@ margin: 2vh 0;">
 					if($value['elementtype'] == 'options') {
 						?>
 						<div class="form-group">
-							<select class="form-select" aria-label="Pilih <?= $value['placeholder'] ?>" name="<?= $value['elementname'] ?>" style="margin: 3vh 0;">
+							<select class="form-select" aria-label="Pilih <?= $value['placeholder'] ?>" name="<?= $value['prefix'] ?>" style="margin: 3vh 0;">
 								<option selected>- Pilih <?= $value['placeholder'] ?> -</option>
 								<?php
 									foreach ($value['elementvaluelist'] as $keyvaluelist => $valuelist) {

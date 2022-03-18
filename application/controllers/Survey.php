@@ -97,8 +97,8 @@ class Survey extends CI_Controller {
 		$datadiriresponden = array();
 
 		foreach ($dataformindividu as $key => $value) {
-			// add $value['elementname'] to $datadiriresponden
-			$datadiriresponden[$value['elementname']] = $this->input->post($value['elementname'], true);
+			// add $value['prefix'] to $datadiriresponden
+			$datadiriresponden[$value['prefix']] = $this->input->post($value['prefix'], true);
 		}
 
 		$datanya = array(

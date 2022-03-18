@@ -21,7 +21,7 @@
                         ],
                         2 => [
                             'nama_menu' => 'Form Individual Template',
-                            'url' => 'laporan',
+                            'url' => 'pengaturan/form_individu',
                             'icon' => 'now-ui-icons files_paper' 
                         ],
                         3 => [
