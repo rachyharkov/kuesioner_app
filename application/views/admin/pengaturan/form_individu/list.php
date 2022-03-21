@@ -71,7 +71,7 @@
                 </nav>
             </div>
             <div class="card-body page-wrapper">
-                <button class="btn btn-primary btn-add-data">Tambah Form</button>
+                <a class="btn btn-primary btn-add-data" href="<?php echo base_url() . 'pengaturan/form_individu_editor' ?>">Tambah Form</a>
                 <div class="table-responsive">
                     <table class="table" id="tabel_formindividu">
                         <thead>
@@ -143,17 +143,6 @@ $(document).ready(function(){
     $('#tabel_formindividu').DataTable({
         sScrollY: ($(window).height() - 100),
     });
-
-    $(document).on('click','.btn-add-data', function() {
-        $.ajax({
-            url: "<?php echo base_url() . 'pengaturan/form_individu_editor' ?>",
-            type: "GET",
-            success: function(data) {
-                $('.page-wrapper').html(data);
-                $('.breadcrumb').html('<li class="breadcrumb-item"><a href="#">Pengaturan</a></li><li class="breadcrumb-item"><a href="#">Form Individu</a></li><li class="breadcrumb-item active" aria-current="page">Form Editor (Tambah)</li>');
-            }
-        })
-    })
 })
 
 </script>

@@ -83,8 +83,8 @@ margin: 2vh 0;">
 					if($value['elementtype'] == 'text' || $value['elementtype'] == 'email' || $value['elementtype'] == 'number') {
 						?>
 						<div class="form__group field">
-							<input type="<?= $value['elementtype'] ?>" class="form__field" placeholder="<?= 'Masukan '.$value['placeholder'] ?>" name="<?= $value['prefix'] ?>" <?= $value['required'] == true ? 'required' : '' ?> />
-							<label for="<?= $value['prefix'] ?>" class="form__label"><?= $value['placeholder'] ?></label>
+							<input type="<?= $value['elementtype'] ?>" class="form__field" placeholder="<?= $value['placeholder'] ?>" name="<?= $value['prefix'] ?>" <?= $value['required'] == true ? 'required' : '' ?> />
+							<label for="<?= $value['prefix'] ?>" class="form__label"><?= $value['elementname'] ?></label>
 						</div>
 						<?php
 					}
