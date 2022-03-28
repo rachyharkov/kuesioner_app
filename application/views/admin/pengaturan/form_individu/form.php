@@ -254,15 +254,20 @@
     anim.setSpeed(3.4);
 
     $(document).ready(function() {
+
+        // get parameter url of id
+        var url = new URL(window.location.href);
+        var id = url.searchParams.get("edit");
         
         setTimeout(function() {
             $.ajax({
-                url: "<?= base_url('pengaturan/fetch_individuform_editor') ?>",
+                url: "<?= base_url('pengaturan/fetch_individuform_editor/') ?>" + id,
                 type: "GET",
                 success: function(data) {
                     $('.page-wrapper').html(data);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    $('.page-wrapper').html('<p>Terjadi kesalahan, silahkan refresh editor</p>');
                     alert('Gagal Memuat Form Editor, silahkan refresh halaman');
                 }
             })

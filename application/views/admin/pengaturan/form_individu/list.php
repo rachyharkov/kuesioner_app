@@ -103,7 +103,7 @@
                                         <td><?php echo $value->created_by ?></td>
                                         <td class="text-center">
                                             <div class="btn-group" role="group">
-                                                <a href="<?php echo base_url() . 'formindividu/edit/' . $value->id_formindividu ?>" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit fa-fw"></i></a>
+                                                <a href="<?php echo base_url() . 'pengaturan/form_individu_editor?edit=' . $value->id_formindividu ?>" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit fa-fw"></i></a>
                                                 <?php
                                                 if ($key == 0) {
                                                 ?>

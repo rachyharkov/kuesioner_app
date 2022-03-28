@@ -42,9 +42,25 @@ class Pengaturan extends CI_Controller {
 		$this->template->load('admin/pengaturan/form_individu/form', $data);
 	}
 
-	public function fetch_individuform_editor()
+	public function fetch_individuform_editor($id = null)
 	{
-		$this->load->view('admin/pengaturan/form_individu/form_editor', TRUE);
+		if($id == 'null' || $id == null) {
+			$data = array(
+				'id' => null
+			);
+
+			$this->load->view('admin/pengaturan/form_individu/form_editor', $data);
+		} else {
+			$getdataform = $this->Formindividu_model->get_by_id($id);
+
+			$data = array(
+				'id' => $getdataform->id_formindividu,
+				'nama_form' => $getdataform->nama_form,
+				'design_form' => $getdataform->design_form, true,
+			);
+
+			$this->load->view('admin/pengaturan/form_individu/form_editor', $data);
+		}
 	}
 
 	public function save_form_individu()

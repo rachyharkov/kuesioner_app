@@ -69,7 +69,7 @@ $secondarycol = $arr2[$ano];
                 <div class="row">
                     <div class="col-6">
                         <div style="position:relative;">
-                            <input type="text" value="" name="form_name" class="form_name" placeholder="Nama Form" style="margin-bottom: 18px;border: none;font-size: 22px;padding-right: 2rem;display: inline-block;width: 100%;" />
+                            <input type="text" value="<?= $id != null ? $nama_form : '' ; ?>" name="form_name" class="form_name" placeholder="Nama Form" style="margin-bottom: 18px;border: none;font-size: 22px;padding-right: 2rem;display: inline-block;width: 100%;" />
                             <i class="fas fa-edit" style="position: absolute;right: 9px;top: 8px;"></i>
                         </div>
                     </div>
@@ -81,19 +81,51 @@ $secondarycol = $arr2[$ano];
                     <div class="card-body" style="text-align: center;">
                         <div class="card" style="max-width: 490px;">
                             <div class="card-body" style="min-height: 60vh;">
-                                <input type="text" name="form_design" class="form_design" value="[]">
+                                <input type="text" name="form_design" class="form_design" value='<?= $id != null ? $design_form : '[]' ; ?>'>
                                 <div style="width: 100%;text-align: center;margin: 2vh 0;">
                                     <img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
                                 </div>
-                                <div class="warning-anu">
-                                    <div style="text-align: center;padding: 15vh 0;">
-                                        <i class="fas fa-cat" style="font-size: 92px;color: gray;margin-bottom: 35px;"></i>
-                                        <p style="font-size: 14px;color: gray;text-align: center;">Tidak ada kolom formulir, mulai tambahkan sesuatu disini dengan menambahkan elemen formulir melalui tombol bilah pada bagian kiri laman</p>
-                                    </div>
-                                </div>
-                                <div id="form_input_preview_wrapper">
 
-                                </div>
+                                <?php 
+                                
+                                    if($id == null) {
+
+                                        ?>
+                                        <div class="warning-anu">
+                                            <div style="text-align: center;padding: 15vh 0;">
+                                                <i class="fas fa-cat" style="font-size: 92px;color: gray;margin-bottom: 35px;"></i>
+                                                <p style="font-size: 14px;color: gray;text-align: center;">Tidak ada kolom formulir, mulai tambahkan sesuatu disini dengan menambahkan elemen formulir melalui tombol bilah pada bagian kiri laman</p>
+                                            </div>
+                                        </div>
+                                        <div id="form_input_preview_wrapper">
+
+                                        </div>
+                                        <?php
+
+                                    } else {
+                                        ?>
+                                        <div id="form_input_preview_wrapper">
+                                            <?php
+                                                $df = json_decode($design_form, TRUE);
+                                                foreach($df as $key => $value) {
+                                                    ?>
+                                                    <div class="preview_element" style="display: flex;">
+                                                        <div class="form__group">
+                                                            <input type="<?= $value['elementtype'] ?>" id="<?= $value['id'] ?>" data-elementname="<?= $value['elementname'] ?>" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}" data-requiredfill="${wajib_diisi}">
+                                                            <label class="form__label"><?= $value['elementname'] ?></label>
+                                                        </div>
+                                                        <div class="handle">
+                                                            <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                                                        </div>
+                                                    </div>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </div>
+                                        <?php
+                                    }
+                                
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -109,6 +141,7 @@ $secondarycol = $arr2[$ano];
 <script>
 
     $(document).ready(function(){
+
         function update_design_form() {
             var form_design = []
             var panjangelement = $('.form__field').length
