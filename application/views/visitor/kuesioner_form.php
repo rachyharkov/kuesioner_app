@@ -91,17 +91,18 @@ margin: 2vh 0;">
 
 					if($value['elementtype'] == 'options') {
 						?>
-						<div class="form-group">
-							<select class="form-select" aria-label="Pilih <?= $value['placeholder'] ?>" name="<?= $value['prefix'] ?>" style="margin: 3vh 0;">
-								<option selected>- Pilih <?= $value['placeholder'] ?> -</option>
+						<div class="form__group field">
+							<select aria-label="Pilih <?= $value['placeholder'] ?>" class="form__field" name="<?= $value['prefix'] ?>" style="margin: 3vh 0;">
+								<option selected>- <?= $value['placeholder'] ?> -</option>
 								<?php
-									foreach ($value['elementvaluelist'] as $keyvaluelist => $valuelist) {
+									foreach ($value['elementvaluelist'] as $valuelist) {
 									?>
-										<option value="<?php echo $valuelist['value'] ?>"><?php echo $valuelist['name'] ?></option>
+										<option value="<?php echo $valuelist ?>"><?php echo $valuelist ?></option>
 									<?php
 									}
 								?>
 							</select>
+							<label class="form__label"><?= $value['elementname'] ?></label>
 						</div>
 						<?php
 					}

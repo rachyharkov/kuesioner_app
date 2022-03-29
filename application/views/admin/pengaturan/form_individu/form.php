@@ -200,6 +200,20 @@
         color: #9b9b9b;
         margin-left: 10px;
     }
+
+    .optionsValue:focus {
+        border-bottom: 1px black solid !important;
+        outline: none;
+    }
+    .optionsValue:focus-visible {
+        border-bottom: 1px black solid !important;
+        outline: none;
+    }
+
+    .optionsValue:focus-within {
+        border-bottom: 1px black solid !important;
+        outline: none;
+    }
 </style>
 
 <div class="row">
@@ -229,7 +243,7 @@
 <div class="modal fade" id="modal_add_element" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-
+            
         </div>
     </div>
 </div>

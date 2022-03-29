@@ -40,7 +40,7 @@ $secondarycol = $arr2[$ano];
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="#" class="add-element" data-type="select" data-element="input_option_select">
+                            <a href="#" class="add-element" data-type="options" data-element="input_option_select">
                                 Opsi Pilihan
                             </a>
                         </li>
@@ -108,17 +108,44 @@ $secondarycol = $arr2[$ano];
                                             <?php
                                                 $df = json_decode($design_form, TRUE);
                                                 foreach($df as $key => $value) {
-                                                    ?>
-                                                    <div class="preview_element" style="display: flex;">
-                                                        <div class="form__group">
-                                                            <input type="<?= $value['elementtype'] ?>" id="<?= $value['id'] ?>" data-elementname="<?= $value['elementname'] ?>" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}" data-requiredfill="${wajib_diisi}">
-                                                            <label class="form__label"><?= $value['elementname'] ?></label>
+
+                                                    if($value['elementtype'] == 'text' || $value['elementtype'] == 'number' || $value['elementtype'] == 'email')
+                                                    {
+                                                        ?>
+                                                        <div class="preview_element" style="display: flex;">
+                                                            <div class="form__group">
+                                                                <input type="<?= $value['elementtype'] ?>" id="<?= $value['id'] ?>" data-elementname="<?= $value['elementname'] ?>" data-prefix="<?= $value['prefix'] ?>" class="form__field" placeholder="<?= $value['placeholder'] ?>" data-requiredfill="<?= $value['required'] ?>">
+                                                                <label class="form__label"><?= $value['elementname'] ?></label>
+                                                            </div>
+                                                            <div class="handle">
+                                                                <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                                                            </div>
                                                         </div>
-                                                        <div class="handle">
-                                                            <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                                                        <?php
+                                                    }
+
+                                                    if($value['elementtype'] == 'options') {
+                                                        ?>
+                                                        <div class="preview_element" style="display: flex;">
+                                                            <div class="form__group">
+                                                                <select id="<?= $value['id'] ?>" data-elementname="<?= $value['elementname'] ?>" data-prefix="<?= $value['prefix'] ?>" class="form__field" placeholder="<?= $value['placeholder'] ?>" data-requiredfill="<?= $value['required'] ?>">
+                                                                    <option value="">Pilih Opsi</option>
+                                                                    <?php
+                                                                        foreach($value['elementvaluelist'] as $key2 => $value2) {
+                                                                            ?>
+                                                                            <option value="<?= $value2 ?>"><?= $value2 ?></option>
+                                                                            <?php
+                                                                        }
+                                                                    ?>
+                                                                </select>
+                                                                <label class="form__label"><?= $value['elementname'] ?></label>
+                                                            </div>
+                                                            <div class="handle">
+                                                                <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <?php
+                                                        <?php
+                                                    }
                                                 }
                                             ?>
                                         </div>
@@ -164,19 +191,35 @@ $secondarycol = $arr2[$ano];
                 var prefix = $(this).data('prefix')
                 var placeholder = $(this).attr('placeholder')
                 var wajib_diisi = $(this).data('requiredfill')
+                
+                if(type == 'text' || type == 'number' || type == 'email') {
+                    form_design.push({
+                        'id': id,
+                        'position': index + 1,
+                        'elementname': nama_element,
+                        'prefix': prefix,
+                        'elementtype': type,
+                        'placeholder': placeholder,
+                        'required': wajib_diisi
+                    });
+                }
 
-                form_design.push({
-                    'id': id,
-                    'position': index + 1,
-                    'elementname': nama_element,
-                    'prefix': prefix,
-                    'elementtype': type,
-                    'placeholder': placeholder,
-                    'required': wajib_diisi
-                });
+                if(type == 'options') {
+                    form_design.push({
+                        'id': id,
+                        'position': index + 1,
+                        'elementname': nama_element,
+                        'prefix': prefix,
+                        'elementtype': type,
+                        'placeholder': placeholder,
+                        'required': wajib_diisi,
+                        'elementvaluelist': $(this).data('options')
+                    });
+                }
             })
             $('.form_design').val(JSON.stringify(form_design))
         }
+        
 
         $("#form_input_preview_wrapper").sortable({
             handle: '.handle',
@@ -253,11 +296,99 @@ $secondarycol = $arr2[$ano];
                 </form>
 
                 `);
-            } else if (type_element == 'select') {
-                alert('Not Available yet')
+            }
+            if (type_element == 'options') {
+                $('.modal-content').html(`
+                <form id="form-confirm-add-element">
+                    <input type="hidden" name="type-element" value="${type_element}">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Element <span id="jenis__element">${type_element}</span></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Nama Element</label>
+                            <input required type="text" class="form-control" name="nama_element" id="nama_element" placeholder="Nama Element">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Input Prefix</label>
+                            <div class="input-group">
+                                <input required type="text" class="form-control" name="prefix" id="prefix" placeholder="Contoh: nama_lengkap">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button" style="margin: 0;">
+                                        <i class="fa fa-magic"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Placeholder</label>
+                            <input required type="text" class="form-control" name="placeholder" id="placeholder" placeholder="Pesan Instruksi">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="optionsInput">Opsi Pilihan</label>
+                            
+                            <ol class="list-options-ready">
+                                <li>
+                                    <div style="display: grid; grid-template-columns: 1fr 0.1fr">
+                                        <input type="text" value="" class="optionsValue" style="border:none"/>
+                                        <button class="btn btn-sm btn-remove-this-valueoptions">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+
+
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox">
+                                <span class="form-check-sign"></span>
+                                Wajib Diisi?
+                            </label>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary btn_add_element">Tambah</button>
+                    </div>
+                </form>
+
+                `);
             }
 
             $('#modal_add_element').modal('show');
+        })
+
+        $(document).on('focus', '.optionsValue', function() {
+            var optionsElement = `<li>
+                                    <div style="display: grid; grid-template-columns: 1fr 0.1fr">
+                                        <input type="text" value="" class="optionsValue" style="border:none"/>
+                                        <button class="btn btn-sm btn-remove-this-valueoptions">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </li>`;
+            var totalelement = $('.optionsValue').length
+
+            // get index of this element
+
+            var index = $(this).closest('li').index()
+            
+            console.log(index + "/" + totalelement)
+            if(index >= (totalelement - 1)) {
+                $(this).val("Options " + totalelement)
+                $('.list-options-ready').append(optionsElement);
+            }
+        })
+
+        $(document).on('click', '.btn-remove-this-valueoptions', function() {
+            $(this).closest('li').remove();
         })
 
         $(document).on('click', '.reset-form', function() {
@@ -303,25 +434,57 @@ $secondarycol = $arr2[$ano];
                 wajib_diisi = false
             }
 
-            $('#form_input_preview_wrapper').append(`
-                <div class="preview_element" style="display: flex;">
-                    <div class="form__group">
-                        <input type="${type}" id="${count_element}" data-elementname="${nama_element}" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}" data-requiredfill="${wajib_diisi}">
-                        <label class="form__label">${nama_element}</label>
+            if(type == 'text' || type == 'email' || type == 'number') {
+                $('#form_input_preview_wrapper').append(`
+                    <div class="preview_element" style="display: flex;">
+                        <div class="form__group">
+                            <input type="${type}" id="${count_element}" data-elementname="${nama_element}" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}" data-requiredfill="${wajib_diisi}">
+                            <label class="form__label">${nama_element}</label>
+                        </div>
+                        <div class="handle">
+                            <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                        </div>
                     </div>
-                    <div class="handle">
-                        <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                    `);
+            }
+
+            if(type == 'options') {
+                var options = [];
+                var options_value = thisform.find('.optionsValue');
+                options_value.each(function() {
+                    var value = $(this).val();
+                    if(value != '') {
+                        options.push(value);
+                    }
+                })
+
+                $('#form_input_preview_wrapper').append(`
+                    <div class="preview_element" style="display: flex;">
+                        <div class="form__group">
+                            <select type="${type}" id="${count_element}" data-elementname="${nama_element}" data-prefix="${prefix}" class="form__field" placeholder="${placeholder}" data-requiredfill="${wajib_diisi}" data-options='[${options.map(function(item) {
+                                    return `"${item}"`
+                                }).join(',')}]'>
+                                <option value="">${placeholder}</option>
+                                ${options.map(function(item) {
+                                    return `<option value="${item}">${item}</option>`
+                                }).join('')}
+                            </select>
+                            <label class="form__label">${nama_element}</label>
+                        </div>
+                        <div class="handle">
+                            <i class="fas fa-arrows-alt" style="bottom: 12px; position: absolute;left: 8px;"></i>
+                        </div>
                     </div>
-                </div>
-                `);
+                    `);
 
-
+            }
             update_design_form()
             $('#modal_add_element').modal('hide');
             Toast.fire({
                 icon: 'success',
                 title: 'Berhasil menambah element form'
             })
+            $('.modal-content').html('')
         });
 
         $(document).on('click', '.btn-mode-delete', function() {
