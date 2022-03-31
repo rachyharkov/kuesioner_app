@@ -111,7 +111,7 @@
                                                 <?php
                                                 } else {
                                                 ?>
-                                                    <a id="<?php echo $value->id_formindividu ?>" class="btn btn-danger btn-sm text-white link_delete_formindividu"><i class="fas fa-trash-alt fa-fw"></i></a>
+                                                    <button id="<?php echo $value->id_formindividu ?>" class="btn btn-danger btn-sm text-white link_delete_formindividu"><i class="fas fa-trash-alt fa-fw"></i></button>
                                                 <?php
                                                 }
 
@@ -143,6 +143,48 @@ $(document).ready(function(){
     $('#tabel_formindividu').DataTable({
         sScrollY: ($(window).height() - 100),
     });
+
+    $(document).on('click', '.link_delete_formindividu', function() {
+        var id = $(this).attr('id');
+
+        var formname = $(this).parent().parent().parent().find('td:first-child').text();
+
+        Swal.fire({
+            title: 'Hapus Form Individu',
+            text: "Apakah anda yakin ingin menghapus " + formname + "?",
+            type: 'warning',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "<?php echo base_url() . 'pengaturan/delete_form_individu' ?>",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        Swal.fire(
+                            'Terhapus!',
+                            'Form individu berhasil dihapus.',
+                            'success'
+                        )
+                        location.reload();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Swal.fire(
+                            'Gagal!',
+                            'Form individu gagal dihapus.',
+                            'error'
+                        )
+                    }
+                });
+            }
+        })
+    })
 })
 
 </script>

@@ -128,7 +128,7 @@ $secondarycol = $arr2[$ano];
                                                         ?>
                                                         <div class="preview_element" style="display: flex;">
                                                             <div class="form__group">
-                                                                <select id="<?= $value['id'] ?>" data-elementname="<?= $value['elementname'] ?>" data-prefix="<?= $value['prefix'] ?>" class="form__field" placeholder="<?= $value['placeholder'] ?>" data-requiredfill="<?= $value['required'] ?>">
+                                                                <select id="<?= $value['id'] ?>" type="<?= $value['elementtype'] ?>" data-elementname="<?= $value['elementname'] ?>" data-prefix="<?= $value['prefix'] ?>" class="form__field" placeholder="<?= $value['placeholder'] ?>" data-requiredfill="<?= $value['required'] == 1 ? 'true' : 'false'; ?>" data-options='<?= json_encode($value['elementvaluelist']) ?>'>
                                                                     <option value="">Pilih Opsi</option>
                                                                     <?php
                                                                         foreach($value['elementvaluelist'] as $key2 => $value2) {
@@ -537,6 +537,20 @@ $secondarycol = $arr2[$ano];
                             icon: 'success',
                             title: 'Berhasil menyimpan form'
                         })
+
+                        if(dt.msg == 'new id') {
+
+                            // add ?edit=${dt.form} to end of url without refresh page
+                            var url = window.location.href;
+                            var new_url = url.split('?')[0] + '?edit=' + dt.form;
+
+                            window.location.href = new_url;
+                        }
+
+                        if(dt.msg == 'old id') {
+                            console.log('using old id')
+                        }
+
                     } else {
                         Toast.fire({
                             icon: 'error',

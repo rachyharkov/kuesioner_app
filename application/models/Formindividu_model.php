@@ -25,10 +25,11 @@ class Formindividu_model extends CI_Model {
         return $this->db->get('tbl_formindividu')->row();
     }
 
-    function delete($id_diskusi)
+    function delete($id)
     {
-        $this->db->where('id', $id_diskusi);
-        $this->db->delete('tbl_formindividu');
+        // update status value where id_formindividu is $id
+        $this->db->where('id_formindividu', $id);
+        $this->db->update('tbl_formindividu', array('status_form' => 0));
     }
 
     // get all

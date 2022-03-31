@@ -106,5 +106,18 @@ class Pengaturan extends CI_Controller {
 		}
 	}
 
+	public function delete_form_individu()
+	{
+		$id = $this->input->post('id', TRUE);
+		
+		$this->Formindividu_model->delete($id);
+		$arr = array(
+			'status' => 'success',
+			'message' => 'Data berhasil dihapus',
+		);
+
+		return print_r(json_encode($arr));
+	}
+
 	// end of form individu
 }
