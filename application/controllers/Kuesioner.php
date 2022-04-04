@@ -37,6 +37,7 @@ class Kuesioner extends CI_Controller {
 		$data = array(
 			'aksi' => 'Buat',
 			'menu' => 'Kuesioner',
+			'form_individu' => $this->Formindividu_model->get_all(),
 			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
 		);
 		$this->template->load('admin/kuesioner/kuesioner_form', $data);
