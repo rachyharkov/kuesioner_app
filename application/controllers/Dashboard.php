@@ -56,7 +56,6 @@ class Dashboard extends CI_Controller {
 
 		
 		$data = array(
-			'list_kuesioner' => $this->Kuesioner_model->get_all_by_createdby($user_id),
 			'menu' => 'Dashboard',
 			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
 			'total_respon_month_to_month' => json_encode($total_respon_month_to_month),

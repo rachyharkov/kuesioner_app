@@ -19,11 +19,64 @@ class Kuesioner extends CI_Controller {
         $this->load->model('Jawaban_model');
         $this->load->model('Direktorat_model');
         $this->load->library('Template');
+		$this->load->library('pagination');
     }
 
 	public function index()
 	{
+		// get query page
+		
 		$user_id = $this->session->userdata('userid');
+		
+		// $page = $this->input->get('page');
+		// $jumlah_data = $this->Kuesioner_model->jumlah_kuesioner();
+
+		// $config['base_url'] = base_url().'kuesioner';
+		// $config['total_rows'] = $jumlah_data;
+		// $config['per_page'] = 10;
+
+		// $config['enable_query_strings'] = TRUE;
+		// $config['page_query_string'] = TRUE;
+		// $config['use_page_numbers'] = TRUE;
+		// $config['reuse_query_string'] = TRUE;
+		// $config['query_string_segment'] = 'page';
+
+
+		// // kustom
+		// $config['full_tag_open'] = '
+		// <nav aria-label="Page navigation example">
+		// 	<ul class="pagination justify-content-center">
+		// ';
+		// $config['full_tag_close'] = '
+		// 	</ul>
+		// </nav>
+		// ';
+
+		// $config['prev_tag_open'] = '<li class="page-item">';
+		// $config['prev_tag_close'] = '</li>';
+
+		// $config['next_tag_open'] = '<li class="page-item">';
+		// $config['next_tag_close'] = '</li>';
+
+		// $config['cur_tag_open'] = '<li class="page-item active"><span class="bg-primary page-link">';
+		// $config['cur_tag_close'] = '</span></li>';
+
+		// $config['num_tag_open'] = '<li class="page-item">';
+		// $config['num_tag_close'] = '</li>';
+
+		// $config['attributes'] = array('class' => 'page-link');
+
+		// $config['first_link'] = 'First';
+		// $config['first_tag_open'] = '<li class="page-item">';
+		// $config['first_tag_close'] = '</li>';
+
+		// $config['last_link'] = 'Last';
+		// $config['last_tag_open'] = '<li class="page-item">';
+		// $config['last_tag_close'] = '</li>';
+
+		// $from = $page;
+		// $this->pagination->initialize($config);		
+
 		$data = array(
 			'list_kuesioner' => $this->Kuesioner_model->get_all_by_createdby($user_id),
 			'menu' => 'Kuesioner',

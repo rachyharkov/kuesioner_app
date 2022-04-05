@@ -4,10 +4,14 @@ class Kuesioner_model extends CI_Model {
     public function get_all_by_createdby($createdby)
     {
         $this->db->select('*');
-        $this->db->from('tbl_kuesioner');
         $this->db->where('created_by', $createdby);
-        return $this->db->get()->result();
+        // return $this->db->get('tbl_kuesioner',$number,$offset)->result();
+        return $this->db->get('tbl_kuesioner')->result();
     }
+
+    function jumlah_kuesioner(){
+		return $this->db->get('tbl_kuesioner')->num_rows();
+	}
 
     public function get_all()
     {
