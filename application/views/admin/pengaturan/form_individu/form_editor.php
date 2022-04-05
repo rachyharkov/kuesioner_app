@@ -188,7 +188,9 @@ $secondarycol = $arr2[$ano];
                 var id = $(this).attr('id');
                 var type = $(this).attr('type');
                 var nama_element = $(this).data('elementname')
-                var prefix = $(this).data('prefix')
+
+                // change nama_element to lowercase and replace space with underscore
+                var prefix = nama_element.toLowerCase().replace(/ /g, '_');
                 var placeholder = $(this).attr('placeholder')
                 var wajib_diisi = $(this).data('requiredfill')
                 
@@ -266,17 +268,6 @@ $secondarycol = $arr2[$ano];
                             <input required type="text" class="form-control" name="nama_element" id="nama_element" placeholder="Nama Element">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Input Prefix</label>
-                            <div class="input-group">
-                                <input required type="text" class="form-control" name="prefix" id="prefix" placeholder="Contoh: nama_lengkap">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button" style="margin: 0;">
-                                        <i class="fa fa-magic"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label for="exampleInputEmail1">Placeholder</label>
                             <input required type="text" class="form-control" name="placeholder" id="placeholder" placeholder="Pesan Instruksi">
                         </div>
@@ -311,17 +302,6 @@ $secondarycol = $arr2[$ano];
                         <div class="form-group">
                             <label for="exampleInputEmail1">Nama Element</label>
                             <input required type="text" class="form-control" name="nama_element" id="nama_element" placeholder="Nama Element">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Input Prefix</label>
-                            <div class="input-group">
-                                <input required type="text" class="form-control" name="prefix" id="prefix" placeholder="Contoh: nama_lengkap">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" type="button" style="margin: 0;">
-                                        <i class="fa fa-magic"></i>
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Placeholder</label>
@@ -422,7 +402,7 @@ $secondarycol = $arr2[$ano];
 
             var type = thisform.find('input[name="type-element"]').val();
             var nama_element = thisform.find('input[name="nama_element"]').val();
-            var prefix = thisform.find('input[name="prefix"]').val();
+            var prefix = nama_element.toLowerCase().replace(/ /g, '_');
             var placeholder = thisform.find('input[name="placeholder"]').val();
             var wajib_diisi = thisform.find('input[type="checkbox"]').is(':checked');
 

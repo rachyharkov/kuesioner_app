@@ -47,6 +47,7 @@ class Kuesioner extends CI_Controller {
 	{
 		$judul_kuesioner = $this->input->post('judul_kuesioner');
 		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
+		$form_individu = $this->input->post('form_individu');
 		
 		$dimensi = $this->input->post('dimensi');
 

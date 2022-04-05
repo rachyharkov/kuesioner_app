@@ -20,6 +20,7 @@
 			</div>
 			<div class="card-body">
 				<form id="form_kuesioner_new">
+					<input type="hidden" name="form_individu" class="form_individu" required readonly>
 					<div class="mb-3">
 						<label for="labelInputJudulKuesioner" class="form-label">Judul</label>
 						<input type="text" name="judul_kuesioner" class="form-control" id="labelInputJudulKuesioner" required style="font-size: 1.1rem;">
@@ -31,7 +32,7 @@
 					<div class="mb-3">
 						<label for="label" class="form-label">Form Individu</label>
 						<div class="input-group">
-							<input type="text" name="form_individu" class="form-control" id="labelInputFormIndividu" required placeholder="- Pilih Form Individu -" style="max-width: 320px;">
+							<input type="text" readonly class="form-control form_individu_name" id="labelInputFormIndividu" required placeholder="- Pilih Form Individu -" style="max-width: 320px;">
 							<div class="input-group-append">
 								<button type="button" class="btn btn-primary btn-sm m-0" data-toggle="modal" data-target="#modal_form_individu">
 									<i class="fa fa-edit"></i>
@@ -100,7 +101,7 @@
 					<div class="col">
 						<div class="form-group">
 							<label for="labelSelectformindividu" class="form-label">Form Individu</label>
-							<select name="form_individu" class="form-control selectformindividu" id="labelSelectformindividu" required>
+							<select class="form-control selectformindividu" id="labelSelectformindividu" required>
 								<option value="">- Pilih Form Individu -</option>
 								<?php foreach($form_individu as $key => $value)
 								{ ?>
@@ -109,14 +110,15 @@
 								} ?>
 							</select>
 						</div>
-						<button type="button" class="btn btn-primary" style="width: 100%;">
+						<p style="font-size: 11px;">Ingin mengelola/menambah form individu? <a href="<?= base_url().'pengaturan/form_individu/' ?>">klik disini.</a></p>
+						<button type="button" class="btn btn-primary btn-choose-formindividu" disabled style="width: 100%;">
 							Simpan
 						</button>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col">
-						<p class="text-center">Preview</p>
+						<p class="text-left">Preview :</p>
 						<div class="preview_individu_form">
 
 						</div>
@@ -204,6 +206,10 @@
 		$('#kategori' + button_id + '').remove()
 	})
 
+	function validateForm() {
+		$
+	}
+
 	$(document).on('submit', '#form_kuesioner_new', function(e) {
 
 		e.preventDefault()
@@ -211,6 +217,8 @@
 		var btnselected = $(document.activeElement)
 
 		btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
+
+		var allowed = 
 
 		Swal.fire({
 			title: 'Konfirmasi Tindakan',
@@ -254,19 +262,37 @@
 		// ajax get
 		$('.preview_individu_form').html('<p>Loading Preview...</p>') 
 		var id = $(this).val()
-		$.ajax({
-			type: "GET",
-			url: "<?php echo base_url() . 'Individuform/preview_form/' ?>" + id,
-			success: function(data) {
-				$('.preview_individu_form').html(data)
-			},
-			error: function(error) {
-				Swal.fire({
-					icon: 'error',
-					title: "Oops!",
-					text: 'Tidak dapat melakukan preview Form Individu, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
-				})
-			}
-		});
+
+		if(id != ''){
+			$('.btn-choose-formindividu').removeAttr('disabled')
+			$.ajax({
+				type: "GET",
+				url: "<?php echo base_url() . 'Individuform/preview_form/' ?>" + id,
+				success: function(data) {
+					$('.preview_individu_form').html(data)
+				},
+				error: function(error) {
+					Swal.fire({
+						icon: 'error',
+						title: "Oops!",
+						text: 'Tidak dapat melakukan preview Form Individu, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+					})
+				}
+			});
+		} else {
+			$('.preview_individu_form').html('<p>Silahkan Pilih Form Individu</p>')
+			$('.btn-choose-formindividu').attr('disabled', true)
+		}
+	})
+
+	$(document).on('click','.btn-choose-formindividu', function() {
+		var id = $('.selectformindividu').val()
+		var nama = $('.selectformindividu option:selected').text()
+		
+		$('.form_individu_name').val(nama)
+		$('.form_individu').val(id)
+
+		// close modal
+		$('#modal_form_individu').modal('hide')
 	})
 </script>
