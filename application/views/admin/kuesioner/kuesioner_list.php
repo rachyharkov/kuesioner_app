@@ -73,6 +73,12 @@ if ($this->session->userdata('failed')) {
 	</div>
 </div>
 <script type="text/javascript">
+	$(document).ready(function() {
+		$('#tableKuesioner').DataTable({
+	    	responsive: true
+	    });
+	})
+
 	$(document).on('change','.switchstatus', function() {
 
 		// get state of this checkbox
