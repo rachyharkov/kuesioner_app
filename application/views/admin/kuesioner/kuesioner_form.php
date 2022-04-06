@@ -12,6 +12,9 @@
 	}
 </style>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
@@ -86,7 +89,7 @@
 </div>
 
 <!-- modal -->
-<div class="modal fade" id="modal_form_individu" tabindex="-1" role="dialog" aria-labelledby="modal_form_individu" aria-hidden="true">
+<div class="modal fade" id="modal_form_individu" role="dialog" aria-labelledby="modal_form_individu" aria-hidden="true" style="overflow:hidden;">
 	<div class="modal-dialog modal-md" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -100,9 +103,7 @@
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
-							<label for="labelSelectformindividu" class="form-label">Form Individu</label>
-							<select class="form-control selectformindividu" id="labelSelectformindividu" required>
-								<option value="">- Pilih Form Individu -</option>
+							<select class="form-control selectformindividu" id="labelSelectformindividu" required name="selectformindividu" style="width: 100%;">
 								<?php foreach($form_individu as $key => $value)
 								{ ?>
 									<option value="<?php echo $value->id_formindividu ?>"><?php echo $value->nama_form ?></option>
@@ -130,6 +131,9 @@
 </div>
 
 <script>
+	$('.selectformindividu').select2({
+		placeholder: "Pilih form individu",
+	});
 	
 	$('[data-toggle="tooltip"]').tooltip()
 	$(document).on('click', '#add_dimensi', function(e) {
