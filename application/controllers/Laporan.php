@@ -11,6 +11,7 @@ class Laporan extends CI_Controller {
         $this->load->model('Kuesioner_model');
         $this->load->model('Laporan_model');
         $this->load->library('template');
+		$this->load->library('report_processor');
     }
 
 	public function index()
