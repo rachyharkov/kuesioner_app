@@ -82,7 +82,7 @@
 
   <style>
     .bg-cool {
-      background-image: url(<?php echo base_url() ?>/assets/admin/img/login.jpg);
+      background-image: url(<?php echo base_url() ?>assets/admin/img/login.jpg);
       animation: zoomout 15s ease-out;
     }
 
@@ -219,9 +219,6 @@
   <script src="<?php echo base_url() ?>/assets/admin/js/core/jquery.min.js" type="text/javascript"></script>
   <script src="<?php echo base_url() ?>/assets/admin/js/core/popper.min.js" type="text/javascript"></script>
   <script src="<?php echo base_url() ?>/assets/admin/js/core/bootstrap.min.js" type="text/javascript"></script>
-
-  <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
-  <script src="<?php echo base_url() ?>/assets/admin/js/plugins/bootstrap-switch.js"></script>
 
   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
   <script src="<?php echo base_url() ?>/assets/admin/js/plugins/nouislider.min.js" type="text/javascript"></script>

@@ -1,4 +1,4 @@
- <?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 date_default_timezone_set('Asia/Jakarta');
 
 class Laporan_model extends CI_Model {

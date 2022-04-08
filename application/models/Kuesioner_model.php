@@ -1,4 +1,4 @@
- <?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Kuesioner_model extends CI_Model {
     public function get_all_by_createdby($createdby)

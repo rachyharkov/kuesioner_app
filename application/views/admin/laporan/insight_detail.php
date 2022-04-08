@@ -2,6 +2,30 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
+	
+	.gap-preview-wrapper > .left-side {
+		position: relative;
+		left: 50%;
+		z-index: 2;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.gap-preview-wrapper > .right-side {
+		position: relative;
+		right: 50%;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.gap-preview-wrapper:hover > .left-side {
+		left: 0;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.gap-preview-wrapper:hover > .right-side {
+		right: 0;
+		transition: all 0.3s ease-in-out;
+	}
+
 	@media (min-width: 576px) {
 		.custom-auto-width {
 			width: auto;
@@ -53,19 +77,23 @@ $jawabanlist = $this->db->query($query)->result();
 		<div class="align-self-stretch custom-auto-width d-flex flex-row flex-md-column justify-content-between" style="">
 			<div class="align-self-stretch card" style="margin: 0;">
 				<div class="card-body">
-					<p style="margin: 0;">Highest Gap</p>
+					<p style="margin: 0;">Status</p>
 					<?php
 					
-					$this->report_processor->get_highest_gap($data_kuesioner, $jawabanlist);
+					echo $data_kuesioner->status == 1 ? '<span class="badge bg-success text-white">Aktif</span>' : '<span class="badge bg-danger text-white">Tidak Aktif</span>';
+					// $this->report_processor->get_highest_gap($data_kuesioner, $jawabanlist);
 					?>
 				</div>
 			</div>
 			<div class="align-self-stretch card" style="margin: 0;">
 				<div class="card-body">
-					<p style="margin: 0;">Highest Focus</p>
+					<p style="margin: 0;">Last Update</p>
 					<?php
+
+					echo '<span class="badge text-white">'.$this->report_processor->get_last_update($data_kuesioner->id_kuesioner).'</span>';
+
 					// generate random color based on length of $hg
-					echo $this->report_processor->get_highest_focus($data_kuesioner, $jawabanlist)
+					// echo $this->report_processor->get_lowest_gap($data_kuesioner, $jawabanlist)
 					?>
 				</div>
 			</div>
@@ -75,11 +103,30 @@ $jawabanlist = $this->db->query($query)->result();
 	<div class="card">
 		<div class="card-body">
 			<!-- create table with borderless -->
+			<p style="margin: 0;">Gap Result</p>
+			<div class="gap-preview-wrapper" style="position: relative; display: grid; grid-template-columns: 1fr 1fr">
+				<div class="left-side">
+					<div style="display: flex; flex-direction: column; overflow: hidden; border-radius: 0.3rem;">
+						<?php
+						$this->report_processor->get_indicator_of_dimension($data_kuesioner, $jawabanlist);
+						?>
+					</div>
+				</div>
+				<div class="right-side">
+					<p>Hidden Information Here</p>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+	<div class="card">
+		<div class="card-body">
+			<!-- create table with borderless -->
 			<table>	
 				<?php
 				$pacuannilai = $this->report_processor->get_jawaban_nilai($data_kuesioner);
 				foreach($pacuannilai as $key => $value) {
-					$maxscale = count($value);	
+					$maxscale = count($value);
 					?>
 					<tr>
 						<td><?= $key ?></td>

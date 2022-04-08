@@ -184,7 +184,7 @@ if ($this->session->userdata('failed')) {
 						if (!$list_kuesioner) {
 						?>
 							<tr>
-								<td colspan="5">
+								<td colspan="6">
 									<div class="alert alert-danger text-center">
 										Tidak ada kuesioner
 									</div>

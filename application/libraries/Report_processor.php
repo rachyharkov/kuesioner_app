@@ -106,7 +106,7 @@ class Report_processor{
         return $data;
     }
     
-    public function get_highest_gap($data_kuesioner, $jawabanlist) {
+    public function get_dimension_result($data_kuesioner, $jawabanlist) {
         
         if($jawabanlist){
 
@@ -138,10 +138,13 @@ class Report_processor{
             foreach ($highest_gap as $name => $value) {
                 $hg[$name] = $value;
             }
-        
+
+            $maxscale = count($hg);
+            $o = $maxscale;
             foreach ($hg as $key => $value) {
-                $color = '#' . substr(md5(rand()), 0, 6);
-                echo '<span class="badge text-white" style="background-color:'.$color.'">'.$key.'</span>';
+                $color = $this->numberToColorHsl($o/$maxscale, 0, 1);
+                echo '<span class="badge text-white" style="background-color:'.$color.'; width: 100%; border-radius: 0; padding-top: 1rem; padding-bottom: 1rem;">'.$key.'</span>';
+                $o--;
             }
         } else {
             echo '<span class="badge text-white" style="background-color:red">Tidak ada data</span>';
@@ -149,24 +152,30 @@ class Report_processor{
 
     }
     
-    function get_highest_focus($data_kuesioner,$jawabanlist) {
+    function get_indicator_of_dimension($data_kuesioner,$jawabanlist) {
 
         if($jawabanlist) {
             $datadimensi = json_decode($data_kuesioner->dimensi, TRUE);
             $datakategorirespondannilai = [];
             $kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
             $pacuannilai = $this->get_jawaban_nilai($data_kuesioner);
-    
         
             $datadimensiindikatordannilai = [];
             foreach ($datadimensi as $key => $value) {
                 $temp = [
                     "nama_dimensi" => $value['name'],
+                    "total" => 0,
                     "indikator" => []
                 ];
                 
                 foreach ($value['indikator'] as $key => $value) {
-                    $temp['indikator'][$value] = 0;
+
+                    $arr = [
+                        "total_nilai" => 0,
+                        "detail" => []
+                    ];
+
+                    $temp['indikator'][$value] = $arr;
                 }
                 
                 $datadimensiindikatordannilai[] = $temp;
@@ -198,24 +207,111 @@ class Report_processor{
             
                         foreach ($kategori_respon as $key => $kresp) {
                             $nama_kategori_respon = $kresp['nama'];
-                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+                            
+                            
+                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator]['total_nilai'] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+
+                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator]['detail'][$nama_kategori_respon] = 0; 
                             
                             $jawabannya = $json_decode[$keyjd][$nama_kategori_respon];
+
+                            
+
                             $datakategorirespondannilai[$nama_kategori_respon][$jawabannya] += $pacuannilai[$nama_kategori_respon][$jawabannya];
                         }
                     }
                 }
             }
         
-            $datakategorirespondannilai = array_map(function($item) {
-                $sum = array_sum($item);
-                return $sum;
-            }, $datakategorirespondannilai);
-        
-            $color = '#' . substr(md5(rand()), 0, 6);
-            return '<span class="badge text-white" style="background-color:'.$color.'">'.array_keys($datakategorirespondannilai, max($datakategorirespondannilai))[0].'</span>';
+
+            foreach ($jawabanlist as $key => $value) {
+                $json_decode = json_decode($value->jawaban, TRUE);
+                foreach ($json_decode as $keyjd => $value) {
+                    
+                    $query = "SELECT * FROM tbl_diskusi WHERE id = '".$value['id_diskusi']."'";
+                    $ci =& get_instance();
+                    $diskusi = $ci->db->query($query)->row();
+                    
+            
+                    if($value['id_diskusi'] == $diskusi->id) {
+                        // find the index of the $datadimensiindikatordannilai by value
+                        $index = array_search($diskusi->dimensi, array_column($datadimensiindikatordannilai, 'nama_dimensi'));
+                        
+                        foreach ($kategori_respon as $key => $kresp) {
+                            $nama_kategori_respon = $kresp['nama'];                 
+                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator]['detail'][$nama_kategori_respon] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+                        }
+                    }
+                }
+            }
+
+            foreach ($datadimensiindikatordannilai as $key => $valuea) {
+                foreach ($valuea['indikator'] as $valueb) {
+                    $datadimensiindikatordannilai[$key]['total'] += $valueb['total_nilai'];
+                }
+            }
+            
+            // $datakategorirespondannilai = array_map(function($item) {
+            //     $sum = array_sum($item);
+            //     return $sum;
+            // }, $datakategorirespondannilai);
+            // echo '<pre>';
+            // print_r($datadimensiindikatordannilai);
+            // print_r($datakategorirespondannilai);
+            // echo '</pre>';
+            
+            // sort $datadimensiindikatordannilai by $datadimensiindikatordannnilai['total']];
+            usort($datadimensiindikatordannilai, function($a, $b) {
+                return $b['total'] - $a['total'];
+            });
+
+            $maxscale = 0;
+            
+            $arrnilai = [];
+            
+            foreach ($datadimensiindikatordannilai as $key => $value) {
+                array_push($arrnilai, $value['total']);
+            }
+
+            // remove duplicate of $arrnilai
+            $arrnilai = array_unique($arrnilai);
+
+            // sort $arrnilai
+            sort($arrnilai);
+            
+
+            $maxscale = count($arrnilai) - 1;
+            foreach ($datadimensiindikatordannilai as $key => $value) {
+
+                if(in_array($value['total'], $arrnilai)) {
+
+                    // get current index of $arrnilai
+                    $index = array_search($value['total'], $arrnilai);
+
+
+
+                    $color = $this->numberToColorHsl($index/$maxscale, 0, 1);
+                    echo '<span class="badge text-white" style="background-color:'.$color.'; width: 100%; border-radius: 0; padding-top: 1rem; padding-bottom: 1rem;">'.$value['nama_dimensi'].' (Skor: '.$value['total'].'</span>';
+                }
+            }
         } else {
             echo '<span class="badge text-white" style="background-color:red">Tidak ada data</span>';
         }
+    }
+
+    public function get_last_update($id_kuesioner)
+    {
+        $query = "SELECT * FROM tbl_jawaban WHERE jawaban LIKE '%\"id_kuesioner\":\"".$id_kuesioner."\"%' ORDER BY tanggal DESC LIMIT 1";
+        $ci =& get_instance();
+        $kuesioner = $ci->db->query($query)->row();
+
+        
+        if($kuesioner) {
+            $p = $kuesioner->tanggal;
+            return $p;
+        } else {
+            return 'N/A';
+        }
+
     }
 }
