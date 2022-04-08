@@ -152,7 +152,7 @@ class Report_processor{
 
     }
     
-    function get_indicator_of_dimension($data_kuesioner,$jawabanlist) {
+    function generate_gap_detail($data_kuesioner,$jawabanlist) {
 
         if($jawabanlist) {
             $datadimensi = json_decode($data_kuesioner->dimensi, TRUE);
@@ -171,11 +171,12 @@ class Report_processor{
                 foreach ($value['indikator'] as $key => $value) {
 
                     $arr = [
+                        "nama_indikator" => $value,
                         "total_nilai" => 0,
                         "detail" => []
                     ];
 
-                    $temp['indikator'][$value] = $arr;
+                    $temp['indikator'][$key] = $arr;
                 }
                 
                 $datadimensiindikatordannilai[] = $temp;
@@ -208,10 +209,12 @@ class Report_processor{
                         foreach ($kategori_respon as $key => $kresp) {
                             $nama_kategori_respon = $kresp['nama'];
                             
+                            // find the index of the $datakategorirespondannilai['indikator'] by $diskusi->indikator
+                            $index_indikator = array_search($diskusi->indikator, array_column($datadimensiindikatordannilai[$index]['indikator'], 'nama_indikator'));
                             
-                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator]['total_nilai'] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['total_nilai'] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
 
-                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator]['detail'][$nama_kategori_respon] = 0; 
+                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['detail'][$nama_kategori_respon] = 0; 
                             
                             $jawabannya = $json_decode[$keyjd][$nama_kategori_respon];
 
@@ -223,7 +226,7 @@ class Report_processor{
                 }
             }
         
-
+            // repeat process to readding the value to the $datadimensiindikatordannilai
             foreach ($jawabanlist as $key => $value) {
                 $json_decode = json_decode($value->jawaban, TRUE);
                 foreach ($json_decode as $keyjd => $value) {
@@ -238,8 +241,11 @@ class Report_processor{
                         $index = array_search($diskusi->dimensi, array_column($datadimensiindikatordannilai, 'nama_dimensi'));
                         
                         foreach ($kategori_respon as $key => $kresp) {
-                            $nama_kategori_respon = $kresp['nama'];                 
-                            $datadimensiindikatordannilai[$index]['indikator'][$diskusi->indikator]['detail'][$nama_kategori_respon] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+                            $nama_kategori_respon = $kresp['nama'];
+                                       
+                            $index_indikator = array_search($diskusi->indikator, array_column($datadimensiindikatordannilai[$index]['indikator'], 'nama_indikator'));
+
+                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['detail'][$nama_kategori_respon] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
                         }
                     }
                 }
@@ -251,51 +257,10 @@ class Report_processor{
                 }
             }
             
-            // $datakategorirespondannilai = array_map(function($item) {
-            //     $sum = array_sum($item);
-            //     return $sum;
-            // }, $datakategorirespondannilai);
-            // echo '<pre>';
-            // print_r($datadimensiindikatordannilai);
-            // print_r($datakategorirespondannilai);
-            // echo '</pre>';
-            
-            // sort $datadimensiindikatordannilai by $datadimensiindikatordannnilai['total']];
-            usort($datadimensiindikatordannilai, function($a, $b) {
-                return $b['total'] - $a['total'];
-            });
-
-            $maxscale = 0;
-            
-            $arrnilai = [];
-            
-            foreach ($datadimensiindikatordannilai as $key => $value) {
-                array_push($arrnilai, $value['total']);
-            }
-
-            // remove duplicate of $arrnilai
-            $arrnilai = array_unique($arrnilai);
-
-            // sort $arrnilai
-            sort($arrnilai);
-            
-
-            $maxscale = count($arrnilai) - 1;
-            foreach ($datadimensiindikatordannilai as $key => $value) {
-
-                if(in_array($value['total'], $arrnilai)) {
-
-                    // get current index of $arrnilai
-                    $index = array_search($value['total'], $arrnilai);
-
-
-
-                    $color = $this->numberToColorHsl($index/$maxscale, 0, 1);
-                    echo '<span class="badge text-white" style="background-color:'.$color.'; width: 100%; border-radius: 0; padding-top: 1rem; padding-bottom: 1rem;">'.$value['nama_dimensi'].' (Skor: '.$value['total'].'</span>';
-                }
-            }
+            return $datadimensiindikatordannilai;
         } else {
-            echo '<span class="badge text-white" style="background-color:red">Tidak ada data</span>';
+            return false;
+            // echo '<span class="badge text-white" style="background-color:red">Tidak ada data</span>';
         }
     }
 
@@ -313,5 +278,58 @@ class Report_processor{
             return 'N/A';
         }
 
+    }
+
+    public function generate_gap_scoreboard($data_kuesioner,$jawabanlist)
+    {
+        $datadimensiindikatordannilai = $this->generate_gap_detail($data_kuesioner,$jawabanlist);
+        echo '<pre>';
+        print_r($datadimensiindikatordannilai);
+        echo '</pre>';
+
+        if($datadimensiindikatordannilai == false) {
+            echo '<span class="badge text-white" style="background-color:red">Tidak ada data</span>';
+        } else {
+
+            usort($datadimensiindikatordannilai, function($a, $b) {
+                return $b['total'] - $a['total'];
+            });
+            $maxscale = 0;
+            $arrnilai = [];
+            foreach ($datadimensiindikatordannilai as $key => $value) {
+                array_push($arrnilai, $value['total']);
+            }
+            // remove duplicate of $arrnilai
+            $arrnilai = array_unique($arrnilai);
+            // sort $arrnilai
+            sort($arrnilai);
+            $maxscale = count($arrnilai) - 1;
+            
+            echo '
+            <div class="left-side">
+                <div style="display: flex; flex-direction: column;">
+            ';
+            
+            foreach ($datadimensiindikatordannilai as $key => $value) {
+    
+                if(in_array($value['total'], $arrnilai)) {
+    
+                    // get current index of $arrnilai
+                    $index = array_search($value['total'], $arrnilai);
+    
+    
+    
+                    $color = $this->numberToColorHsl($index/$maxscale, 0, 1);
+                    echo '<span class="badge badge-gap text-white" style="background-color:'.$color.'; width: 100%; border-radius: 0; padding-top: 1rem; padding-bottom: 1rem; cursor: help;" data-dtl=\''.json_encode($value['indikator'], JSON_HEX_APOS).'\'>'.$value['nama_dimensi'].' (Skor: '.$value['total'].')</span>';
+                }
+            }
+    
+            echo '
+                </div>
+            </div>
+            <div class="right-side">
+                <p>Hidden Information Here</p>
+            </div>';
+        }
     }
 }
