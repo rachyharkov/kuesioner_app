@@ -26,6 +26,25 @@
 		transition: all 0.3s ease-in-out;
 	}
 
+	.badge-gap {
+		transition: all 0.2s ease-in-out;
+	}
+
+	.badge-gap:nth-child(1) {
+		border-top-left-radius: 0.5rem !important;
+		border-top-right-radius: 0.5rem !important;
+	}
+
+	.badge-gap:nth-last-child(1) {
+		border-bottom-left-radius: 0.5rem !important;
+		border-bottom-right-radius: 0.5rem !important;
+	}
+	.badge-gap:hover {
+		transform: scale(1.1);
+		transition: all 0.2s ease-in-out;
+		border-radius: 0.5rem !important;
+	}
+
 	@media (min-width: 576px) {
 		.custom-auto-width {
 			width: auto;
@@ -105,16 +124,9 @@ $jawabanlist = $this->db->query($query)->result();
 			<!-- create table with borderless -->
 			<p style="margin: 0;">Gap Result</p>
 			<div class="gap-preview-wrapper" style="position: relative; display: grid; grid-template-columns: 1fr 1fr">
-				<div class="left-side">
-					<div style="display: flex; flex-direction: column; overflow: hidden; border-radius: 0.3rem;">
-						<?php
-						$this->report_processor->get_indicator_of_dimension($data_kuesioner, $jawabanlist);
-						?>
-					</div>
-				</div>
-				<div class="right-side">
-					<p>Hidden Information Here</p>
-				</div>
+				<?php
+					$this->report_processor->generate_gap_scoreboard($data_kuesioner, $jawabanlist);
+				?>
 			</div>
 		</div>
 	</div>	
@@ -270,6 +282,14 @@ $jawabanlist = $this->db->query($query)->result();
 
 <script>
 	$(document).ready(function(){
+
+		$(document).on('click','.badge-gap', function() {
+			var jsonnya = $(this).data('dtl');
+
+			var p = JSON.parse(jsonnya);
+
+			alert(p[].id_diskusi);
+		})
 		
 		<?php
 		foreach($datadiskusidanjumlahjawabannya as $keyiddiskusi => $value){
