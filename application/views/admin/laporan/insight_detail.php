@@ -21,9 +21,14 @@
 		transition: all 0.3s ease-in-out;
 	}
 
+	.gap-preview-wrapper > .right-side {
+		opacity: 0;
+	}
+
 	.gap-preview-wrapper:hover > .right-side {
 		right: 0;
 		transition: all 0.3s ease-in-out;
+		opacity: 1;
 	}
 
 	.badge-gap {
@@ -123,7 +128,7 @@ $jawabanlist = $this->db->query($query)->result();
 		<div class="card-body">
 			<!-- create table with borderless -->
 			<p style="margin: 0;">Gap Result</p>
-			<div class="gap-preview-wrapper" style="position: relative; display: grid; grid-template-columns: 1fr 1fr">
+			<div class="gap-preview-wrapper" style="position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
 				<?php
 					$this->report_processor->generate_gap_scoreboard($data_kuesioner, $jawabanlist);
 				?>
@@ -285,10 +290,50 @@ $jawabanlist = $this->db->query($query)->result();
 
 		$(document).on('click','.badge-gap', function() {
 			var jsonnya = $(this).data('dtl');
+			
+			var str = `
+			<table style="width: 100%;">
+				<thead>
+					<tr>
+						<th>Indikator</th>
+						<th>Skor</th>
+					</tr>
+				</thead>
+				<tbody>
+			`;
 
-			var p = JSON.parse(jsonnya);
+			for(let key in jsonnya){
 
-			alert(p[].id_diskusi);
+				var p = jsonnya[key].detail
+
+				str += `
+					<tr>
+						<td>
+							<details>
+								<summary>
+									${jsonnya[key].nama_indikator}
+								</summary>
+								${
+									// return each 
+									$.each(p, function(i, val){
+									return i + ' : ' + val;
+								})}
+							</details>
+						</td>
+						<td style="vertical-align: top;">
+							<span class="badge bg-success text-white">${jsonnya[key].total_nilai}</span>
+						</td>
+					</tr>
+				`;
+			}
+
+			str += `
+				</tbody>
+			</table>
+			`;
+
+			$('.right-side').html(str);
+			
 		})
 		
 		<?php

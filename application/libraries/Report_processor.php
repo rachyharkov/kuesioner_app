@@ -283,10 +283,7 @@ class Report_processor{
     public function generate_gap_scoreboard($data_kuesioner,$jawabanlist)
     {
         $datadimensiindikatordannilai = $this->generate_gap_detail($data_kuesioner,$jawabanlist);
-        echo '<pre>';
-        print_r($datadimensiindikatordannilai);
-        echo '</pre>';
-
+ 
         if($datadimensiindikatordannilai == false) {
             echo '<span class="badge text-white" style="background-color:red">Tidak ada data</span>';
         } else {
@@ -328,7 +325,7 @@ class Report_processor{
                 </div>
             </div>
             <div class="right-side">
-                <p>Hidden Information Here</p>
+                <p>Silahkan klik salah satu gap</p>
             </div>';
         }
     }
