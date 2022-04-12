@@ -26,7 +26,7 @@
                         ],
                         3 => [
                             'nama_menu' => 'Tema',
-                            'url' => '#',
+                            'url' => 'pengaturan/tema',
                             'icon' => 'now-ui-icons design_palette' 
                         ],
                         4 => [

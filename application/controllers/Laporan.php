@@ -45,4 +45,66 @@ class Laporan extends CI_Controller {
 
 		echo json_encode($arr);
 	}
+
+	function fetch_detail_responden_individual() {
+		$id_kuesioner = $this->input->post('id_kuesioner');
+		$urutan = $this->input->post('urutan') - 1;
+		$data = $this->db->like('jawaban','"id_kuesioner":"'.$id_kuesioner.'"')->get('tbl_jawaban', 1, $urutan)->row()->jawaban;
+		
+		$datajawaban = json_decode($data, TRUE);
+
+		$choices = json_decode($this->Kuesioner_model->get_by_id($id_kuesioner)->kategori_respon, TRUE);
+
+		$str = '
+		<div style="display: flex; flex-direction: column">';
+
+
+		foreach ($datajawaban as $key => $value) {
+
+			$pertanyaan = $this->db->where('id', $value['id_kuesioner'])->get('tbl_diskusi')->row();
+
+			$str .= '
+				<div class="card">
+					<div class="card-body">
+						<p>'.$pertanyaan->isi_diskusi.'</p>
+						
+						<div class="container-fluid" style="display: flex;
+flex-direction: row;
+justify-content: space-evenly;">';
+
+						foreach ($choices as $keykr => $kr) {
+							$str .= "
+							<div>
+								<span style='width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;'>".$kr['nama']."</span>
+								<div style='display: flex; flex-direction: column;'>";
+									
+									foreach ($kr['respon_list'] as $key => $rp) {
+
+										$owo = '';
+
+										if($rp == $datajawaban[$kr]) {
+											$owo = 'checked';
+										}
+									
+										$str .=	"<label for='disc".$value->urutan."_col".$keykr."_".$key."' class='radio'>
+													<input type='radio' ".$owo." value='".$rp."' name='disc".$value->urutan."_col".$keykr."' id='disc".$value->urutan."_col".$keykr."_".$key."' class='hidden choicenya disc".$value->urutan."_col".$keykr."' />
+													<span class='label'></span>".$rp."
+												</label>";
+									}
+							$str .= "
+								</div>
+							</div>";
+						}
+						
+			$str.= '
+						</div>
+					</div>
+				</div>
+			';
+		}
+
+		$str .= '</div>';
+		
+		echo $str;
+	}
 }

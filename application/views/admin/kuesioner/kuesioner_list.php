@@ -160,6 +160,48 @@ if ($this->session->userdata('failed')) {
 }
 ?>
 
+<style>
+	.context-menu {
+		position: absolute;
+		z-index: 4;
+		width: 150px;
+		background-color: #fff;
+		border-radius: 5px;
+		border: 1px solid gainsboro;
+		top: 0;
+		left: -15px;
+
+		transform: scale(0);
+		transform-origin: top left;
+	}
+
+	.context-menu .item {
+		padding: 8px 10px;
+		font-size: 15px;
+		color: #eee;
+		cursor: pointer;
+		border-radius: inherit;
+	}
+
+	.context-menu .item:hover {
+		background-color: #eee;
+	}
+
+	.context-menu .item a {
+		display: block;
+	}
+	/* disable underline a on hover .item */
+	.context-menu .item:hover a {
+		text-decoration: none;
+	}
+
+	.context-menu.visible {
+		display: block;
+		transform: scale(1);
+		transition: transform 200ms ease-in-out;
+	}
+</style>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="card">
@@ -212,10 +254,13 @@ if ($this->session->userdata('failed')) {
 									<td><?php echo $value->created_at ?></td>
 									<td><?php echo $value->created_by ?></td>
 									<td class="text-center">
-										<div class="btn-group" role="group">
-											<a href="<?php echo base_url() . 'kuesioner/edit/' . $value->id_kuesioner ?>" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit fa-fw"></i></a>
-											<a class="btn btn-success btn-sm" href="<?php echo base_url() . 'kuesioner/export/' . $value->id_kuesioner ?>"><i class="fas fa-file-excel fa-fw"></i></a>
-											<a id="<?php echo $value->id_kuesioner ?>" class="btn btn-danger btn-sm text-white link_delete_kuesioner"><i class="fas fa-trash-alt fa-fw"></i></a>
+										<div class="context-menu-wrapper" style="position: relative;">
+											<button class="btn btn-primary btn-neutral btn-action" style="font-size: 18px;"><i class="fas fa-ellipsis-v"></i></button>
+											<div class="context-menu">
+												<div class="item"><a href="<?php echo base_url() . 'kuesioner/edit/' . $value->id_kuesioner ?>">Edit Diskusi</a></div>
+												<div class="item"><a href="<?php echo base_url() . 'kuesioner/export/' . $value->id_kuesioner ?>">Export Respon</a></div>
+												<div class="item"><a id="<?php echo $value->id_kuesioner ?>" class="link_delete_kuesioner text-danger">Hapus</a></div>
+											</div>
 										</div>
 									</td>
 								</tr>
@@ -235,6 +280,20 @@ if ($this->session->userdata('failed')) {
 			responsive: true
 		});
 	})
+	$(document).click(function(event) {
+		if (!$(event.target).closest('.context-menu-wrapper').length) {
+			$('.context-menu').removeClass('visible');
+		}
+	});
+
+	// when clicking each btn-action, show the context-menu, and hide the other context-menu
+	$('.btn-action').click(function() {
+		$('.context-menu').removeClass('visible');
+		$(this).parent().find('.context-menu').addClass('visible');
+	});
+
+	// when clicking outside of the context-menu, hide it
+
 
 	$(document).on('change', '.switchstatus', function() {
 
@@ -291,7 +350,7 @@ if ($this->session->userdata('failed')) {
 			if (result.isConfirmed) {
 				window.location.href = '<?php echo base_url() . 'kuesioner/delete/' ?>' + id_kuesioner
 			} else {
-				btnselected.html('<i class="fas fa-trash-alt"></i>').removeClass('disabled').removeAttr('disabled')
+				btnselected.html('Hapus').removeClass('disabled').removeAttr('disabled')
 			}
 		})
 	})
