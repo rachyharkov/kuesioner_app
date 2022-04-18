@@ -2,6 +2,11 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
+
+	.preview-answer.form-check-radio input[type="radio"]:checked+.form-check-sign::after {
+		transform: scale(2.5);
+	}
+
 	.gap-preview-wrapper>.left-side {
 		position: relative;
 		left: 50%;
@@ -290,21 +295,27 @@ $jawabanlist = $this->db->query($query)->result();
 				</button>
 			</div>
 			<div class="modal-body">
+				<div style="display: inline-flex;flex-wrap: wrap;justify-content: space-between;width: 100%;">
+					<div style="display: inline-flex;flex-wrap: wrap;gap: 8px;">
+						<button class="prev-response" style="font-size: 11px;
+							border: none;
+							background-color: white;
+							padding: 6px 12px;"><i class="fas fa-chevron-left"></i></button>
+						<!-- input type text with 1rem of width -->
+						<input type="number" class="urutan_respond" style="width: 3rem;text-align: center;border: none;border-bottom: solid 2px gray;" value="1" max="">
+						<span style="padding-top: 4px; line-height: 3;">Of <span id="totalkuesioner"></span></span>
+						<button class="next-response" style="font-size: 11px;
+							border: none;
+							background-color: white;
+							padding: 6px 12px;"><i class="fas fa-chevron-right"></i></button>
+					</div>
 
-				<div style="display: inline-flex;flex-wrap: wrap;gap: 8px;">
-					<button style="font-size: 11px;
-						border: none;
-						background-color: white;
-						padding: 6px 12px;"><i class="fas fa-chevron-left"></i></button>
-					<!-- input type text with 1rem of width -->
-					<input type="number" class="urutan_respond" style="width: 3rem;text-align: center;" value="1">
-					<span style="padding-top: 4px;">Of 5</span>
-					<button style="font-size: 11px;
-						border: none;
-						background-color: white;
-						padding: 6px 12px;"><i class="fas fa-chevron-right"></i></button>
+					<button class="btn btn-primary btn-sm" id="btn-print-responden" style="margin-left: 8px;" onclick="printJS('printJS-form', 'html')">
+						<i class="fas fa-print"></i>
+					</button>
+
 				</div>
-				<div class="detail-jawaban-responden">
+				<div class="detail-jawaban-responden" style="padding-top: 1rem;">
 
 				</div>
 			</div>
@@ -330,7 +341,11 @@ $jawabanlist = $this->db->query($query)->result();
 					urutan: urutan
 				},
 				success: function(data) {
-					$('.detail-jawaban-responden').html(data);
+					var dt = JSON.parse(data);
+					$('.detail-jawaban-responden').html(dt.page);
+
+					$('#totalkuesioner').html(dt.total_resp);
+					$('.urutan_respond').attr('max', dt.total_resp);
 				}
 			});
 		}
@@ -338,6 +353,25 @@ $jawabanlist = $this->db->query($query)->result();
 		$(document).on('input', '.urutan_respond', function() {
 			var urutan = $(this).val();
 			fetch_detail(urutan);
+		});
+
+		$(document).on('click', '.next-response', function() {
+			var total_resp = $('#totalkuesioner').text();
+			var urutan = parseInt($('.urutan_respond').val());
+			if (urutan < 5) {
+				urutan++;
+				$('.urutan_respond').val(urutan);
+				fetch_detail(urutan);
+			}
+		});
+
+		$(document).on('click', '.prev-response', function() {
+			var urutan = parseInt($('.urutan_respond').val());
+			if (urutan > 1) {
+				urutan--;
+				$('.urutan_respond').val(urutan);
+				fetch_detail(urutan);
+			}
 		});
 
 		// trigger fetch_detail() when modal-data-respond is shown

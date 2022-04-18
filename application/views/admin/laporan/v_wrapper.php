@@ -19,8 +19,11 @@
 
 	
 
+
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js" integrity="sha512-/fgTphwXa3lqAhN+I8gG8AvuaTErm1YxpUjbdCvwfTMyv8UZnFyId7ft5736xQ6CyQN4Nzr21lBuWWA9RTCXCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.css" integrity="sha512-tKGnmy6w6vpt8VyMNuWbQtk6D6vwU8VCxUi0kEMXmtgwW+6F70iONzukEUC3gvb+KTJTLzDKAGGWc1R7rmIgxQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="row">
   	<div class="col-md-12">
 	    <div class="card">
@@ -50,7 +53,7 @@
 											<tr>
 												<td colspan="5">
 													<div class="alert alert-danger text-center">
-													 		Tidak ada kuesioner
+													 	Tidak ada kuesioner
 													</div>	
 												</td>
 											</tr>

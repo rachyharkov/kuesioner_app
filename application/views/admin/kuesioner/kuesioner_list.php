@@ -2,7 +2,7 @@
 	.btn-lock {
 
 		display: inline-block;
-		background: #ff5b5b;
+		background: #20cca5;
 		width: 64px;
 		height: 64px;
 		box-sizing: border-box;
@@ -50,7 +50,7 @@
 	}
 
 	.inpLock:checked+label {
-		background: #20cca5;
+		background: #ff5b5b;
 	}
 
 	.inpLock:checked+label svg {
@@ -249,14 +249,15 @@ if ($this->session->userdata('failed')) {
 											</svg>
 										</label>
 									</td>
-									<td><a href="<?php echo base_url() . 'survey?id=' . encrypt_url($value->id_kuesioner) ?>" target="_blank" rel="noopener noreferrer"><?php echo $value->judul_kuesioner; ?></a></td>
-									<td><?php echo 0; ?> </td>
+									<td><a href="<?php echo base_url() . 'survey?id=' . encrypt_url($value->id_kuesioner) ?>" target="_blank" class="link-redirect" rel="noopener noreferrer"><?php echo $value->judul_kuesioner; ?></a></td>
+									<td><?php echo $classnyak->jumlah_respon($value->id_kuesioner) ?> </td>
 									<td><?php echo $value->created_at ?></td>
 									<td><?php echo $value->created_by ?></td>
 									<td class="text-center">
 										<div class="context-menu-wrapper" style="position: relative;">
 											<button class="btn btn-primary btn-neutral btn-action" style="font-size: 18px;"><i class="fas fa-ellipsis-v"></i></button>
 											<div class="context-menu">
+												<div class="item"><a href="#" class="share-option" data-toggle="modal" data-target="#modal-share-kuesioner"><span>Bagikan</span></a></div>
 												<div class="item"><a href="<?php echo base_url() . 'kuesioner/edit/' . $value->id_kuesioner ?>">Edit Diskusi</a></div>
 												<div class="item"><a href="<?php echo base_url() . 'kuesioner/export/' . $value->id_kuesioner ?>">Export Respon</a></div>
 												<div class="item"><a id="<?php echo $value->id_kuesioner ?>" class="link_delete_kuesioner text-danger">Hapus</a></div>
@@ -274,6 +275,37 @@ if ($this->session->userdata('failed')) {
 		</div>
 	</div>
 </div>
+
+<!-- modal -->
+<div class="modal fade" id="modal-share-kuesioner" tabindex="-1" role="dialog" aria-labelledby="modal-share-kuesioner" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modal-share-kuesioner">Bagikan Kuesioner</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>Status Kuesioner: Terbuka</p>
+				<p>Link</p>
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" id="link_kuesioner" value="" readonly>
+					<div class="input-group-append">
+						<button class="btn btn-primary" type="button" id="copy_link_kuesioner" style="margin: 0;">Copy</button>
+					</div>
+				</div>
+				<div class="alert-notification-shared">
+					
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#tableKuesioner').DataTable({
@@ -291,9 +323,27 @@ if ($this->session->userdata('failed')) {
 		$('.context-menu').removeClass('visible');
 		$(this).parent().find('.context-menu').addClass('visible');
 	});
+	
 
-	// when clicking outside of the context-menu, hide it
+	$(document).on('click', '.share-option', function() {
+		var link_kuesioner = $(this).parents('tr').find('.link-redirect').attr('href');
+		$('#link_kuesioner').val(link_kuesioner);
+	})
 
+	$(document).on('click', '#copy_link_kuesioner', function() {
+		var link_kuesioner = $('#link_kuesioner').val();
+		
+		
+		var copyText = document.getElementById("link_kuesioner");
+		copyText.select();
+		document.execCommand("copy");
+
+		$('.alert-notification-shared').html('<div class="alert alert-success alert-dismissible fade show" role="alert">Link berhasil disalin!</div>');
+
+		setTimeout(function() {
+			$('.alert-notification-shared').html('');
+		}, 3000);
+	})
 
 	$(document).on('change', '.switchstatus', function() {
 

@@ -49,48 +49,76 @@ class Laporan extends CI_Controller {
 	function fetch_detail_responden_individual() {
 		$id_kuesioner = $this->input->post('id_kuesioner');
 		$urutan = $this->input->post('urutan') - 1;
-		$data = $this->db->like('jawaban','"id_kuesioner":"'.$id_kuesioner.'"')->get('tbl_jawaban', 1, $urutan)->row()->jawaban;
+
+		$total_responden = $this->Laporan_model->count_total_respond($id_kuesioner);
+
+		$data = $this->db->like('jawaban','"id_kuesioner":"'.$id_kuesioner.'"')->get('tbl_jawaban', 1, $urutan)->row();
 		
-		$datajawaban = json_decode($data, TRUE);
+		$datadiri = json_decode($data->data_diri, TRUE);
+
+		$datajawaban = json_decode($data->jawaban, TRUE);
 
 		$choices = json_decode($this->Kuesioner_model->get_by_id($id_kuesioner)->kategori_respon, TRUE);
 
 		$str = '
-		<div style="display: flex; flex-direction: column">';
+		<div id="printJS-form">';
 
+		
+
+		foreach ($datadiri as $key => $value) {
+
+			// split $key string by _ then join it with space with uppercase each word
+			$p = ucwords(implode(' ', explode('_', $key)));
+			
+			$str.= '
+			<div class="form-group">
+				<label for="input'.$key.'">'.$p.'</label>
+				<input type="text" disabled class="form-control disabled" id="input'.$key.'" placeholder="ingput" value="'.$value.'">
+			</div>
+			';	
+		}
 
 		foreach ($datajawaban as $key => $value) {
 
-			$pertanyaan = $this->db->where('id', $value['id_kuesioner'])->get('tbl_diskusi')->row();
-
+			$pertanyaan = $this->db->where('id', $value['id_diskusi'])->get('tbl_diskusi')->row();
+	
 			$str .= '
+			<form>
 				<div class="card">
 					<div class="card-body">
 						<p>'.$pertanyaan->isi_diskusi.'</p>
 						
-						<div class="container-fluid" style="display: flex;
-flex-direction: row;
-justify-content: space-evenly;">';
+						<div class="container-fluid" style="display: flex;flex-direction: row; justify-content: space-evenly;">';
 
 						foreach ($choices as $keykr => $kr) {
 							$str .= "
 							<div>
 								<span style='width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;'>".$kr['nama']."</span>
-								<div style='display: flex; flex-direction: column;'>";
-									
-									foreach ($kr['respon_list'] as $key => $rp) {
 
-										$owo = '';
-
-										if($rp == $datajawaban[$kr]) {
-											$owo = 'checked';
-										}
+								<div class='form-check form-check-radio'>";
 									
-										$str .=	"<label for='disc".$value->urutan."_col".$keykr."_".$key."' class='radio'>
-													<input type='radio' ".$owo." value='".$rp."' name='disc".$value->urutan."_col".$keykr."' id='disc".$value->urutan."_col".$keykr."_".$key."' class='hidden choicenya disc".$value->urutan."_col".$keykr."' />
-													<span class='label'></span>".$rp."
-												</label>";
+								$urutan = 0;
+
+								foreach ($kr['respon_list'] as $key => $rp) {
+
+									$owo = '';
+
+									// echo $rp;
+									// echo $value[$kr['nama']];
+
+									if($rp == $value[$kr['nama']]) {
+										$owo = 'checked';
 									}
+								
+									$str .=	"
+											<label for='disc".$urutan."_col".$keykr."_".$key."' class='form-check-label'>
+												<input class='form-check-input preview-answer' type='radio' ".$owo." value='".$rp."' name='disc".$urutan."_col".$keykr."' id='disc".$urutan."_col".$keykr."_".$key."' disabled>
+												".$rp."
+												<span class='form-check-sign'></span>
+											</label>";
+
+									$urutan++;
+								}
 							$str .= "
 								</div>
 							</div>";
@@ -100,11 +128,18 @@ justify-content: space-evenly;">';
 						</div>
 					</div>
 				</div>
+			</form>
 			';
 		}
 
 		$str .= '</div>';
 		
-		echo $str;
+		$arr = array(
+			'response' => 'ok',
+			'page' => $str,
+			'total_resp' => $total_responden
+		);
+		
+		echo json_encode($arr);
 	}
 }

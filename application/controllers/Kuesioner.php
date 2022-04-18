@@ -80,6 +80,7 @@ class Kuesioner extends CI_Controller {
 		$data = array(
 			'list_kuesioner' => $this->Kuesioner_model->get_all_by_createdby($user_id),
 			'menu' => 'Kuesioner',
+			'classnyak' => $this,
 			'sett_apps' =>$this->Setting_app_model->get_by_id(1),
 		);
 		$this->template->load('admin/kuesioner/kuesioner_list', $data);
@@ -520,5 +521,14 @@ class Kuesioner extends CI_Controller {
 		);
 
 		echo json_encode($arr);
+	}
+
+	public function jumlah_respon($id_kuesioner)
+	{
+		$query = 'SELECT * FROM `tbl_jawaban` WHERE jawaban LIKE \'%"id_kuesioner":"'.$id_kuesioner.'"%\'';
+
+		$jmlh = $this->db->query($query)->num_rows();
+
+		return $jmlh;
 	}
 }
