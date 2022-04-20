@@ -102,7 +102,11 @@ class Kuesioner extends CI_Controller {
 		$judul_kuesioner = $this->input->post('judul_kuesioner');
 		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
 		$form_individu = $this->input->post('form_individu');
-		
+		$choices_structural = $this->input->post('choices_structural');
+		$theme_val = $this->input->post('theme_val');
+
+		$choices_structural = $choices_structural == '' ? 'N/A' : $choices_structural;
+
 		$dimensi = $this->input->post('dimensi');
 
 		$kategori_respon = $this->input->post('kategori_respon');
@@ -152,7 +156,9 @@ class Kuesioner extends CI_Controller {
 			'kategori_respon' => json_encode($kategori_respon_temp),
 			'created_by' => $this->session->userdata('userid'),
 			'created_at' => date('Y-m-d H:i:s'),
-			'status' => 0
+			'status' => 0,
+			'choices_structural' => $choices_structural,
+			'theme' => $theme_val,
 		);
 
 		$this->Kuesioner_model->insert($datanya);

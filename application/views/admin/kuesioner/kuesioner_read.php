@@ -43,6 +43,26 @@
 		width: 4px;
 	}
 
+	/* create animation bounce */
+	.bounce {
+		animation: bounce 1s infinite;
+	}
+
+	@keyframes bounce {
+		0% {
+			transform: scale(1.4);
+		}
+		30% {
+			transform: scale(1);
+		}
+		60% {
+			transform: scale(1.4);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
 </style>
 
 <?php
@@ -158,6 +178,9 @@
 <script type="text/javascript">
 
 	function save_all() {
+
+		$('.btn-save').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+
 		var id_kuesioner = $('#id_kuesioner').val()
 
 		/* array literal */
@@ -208,10 +231,13 @@
 		    	var dt = JSON.parse(data)
 
 		    	if (dt.response == 'ok') {
-		    		Toast.fire({
-						icon: 'success',
-						title: 'Auto Saved'
-                    })
+					$('.btn-save').prop('disabled', false).html('<i class="fas fa-save"></i>');
+					// animate .btn-save to bounce
+					$('.btn-save').addClass('animated bounce');
+					setTimeout(function(){
+						$('.btn-save').removeClass('animated bounce');
+					}, 1000);
+
 		    	}
 		    },
 		    error: function(error) {

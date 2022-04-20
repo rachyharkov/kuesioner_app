@@ -146,7 +146,7 @@
 											</label>
 										</div>
 										<div class="structural_choice_wrapper">
-											<input type="hidden" name="choices_structural" class="choices_structural" disabled>
+											<input type="text" name="choices_structural" class="choices_structural" disabled>
 										</div>
 										<div class="form-check">
 											<label class="form-check-label">
@@ -194,6 +194,7 @@
 									</table>
 								</div>
 							</div>
+							<input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
 							<button type="submit" class="btn btn-primary">Simpan</button>
 							<a href="<?php echo site_url('kuesioner') ?>" class="btn btn-danger list-data">Kembali</a>
 						</form>
@@ -653,7 +654,17 @@
 		});
 	})
 
+	function themeSet(name, value){
+		var newData = [];
+		newData.push({
+			'name': name,
+			'value': value
+		})
+		$('#theme_val').val(JSON.stringify(newData))
+	}	
+
 	$(document).on('click', '.theme_choice', function() {
+
 		$('.theme_choice').removeClass('active')
 		$(this).addClass('active')
 
@@ -671,10 +682,17 @@
 				'background-color': $('#clr').val()
 			});
 			
-			
+			var style = `
+				.background_kuesioner {
+					background-image: url();
+					background-color: ${$('#clr').val()};
+				}
+			`
+			themeSet('solid', style)
+
 		} else if (theme == 'picture') {
 			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 11px; color: gray;'>Latar belakang dengan perpaduan blur serta gambar yang menarik</p>
+				<p style='font-size: 11px; color: gray;'>Latar belakang dengan dengan gambar yang bisa dipilih (disarankan menggunakan gambar blur serta warna agak gelap) </p>
 				<input type="file" id="picture_background_input" style="margin-bottom: 5px;">
 				<label for="picture_background_input">Pilih Gambar</label>	
 			`)
@@ -686,6 +704,17 @@
 				'overflow': 'hidden',
 				'background-color': $('#clr').val()
 			});
+
+			var style = `
+				.background_kuesioner {
+					background: default.png;
+					background-size: cover;
+					height: 100%;
+					overflow: hidden;
+					background-color: ${$('#clr').val()};
+				}
+			`
+			themeSet('picture', style)
 
 		} else if(theme == 'gradient') {
 			var primarycol = '';
@@ -707,6 +736,9 @@
 				<p style='font-size: 11px; color: gray;'>Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berubah-ubah untuk seluruh responden</p>
 			`)
 
+			var style = `gradient_random`
+			themeSet('gradient', style)
+
 		} else {
 
 			var primarycol = '';
@@ -725,6 +757,9 @@
 				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
 				<p style='font-size: 11px; color: gray;'>Empat Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berbeda bagi setiap responden</p>
 			`)
+
+			var style = `default_random`
+			themeSet('default', style)
 		}
 
 	})
