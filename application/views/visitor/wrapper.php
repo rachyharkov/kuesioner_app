@@ -161,7 +161,7 @@
 	<body>
 		<div class="container-fluid" style="<?= $theme_apply; ?>">
 			<div class="container-sm" style="max-width: 570px;min-height: 100vh;">
-				<div id="body" style="position: relative;">
+				<div id="body" style="position: relative;padding-top: 5rem;">
 					<?php $classnyak->get_kuesioner($id_kuesioner) ?>
 					
 				</div>

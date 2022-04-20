@@ -38,12 +38,42 @@
 			transform: translateY(-50%);
 		}
 	}
+
+	.sequence-wrapper {
+		margin-top: -50px;
+		transform: scale(0);
+		transition: all 500ms ease-in-out;
+		animation-name:moveTobottom;
+        animation-fill-mode: forwards;
+		-webkit-animation-name:wowow;
+        -webkit-animation-fill-mode: forwards;
+	}
+
+	@keyframes wowow{
+		from{
+			margin-top: -50px;
+			transform: scale(0);
+		}
+		to{
+			margin-top: 0px;
+			transform: scale(1);
+		}
+	}
+	@-webkit-keyframes wowow{
+		from{
+			margin-top: -50px;
+			transform: scale(0);
+		}
+		to{
+			margin-top: 0px;
+			transform: scale(1);
+		}
+	}
 </style>
 
 <form id="form_create_action" method="post" enctype="multipart/form-data">
 
-	<div class="container" style="padding: 1vh 0;
-display: block;">
+	<div class="container sequence-wrapper" style="padding: 1vh 0;display: block;animation-duration: 1.0s;">
 		<div class="card" style="width: 100%;">
 			<div class="card-body">
 				<div style="width: 100%;
@@ -60,7 +90,7 @@ margin: 2vh 0;">
 		</div>
 	</div>
 
-	<div class="container" style="padding: 1vh 0; display: block;">
+	<div class="container sequence-wrapper" style="padding: 1vh 0; display: block;animation-duration: 1.3s;">
 		<div class="card" style="width: 100%;">
 			<div class="card-body">
 				<div style="width: 100%;
@@ -116,11 +146,13 @@ margin: 2vh 0;">
 	</div>
 	<?php
 
+	$dataanimationoffset = 1.3;
+
 	foreach ($list_diskusi as $key => $value) {
 
 	?>
 		<input type="hidden" name="soal<?php echo $value->urutan ?>id" value="<?php echo $value->id ?>">
-		<div class="container container-<?php echo $value->urutan ?>" style="padding: 1vh 0; display: block; margin-top: 11px;">
+		<div class="container container-<?php echo $value->urutan ?> sequence-wrapper" style="padding: 1vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
 			<div class="card" style="width: 100%; position: relative;">
 				<span class="badge rounded-pill bg-secondary" style="position: absolute;
 left: 50%;

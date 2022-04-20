@@ -25,26 +25,16 @@
                             'icon' => 'now-ui-icons files_paper' 
                         ],
                         3 => [
-                            'nama_menu' => 'Tema',
-                            'url' => 'pengaturan/tema',
-                            'icon' => 'now-ui-icons design_palette' 
-                        ],
-                        4 => [
                             'nama_menu' => 'Akun',
                             'url' => '#',
                             'icon' => 'now-ui-icons users_single-02' 
                         ],
-                        5 => [
-                            'nama_menu' => 'User Management',
-                            'url' => '#',
-                            'icon' => 'now-ui-icons users_single-02' 
-                        ],
-                        6 => [
+                        4 => [
                             'nama_menu' => 'Agenda',
                             'url' => '#',
                             'icon' => 'now-ui-icons education_agenda-bookmark'
                         ],
-                        7 => [
+                        5 => [
                             'nama_menu' => 'Calendar Management',
                             'url' => '#',
                             'icon' => 'now-ui-icons ui-1_calendar-60'

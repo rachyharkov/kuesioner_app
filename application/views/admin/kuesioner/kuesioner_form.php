@@ -630,10 +630,6 @@
 		$(this).closest('li').remove();
 	})
 
-	$(document).on('hidden.bs.modal', '#modal_option_structured', function() {
-		alert('anu')
-	})
-
 	$(document).on('submit', '#form-structural-data', function(e) {
 		// var btnselected = $(this).find('button[type="submit"]')
 		// btnselected.html('<i class="fa fa-spin fa-spinner"></i> Menyimpan').addClass('disabled').attr('disabled', true)

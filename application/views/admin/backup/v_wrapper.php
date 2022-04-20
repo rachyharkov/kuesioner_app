@@ -166,6 +166,14 @@
                                 </button>
                             </div>
 
+                            <div class="preview_data_import" style="text-align: center;">
+                                <table class="table table-bordered table_preview_data_import" style="max-width: 21rem;margin: 10px auto 25px auto;">
+                                    <tbody>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <p>Silahkan masukan data terkait kuesioner dengan menentukan judul, deskripsi, dan tentukan kategori respon serta apa saja jawaban yang akan dipilih oleh para responden pada kuesioner ini</p>
 
                             <form id="form_kuesioner_new">
@@ -179,24 +187,146 @@
                                             <label for="labelInputDeskripsiKuesioner" class="form-label">Deskripsi</label>
                                             <textarea name="deskripsi_kuesioner" rows="4" class="form-control" id="labelInputDeskripsiKuesioner" required placeholder="Masukan Deskripsi"></textarea>
                                         </div>
-                                    </div>
-                                    <div class="col-sm-12 col-md-6 col-lg-6">
                                         <table class="table table-borderless" id="kategori_response_table">
                                             <tr id="row0" class="baris_kategori_respon">
                                                 <td>
                                                     <input type="text" name="kategori_respon[]" placeholder="Masukan nama kategori jawaban" class="form-control kategori_respon" required />
                                                     <table class="tabel_pilihan_row">
-
+    
                                                     </table>
                                                     <span style="font-size: 11px;"><a href="#" class="add_pilihan">Tambah pilihan</a></span>
                                                 </td>
-
+    
                                                 <td style="vertical-align: top;"><button type="button" id="add_kategori_respon" class="btn btn-success btn-sm"><i class="now-ui-icons ui-1_simple-add"></i></button></td>
                                             </tr>
                                         </table>
                                     </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
+                                        <h5 style="margin: 1rem 0 0 0">Tema</h5>
+                                        <div class="option_theme_settings" style="text-align: center;">
+                                            <!-- create button group -->
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-primary theme_choice active" data-theme="auto">Auto</button>
+                                                <button type="button" class="btn btn-primary theme_choice" data-theme="gradient">Auto2</button>
+                                                <button type="button" class="btn btn-primary theme_choice" data-theme="solid">Solid</button>
+                                                <button type="button" class="btn btn-primary theme_choice" data-theme="picture">Gambar</button>
+                                            </div>
+                                            <div class="theme_setting_wrapper">
+                                                <p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
+                                                <p style='font-size: 11px; color: gray;'>Empat Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berbeda bagi setiap responden</p>
+                                            </div>
+                                        </div>
+                                        <div class="theme_preview">
+                                            <?php
+
+                                            $primarycol = '';
+                                            $secondarycol = '';
+
+                                            $arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
+                                            $arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
+
+                                            $ano = array_rand($arr1, 1);
+
+                                            $primarycol = $arr1[$ano];
+                                            $secondarycol = $arr2[$ano];
+
+                                            ?>
+
+                                            <style>
+                                                .form__group {
+                                                    position: relative;
+                                                    padding: 15px 0 0;
+                                                    margin-top: 10px;
+                                                    width: 95%
+                                                }
+
+                                                .form__field {
+                                                    font-family: inherit;
+                                                    width: 100%;
+                                                    border: 0;
+                                                    border-bottom: 2px solid #9b9b9b;
+                                                    outline: 0;
+                                                    font-size: 1.3rem;
+                                                    color: black;
+                                                    padding: 7px 0;
+                                                    background: transparent;
+                                                    transition: border-color 0.2s;
+                                                }
+
+                                                .form__field::placeholder {
+                                                    color: transparent;
+                                                }
+
+                                                .form__field:placeholder-shown~.form__label {
+                                                    font-size: 1.3rem;
+                                                    cursor: text;
+                                                    top: 20px;
+                                                }
+
+                                                .form__label {
+                                                    position: absolute;
+                                                    top: 0;
+                                                    display: block;
+                                                    transition: 0.2s;
+                                                    font-size: 1rem;
+                                                    color: #9b9b9b;
+                                                }
+
+                                                .form__field:focus {
+                                                    padding-bottom: 6px;
+                                                    font-weight: 700;
+                                                    border-width: 3px;
+                                                    border-image: linear-gradient(to right, <?php echo $primarycol . ',' . $secondarycol ?>);
+                                                    border-image-slice: 1;
+                                                }
+
+                                                .form__field:focus~.form__label {
+                                                    position: absolute;
+                                                    top: 0;
+                                                    display: block;
+                                                    transition: 0.2s;
+                                                    font-size: 1rem;
+                                                    color: <?php echo $primarycol ?>;
+                                                    font-weight: 700;
+                                                }
+
+                                                .form__field:required,
+                                                .form__field:invalid {
+                                                    box-shadow: none;
+                                                }
+                                            </style>
+
+                                            <div class="card background_kuesioner" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
+                                                <div class="card-body" style="text-align: center;">
+                                                    <div class="card" style="max-width: 314px; margin-top: 10px;">
+                                                        <div class="card-body" style="min-height: 60vh;">
+                                                            <div style="width: 100%;text-align: center;margin: 2vh 0;">
+                                                                <img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
+                                                            </div>
+                                                            <div id="form_input_preview_wrapper">
+                                                                <div class="form__group">
+                                                                    <input type="text" class="form__field" disabled>
+                                                                    <label class="form__label">Your Name</label>
+                                                                </div>
+                                                                <div class="form__group">
+                                                                    <input type="text" class="form__field" disabled>
+                                                                    <label class="form__label">Telp.</label>
+                                                                </div>
+                                                                <div class="form__group">
+                                                                    <input type="text" class="form__field" disabled>
+                                                                    <label class="form__label">City</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="dataaa">
+                                    <input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
+                                    <input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
                                     <input type="hidden" name="dimensi" class="tbdimensi" value="" />
                                     <input type="hidden" name="diskusilist" class="tbdiskusilist" value="" />
                                 </div>
@@ -289,9 +419,22 @@
                             <button data-title="${dt.message}" class="btn btn-success btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-check-circle"></i></button>    
                             `
                         );
+
+                        
                         $('.btn-confirm-import').removeAttr('disabled');
                         $('.tbdimensi').val(dt.datakuesioner);
                         $('.tbdiskusilist').val(dt.datadiskusi);
+                        $('.table_preview_data_import tbody').html(`
+                            <tr>
+                                <td>Dimensi/Gap/Tolak Ukur</td><td><label class='badge bg-success text-white'>OK</label></td>
+                            </tr>
+                            <tr>
+                                <td>Indikator</td><td><label class='badge bg-success text-white'>OK</label></td>
+                            </tr>
+                            <tr>
+                                <td>Diskusi</td><td><label class='badge bg-success text-white'>OK</label></td>
+                            </tr>
+                        `);
                     }
 
                     if (dt.response == 'error') {
@@ -477,4 +620,150 @@
             }
         })
     })
+
+    $(document).on('change', '#clr', function() {
+		$('.background_kuesioner').css({
+			'background-image': 'url(' + $(this).val() + ')',
+			'background-color': $(this).val()
+		});
+	})
+
+	function themeSet(name, value){
+		var newData = [];
+		newData.push({
+			'name': name,
+			'value': value
+		})
+		$('#theme_val').val(JSON.stringify(newData))
+	}	
+
+	$(document).on('click', '.theme_choice', function() {
+
+		$('.theme_choice').removeClass('active')
+		$(this).addClass('active')
+
+		var theme = $(this).data('theme')
+
+		if (theme == 'solid') {
+			$('.theme_setting_wrapper').html(`
+				<p style='font-size: 11px; color: gray;'>Latar belakang satu warna</p>
+				<input type="color" value= "#001A57" id="clr">
+				<label for="clr">Pilih Warna</label>	
+			`)
+
+			$('.background_kuesioner').css({
+				'background-image': 'url()',
+				'background-color': $('#clr').val()
+			});
+			
+			var style = `${$('#clr').val()}`
+			themeSet('solid', style)
+			$('#picture_background_input').val('')
+
+		} else if (theme == 'picture') {
+			$('.theme_setting_wrapper').html(`
+				<p style='font-size: 11px; color: gray;'>Latar belakang dengan dengan gambar yang bisa dipilih (disarankan menggunakan gambar blur serta warna agak gelap) </p>
+				<button class='btn btn-primary btn-upload-pic'>Pilih Gambar</button>	
+			`)
+
+			$('.background_kuesioner').css({
+				'background': 'url(<?= base_url().'assets/images/kuesioner/default.png' ?>) no-repeat center center',
+				'background-size': 'cover',
+				'height': '100%',
+				'overflow': 'hidden',
+				'background-color': $('#clr').val()
+			});
+
+			var style = `pic`
+			themeSet('picture', style)
+
+		} else if(theme == 'gradient') {
+			var primarycol = '';
+			var secondarycol = '';
+
+			var arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
+			var arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
+
+			var rand1 = Math.floor(Math.random() * arr1.length);
+			var rand2 = Math.floor(Math.random() * arr2.length);
+
+			primarycol = arr1[rand1];
+			secondarycol = arr2[rand2];
+
+			$('.background_kuesioner').css('background-image', 'linear-gradient(to bottom right, ' + primarycol + ', ' + secondarycol + ')')
+
+			$('.theme_setting_wrapper').html(`
+				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
+				<p style='font-size: 11px; color: gray;'>Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berubah-ubah untuk seluruh responden</p>
+			`)
+
+			var style = `gradient_random`
+			themeSet('gradient', style)
+			$('#picture_background_input').val('')
+
+		} else {
+
+			var primarycol = '';
+			var secondarycol = '';
+
+			var arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
+			var arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
+
+			var rand1 = Math.floor(Math.random() * arr1.length);
+
+			primarycol = arr1[rand1];
+			secondarycol = arr2[rand1];
+
+			$('.background_kuesioner').css('background-image', 'linear-gradient(to bottom right, ' + primarycol + ', ' + secondarycol + ')')
+			$('.theme_setting_wrapper').html(`
+				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
+				<p style='font-size: 11px; color: gray;'>Empat Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berbeda bagi setiap responden</p>
+			`)
+
+			var style = `default_random`
+			themeSet('default', style)
+			$('#picture_background_input').val('')
+		}
+
+	})
+
+	$(document).on('click','.btn-upload-pic', function() {
+		$('#picture_background_input').click()
+	})
+
+	$(document).on('change','#picture_background_input', function() {
+		var file = this.files[0];
+
+		// can't submit if size more than 1mb
+		if (file.size > 1000000) {
+			$('#picture_background_input').val('')
+			alert('Ukuran gambar terdeteksi melebihi ketentuan (Size 1 MB maximum)')
+			return false
+		} else {
+
+			// detect image type
+			var imageType = /image.*/;
+
+			if (file.type.match(imageType)) {
+				var reader = new FileReader();
+
+				reader.onload = function(e) {
+					$('.background_kuesioner').css({
+						'background': 'url(' + e.target.result + ') no-repeat center center',
+						'background-size': 'cover',
+						'height': '100%',
+						'overflow': 'hidden',
+						'background-color': $('#clr').val()
+					});
+				}
+
+				reader.readAsDataURL(file);
+			} else {
+				// empty this input file
+				$('#picture_background_input').val('')
+				alert('File yang diupload bukan gambar')
+			}
+		}
+	})
+
 </script>

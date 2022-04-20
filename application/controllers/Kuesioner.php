@@ -210,6 +210,8 @@ class Kuesioner extends CI_Controller {
 		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
 		
 		$dimensi = $this->input->post('dimensi');
+		$choices_structural = $this->input->post('choices_structural');
+		$theme_val = $this->input->post('theme_val');
 
 		$datadiskusi = json_decode($this->input->post('diskusilist'), true);
 
@@ -241,7 +243,9 @@ class Kuesioner extends CI_Controller {
 			'kategori_respon' => json_encode($kategori_respon_temp),
 			'created_by' => $this->session->userdata('userid'),
 			'created_at' => date('Y-m-d H:i:s'),
-			'status' => 0
+			'status' => 0,
+			'choices_structural' => $choices_structural,
+			'theme' => $theme_val,
 		);
 
 		// print_r($datanya);
