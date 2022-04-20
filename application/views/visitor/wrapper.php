@@ -3,7 +3,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>Kuesioner - PT Pupuk Indonesia </title>
+		<title><?php echo $judul_kuesioner == null ? 'Not Found' : $judul_kuesioner ?> - Kuesioner Internal PT Pupuk Indonesia </title>
 		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 		<meta content="" name="description" />
 		<meta content="" name="author" />
@@ -136,14 +136,23 @@
 		</style>
 		
 	</head>
-	<body style="overflow: hidden;">
-		<div class="container-fluid" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol.','.$secondarycol ?>);overflow-y: auto;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;">
-			<div class="container-sm" style="height: 100vh; max-width: 570px;">
+	<body>
+		<div class="container-fluid" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol.','.$secondarycol ?>);">
+			<div class="container-sm" style="max-width: 570px;">
 				<div id="body" style="position: relative;">
 					<?php $classnyak->get_kuesioner($id_kuesioner) ?>
-						
+					
+				</div>
+			</div>
+			<div class="footer">
+				<div class="container-sm">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="text-center">
+								<p style="color: white; font-size: 12px;">Copyright &copy; <?php echo date('Y') ?> Kompartemen Pusat Pembelajaran dan Pengetahuan - PT Pupuk Indonesia (Persero) | <a href="https://rach-nh.xyz" style="color: white;">RNH</a></p>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

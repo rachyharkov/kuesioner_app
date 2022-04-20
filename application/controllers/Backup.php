@@ -127,12 +127,9 @@ class Backup extends CI_Controller
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="ImportKuesionerTemplate.xlsx"'); // Set nama file excel nya
+        header('Content-Disposition: attachment;filename="importkuesionertemplate.xlsx"');
         header('Cache-Control: max-age=0');
-
-        $writer = new Xlsx($spreadsheet);
-        ob_end_clean();
-        ob_start();
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
         $writer->save('php://output');
     }
 

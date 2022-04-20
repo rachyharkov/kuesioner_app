@@ -120,7 +120,7 @@ margin: 2vh 0;">
 
 	?>
 		<input type="hidden" name="soal<?php echo $value->urutan ?>id" value="<?php echo $value->id ?>">
-		<div class="container container-<?php echo $value->urutan ?>" style="padding: 1vh 0; display: block;">
+		<div class="container container-<?php echo $value->urutan ?>" style="padding: 1vh 0; display: block; margin-top: 11px;">
 			<div class="card" style="width: 100%; position: relative;">
 				<span class="badge rounded-pill bg-secondary" style="position: absolute;
 left: 50%;
