@@ -174,12 +174,16 @@ class Backup extends CI_Controller
 
                 foreach ($sheetData as $key => $value) {
                     if ($key > 3) {
-                        $diskusilist[] = array(
-                            'urutan' => $value['C'],
-                            'dimensi' => $value['A'],
-                            'indikator' => $value['B'],
-                            'diskusi' => $value['D'],
-                        );
+                        if($value['A'] || $value['B'] || $value['C'] || $value['D']){
+
+                            $diskusilist[] = array(
+                                'urutan' => trim($value['C']),
+                                'dimensi' => trim($value['A']),
+                                'indikator' => trim($value['B']),
+                                'diskusi' => trim($value['D']),
+                            );
+                        }
+
                     }
                 }
 

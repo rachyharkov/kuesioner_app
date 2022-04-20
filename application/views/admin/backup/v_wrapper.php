@@ -197,8 +197,8 @@
                                     </div>
                                 </div>
                                 <div class="dataaa">
-                                    <input type="text" name="dimensi" class="tbdimensi" value="" />
-                                    <input type="text" name="diskusilist" class="tbdiskusilist" value="" />
+                                    <input type="hidden" name="dimensi" class="tbdimensi" value="" />
+                                    <input type="hidden" name="diskusilist" class="tbdiskusilist" value="" />
                                 </div>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
