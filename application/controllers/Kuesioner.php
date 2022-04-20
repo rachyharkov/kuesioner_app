@@ -111,6 +111,42 @@ class Kuesioner extends CI_Controller {
 
 		$kategori_respon = $this->input->post('kategori_respon');
 
+		$picture_kuesioner = '';
+
+		$filename = '';
+		$theme_temp = json_decode($theme_val, TRUE);
+
+		$this->load->library('upload'); //call library upload
+
+		if($theme_temp[0]['name'] == 'picture') {
+
+			if($_FILES['picture_bekgron']['name']){
+				
+				$filename = 'kuesioner_bg'.md5(time());
+	
+				$config['upload_path'] = './assets/images/kuesioner/';
+				$config['allowed_types'] = 'jpg|png|jpeg';
+				$config['max_size'] = '2048';
+				$config['file_name'] = $filename;
+				$this->upload->initialize($config);
+				$this->upload->do_upload('picture_bekgron');
+				$uploadData = $this->upload->data();
+
+				// get file name with extension
+
+
+
+				$picture_kuesioner = $uploadData['file_name'];
+				$theme_temp[0]['value'] = $picture_kuesioner;
+			} else {
+				$picture_kuesioner = 'default.png';
+				$theme_temp[0]['value'] = $picture_kuesioner;
+			}
+			$theme_val = json_encode($theme_temp);
+		}
+
+
+
 		$dimensi_temp = [];
 
 		$kategori_respon_temp = [];
@@ -160,7 +196,7 @@ class Kuesioner extends CI_Controller {
 			'choices_structural' => $choices_structural,
 			'theme' => $theme_val,
 		);
-
+		// print_r($datanya);
 		$this->Kuesioner_model->insert($datanya);
 		$e = array(
 			'response' => 'ok'

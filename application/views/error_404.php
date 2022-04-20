@@ -1,4 +1,4 @@
-<div class="container" style="padding: 14vh 0; display: block;scroll-snap-align: start;">
+<div class="container" style="padding: 14vh 0; display: block;scroll-snap-align: start; height:100vh;">
 	<div class="card" style="width: 100%;">
 	  <div class="card-body" style="text-align:center;">
 	  	<div style="width: 100%;

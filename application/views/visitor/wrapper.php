@@ -19,10 +19,32 @@
 		$arr1 = ['#fab438','#11998e','#f47b24','#1f78bc'];
 		$arr2 = ['#feec03','#38ef7d','#fbaf14','#57a2cb'];
 
-		$ano = array_rand($arr1, 1);
+		$theme_decode = json_decode($theme,TRUE);
 
-		$primarycol = $arr1[$ano];
-		$secondarycol = $arr2[$ano];
+		$primarycol = '';
+		$secondarycol = '';
+		$theme_apply = '';
+
+		if($theme_decode[0]['name'] == 'default'){
+			$ano = array_rand($arr1, 1);
+			$primarycol = $arr1[$ano];
+			$secondarycol = $arr2[$ano];
+			$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
+		} elseif($theme_decode[0]['name'] == 'gradient'){
+			$ano1 = array_rand($arr1, 1);
+			$ano2 = array_rand($arr1, 1);
+			$primarycol = $arr1[$ano1];
+			$secondarycol = $arr2[$ano2];
+			$theme_apply = 'background-i mage: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
+		} elseif($theme_decode[0]['name'] == 'solid'){
+			$primarycol = $theme_decode[0]['value'];
+			$secondarycol = $theme_decode[0]['value'];
+			$theme_apply = 'background-image: url();background-color: '.$primarycol.';';
+		} elseif($theme_decode[0]['name'] == 'picture') {
+			$primarycol = $arr1[1];
+			$secondarycol = $arr2[1];
+			$theme_apply = 'background: url('.base_url().'assets/images/kuesioner/'.$theme_decode[0]['value'].') no-repeat center center fixed;background-size: cover;height: 100%;overflow: hidden;';
+		}
 
 		?>
 		<style>
@@ -137,8 +159,8 @@
 		
 	</head>
 	<body>
-		<div class="container-fluid" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol.','.$secondarycol ?>);">
-			<div class="container-sm" style="max-width: 570px;">
+		<div class="container-fluid" style="<?= $theme_apply; ?>">
+			<div class="container-sm" style="max-width: 570px;min-height: 100vh;">
 				<div id="body" style="position: relative;">
 					<?php $classnyak->get_kuesioner($id_kuesioner) ?>
 					

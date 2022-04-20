@@ -195,6 +195,7 @@
 								</div>
 							</div>
 							<input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
+							<input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
 							<button type="submit" class="btn btn-primary">Simpan</button>
 							<a href="<?php echo site_url('kuesioner') ?>" class="btn btn-danger list-data">Kembali</a>
 						</form>
@@ -502,6 +503,7 @@
 		e.preventDefault()
 
 		var btnselected = $(document.activeElement)
+		var a = this
 
 		btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
 
@@ -515,11 +517,14 @@
 			confirmButtonText: 'Yes'
 		}).then((result) => {
 			if (result.isConfirmed) {
-				dataString = $("#form_kuesioner_new").serialize();
 				$.ajax({
 					type: "POST",
 					url: "<?php echo base_url() . 'Kuesioner/create_action' ?>",
-					data: dataString,
+					data: new FormData(a), //penggunaan FormData
+					processData: false,
+					contentType: false,
+					cache: false,
+					async: false,
 					success: function(data) {
 
 						var dt = JSON.parse(data)
@@ -682,18 +687,14 @@
 				'background-color': $('#clr').val()
 			});
 			
-			var style = `
-				.background_kuesioner {
-					background-image: url();
-					background-color: ${$('#clr').val()};
-				}
-			`
+			var style = `${$('#clr').val()}`
 			themeSet('solid', style)
+			$('#picture_background_input').val('')
 
 		} else if (theme == 'picture') {
 			$('.theme_setting_wrapper').html(`
 				<p style='font-size: 11px; color: gray;'>Latar belakang dengan dengan gambar yang bisa dipilih (disarankan menggunakan gambar blur serta warna agak gelap) </p>
-				<input type="file" id="picture_background_input" style="margin-bottom: 5px;">
+				<button class='btn btn-primary btn-upload-pic'>Pilih File</button>
 				<label for="picture_background_input">Pilih Gambar</label>	
 			`)
 
@@ -705,15 +706,7 @@
 				'background-color': $('#clr').val()
 			});
 
-			var style = `
-				.background_kuesioner {
-					background: default.png;
-					background-size: cover;
-					height: 100%;
-					overflow: hidden;
-					background-color: ${$('#clr').val()};
-				}
-			`
+			var style = `pic`
 			themeSet('picture', style)
 
 		} else if(theme == 'gradient') {
@@ -738,6 +731,7 @@
 
 			var style = `gradient_random`
 			themeSet('gradient', style)
+			$('#picture_background_input').val('')
 
 		} else {
 
@@ -760,8 +754,13 @@
 
 			var style = `default_random`
 			themeSet('default', style)
+			$('#picture_background_input').val('')
 		}
 
+	})
+
+	$(document).on('click','.btn-upload-pic', function() {
+		$('#picture_background_input').click()
 	})
 
 	$(document).on('change','#picture_background_input', function() {
@@ -769,6 +768,7 @@
 
 		// can't submit if size more than 1mb
 		if (file.size > 1000000) {
+			$('#picture_background_input').val('')
 			alert('Ukuran gambar terdeteksi melebihi ketentuan (Size 1 MB maximum)')
 			return false
 		} else {
@@ -791,6 +791,8 @@
 
 				reader.readAsDataURL(file);
 			} else {
+				// empty this input file
+				$('#picture_background_input').val('')
 				alert('File yang diupload bukan gambar')
 			}
 		}
