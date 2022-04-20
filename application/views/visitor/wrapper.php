@@ -35,7 +35,7 @@
 			$ano2 = array_rand($arr1, 1);
 			$primarycol = $arr1[$ano1];
 			$secondarycol = $arr2[$ano2];
-			$theme_apply = 'background-i mage: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
+			$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
 		} elseif($theme_decode[0]['name'] == 'solid'){
 			$primarycol = $theme_decode[0]['value'];
 			$secondarycol = $theme_decode[0]['value'];

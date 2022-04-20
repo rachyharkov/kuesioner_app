@@ -694,8 +694,7 @@
 		} else if (theme == 'picture') {
 			$('.theme_setting_wrapper').html(`
 				<p style='font-size: 11px; color: gray;'>Latar belakang dengan dengan gambar yang bisa dipilih (disarankan menggunakan gambar blur serta warna agak gelap) </p>
-				<button class='btn btn-primary btn-upload-pic'>Pilih File</button>
-				<label for="picture_background_input">Pilih Gambar</label>	
+				<button class='btn btn-primary btn-upload-pic'>Pilih Gambar</button>	
 			`)
 
 			$('.background_kuesioner').css({
