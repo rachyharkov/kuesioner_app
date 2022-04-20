@@ -23,8 +23,13 @@ class Backup extends CI_Controller
     public function index()
     {
         $user_id = $this->session->userdata('userid');
+
+        // get action queryurl
+        $action = $this->input->get('action');
+
         $data = array(
             'menu' => 'Backup',
+            'action' => $action,
             'sett_apps' => $this->Setting_app_model->get_by_id(1),
         );
         $this->template->load('admin/backup/v_wrapper', $data);

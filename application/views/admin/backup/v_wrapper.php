@@ -71,10 +71,10 @@
                 <p style="text-align: center;">Silahkan pilih tindakan yang ingin anda lakukan terkait backup dibawah ini</p>
                 <ul class="nav nav-tabs" role="tablist" style="justify-content: center;">
                     <li class="nav-item">
-                        <a class="nav-link" href="#export" role="tab" data-toggle="tab"><span><i class="now-ui-icons arrows-1_cloud-download-93"></i></span> Export</a>
+                        <a class="nav-link hreftoexport" href="#export" role="tab" data-toggle="tab"><span><i class="now-ui-icons arrows-1_cloud-download-93"></i></span> Export</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#import" role="tab" data-toggle="tab"><span><i class="now-ui-icons arrows-1_cloud-upload-94"></i></span> Import</a>
+                        <a class="nav-link hreftoimport" href="#import" role="tab" data-toggle="tab"><span><i class="now-ui-icons arrows-1_cloud-upload-94"></i></span> Import</a>
                     </li>
                 </ul>
                 <!-- Tab panes -->
@@ -231,6 +231,19 @@
 </div>
 
 <script>
+
+    $(document).ready(function() {
+        $('.nav-tabs a.hrefto<?= $action ?>').click()
+    })
+
+    // change query action to anu variable on click .nav-tabs a
+    $('.nav-tabs a').click(function() {
+        var action = $(this).attr('href').replace('#', '')
+        // change query url ?action=action without refresh dont save it to history
+        window.history.replaceState({}, '', '?action=' + action)
+    })
+    
+
     function show_modal_export() {
         $('#modal-export').modal('show');
     }
