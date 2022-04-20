@@ -146,7 +146,7 @@
                                             <input type="file" class="form-control" accept=".xlsx,.xls" name="input-upload" id="input-upload">
                                         </td>
                                         <td>
-                                            <p class="jenis-msg m-0">-</p>
+                                            <p class="jenis-msg m-0" style="display: flex; flex-direction: row; justify-content: space-between;">-</p>
                                         </td>
                                         <td style="text-align: center;">
                                             <button class="btn btn-danger btn-delete"><i class="fas fa-trash-alt"></i></button>
@@ -286,7 +286,7 @@
                         $('.jenis-msg').html(
                             `
                             ${dt.jenis}
-                            <button data-title="Hypertext Markup Language" class="btn btn-success btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-check-circle"></i></button>    
+                            <button data-title="${dt.message}" class="btn btn-success btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-check-circle"></i></button>    
                             `
                         );
                         $('.btn-confirm-import').removeAttr('disabled');
@@ -298,7 +298,7 @@
                         $('.jenis-msg').html(
                             `
                             ${dt.jenis}
-                            <button data-title="Hypertext Markup Language" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-exclamation-circle"></i></button>    
+                            <button data-title="${dt.message}" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-exclamation-circle"></i></button>    
                             `
                         );
 
@@ -308,7 +308,19 @@
                 },
                 error: function(response) {
                     console.log(response);
-                    $('.btn-confirm-import').removeAttr('disabled');
+
+                    // get response error
+                    var dt = JSON.parse(response.responseText);
+
+                    $('.jenis-msg').html(
+                        `
+                        ${dt.jenis}
+                        <button data-title="${dt.message}" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px;"><i class="fas fa-exclamation-circle"></i></button>    
+                        `
+                    );
+
+                    // disable .btn-confirm-import
+                    $('.btn-confirm-import').attr('disabled', true);
                 }
             });
         }

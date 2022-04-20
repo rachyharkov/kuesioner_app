@@ -217,7 +217,7 @@ class Backup extends CI_Controller
                 $arr = array(
                     'response' => 'ok',
                     'jenis' => 'Kuesioner',
-                    'message' => 'Confirming data',
+                    'message' => 'Verified',
                     'datakuesioner' => json_encode($datany),
                     'datadiskusi' => json_encode($diskusilist),
                 );
