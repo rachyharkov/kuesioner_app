@@ -210,12 +210,46 @@ class Kuesioner extends CI_Controller {
 		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
 		
 		$dimensi = $this->input->post('dimensi');
-		$choices_structural = $this->input->post('choices_structural');
+		$choices_structural = $this->input->post('choicesstructural');
 		$theme_val = $this->input->post('theme_val');
 
 		$datadiskusi = json_decode($this->input->post('diskusilist'), true);
 
 		$kategori_respon = $this->input->post('kategori_respon');
+
+		$picture_kuesioner = '';
+
+		$filename = '';
+		$theme_temp = json_decode($theme_val, TRUE);
+
+		$this->load->library('upload'); //call library upload
+
+		if($theme_temp[0]['name'] == 'picture') {
+
+			if($_FILES['picture_bekgron']['name']){
+				
+				$filename = 'kuesioner_bg'.md5(time());
+	
+				$config['upload_path'] = './assets/images/kuesioner/';
+				$config['allowed_types'] = 'jpg|png|jpeg';
+				$config['max_size'] = '2048';
+				$config['file_name'] = $filename;
+				$this->upload->initialize($config);
+				$this->upload->do_upload('picture_bekgron');
+				$uploadData = $this->upload->data();
+
+				// get file name with extension
+
+
+
+				$picture_kuesioner = $uploadData['file_name'];
+				$theme_temp[0]['value'] = $picture_kuesioner;
+			} else {
+				$picture_kuesioner = 'default.png';
+				$theme_temp[0]['value'] = $picture_kuesioner;
+			}
+			$theme_val = json_encode($theme_temp);
+		}
 
 		$kategori_respon_temp = [];		
 
@@ -263,7 +297,8 @@ class Kuesioner extends CI_Controller {
 				'urutan' => $value['urutan'],
 				'dimensi' => $value['dimensi'],
 				'indikator' => $value['indikator'],
-				'isi_diskusi' => $value['diskusi']
+				'isi_diskusi' => $value['diskusi'],
+				'exception' => $value['exception'],
 			);
 			$this->Diskusi_model->insert($datadiskusinyak);
 		}

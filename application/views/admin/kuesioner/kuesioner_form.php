@@ -141,8 +141,8 @@
 											<label class="form-check-label">
 												<input class="form-check-input structural_based_question_check" type="checkbox">
 												<span class="form-check-sign"></span>
-												Structural Based Question
-												<span style="position: absolute;top: -7px;right: -27px;"><button data-title="Apakah anda ingin kuesioner yang tampil tergantung dari opsi yang dipilih sebelum responden memulai isi kuesionernya?. Saat anda membuat diskusi nanti, akan ada opsi yang mengharuskan anda untuk mengatur diskusi sesuai dengan opsi-opsi yang sudah dibuat" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px; z-index: 2;" onclick="return false;"><i class="fas fa-question"></i></button></span>
+												Exception Based Question
+												<span style="position: absolute;top: -7px;right: -27px;"><button data-title="Diskusi yang tampil pada kuesioner akan difilter berdasarkan pilihan yang dibuat oleh anda dan dipilih oleh responden dalam bentuk laman konfirmasi pesan yang anda buat saat responden memulai pengisian kuesioner, informasi lebih lanjut merujuk pada dokumentasi." class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px; z-index: 2;" onclick="return false;"><i class="fas fa-question"></i></button></span>
 											</label>
 										</div>
 										<div class="structural_choice_wrapper">
@@ -153,7 +153,7 @@
 												<input class="form-check-input additional_feedback_respond_check" type="checkbox">
 												<span class="form-check-sign"></span>
 												Additional Feedback Respond
-												<span style="position: absolute;top: -7px;right: -27px;"><button data-title="Fitur ini akan mengaktifkan kotak inputan saran dan juga kotak input khusus (untuk mengetahui hal yang menjadi penilaian rendah) yang bisa diketik responden saat salah responden terdeteksi memilih jawaban dengan poin rendah (Kritik dan Saran dapat dilihat pada detail respon masing-masing responden)" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px; z-index: 1;" onclick="return false;"><i class="fas fa-question"></i></button></span>
+												<span style="position: absolute;top: -7px;right: -27px;"><button data-title="Fitur ini akan mengaktifkan kotak inputan saran dan juga kotak input khusus (untuk mengetahui hal yang mengakibatkan responden memberi penilaian rendah) yang bisa diketik responden saat salah responden terdeteksi memilih jawaban dengan poin rendah (Hasil input kritik dan saran dapat dilihat pada detail laporan respon masing-masing responden)" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px; z-index: 1;" onclick="return false;"><i class="fas fa-question"></i></button></span>
 											</label>
 										</div>
 									</div>
@@ -391,7 +391,7 @@
 							<div class="alert-icon" style="width: 15%;">
 								<i class="now-ui-icons ui-1_bell-53" style="margin-top: 8px;"></i>
 							</div>
-							<span style="font-size: 11px;">Responden akan melihat pesan dan pilihan yang dibuat dibawah ini saat sebelum pengisian kuesioner dimulai, sehingga diskusi yang tampil akan sesuai dengan yang dipilih dibawah.</span>
+							<span style="font-size: 11px;">Responden akan melihat pesan dan pilihan yang dibuat dibawah ini sebelum pengisian kuesioner dimulai, sehingga diskusi yang tampil akan sesuai dengan yang dipilih dibawah.</span>
 						</div>
 					</div>
 					<div class="form-group">

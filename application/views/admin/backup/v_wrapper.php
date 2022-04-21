@@ -166,9 +166,23 @@
                                 </button>
                             </div>
 
-                            <div class="preview_data_import" style="text-align: center;">
+                            <div class="preview_data_import">
                                 <table class="table table-bordered table_preview_data_import" style="max-width: 21rem;margin: 10px auto 25px auto;">
                                     <tbody>
+                                        <tr>
+                                            <td colspan="3"><b style="font-size: 14px;">Import Check Result</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               <b style="font-size: 12px;">Detail</b> 
+                                            </td>
+                                            <td>
+                                                <b style="font-size: 12px;">Status</b>
+                                            </td>
+                                            <td>
+                                                <b style="font-size: 12px;">Tindakan</b>
+                                            </td>
+                                        </tr>
                                         
                                     </tbody>
                                 </table>
@@ -212,7 +226,7 @@
                                                 <button type="button" class="btn btn-primary theme_choice" data-theme="picture">Gambar</button>
                                             </div>
                                             <div class="theme_setting_wrapper">
-                                                <p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
+                                                <p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p> 
                                                 <p style='font-size: 11px; color: gray;'>Empat Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berbeda bagi setiap responden</p>
                                             </div>
                                         </div>
@@ -327,8 +341,9 @@
                                 <div class="dataaa">
                                     <input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
                                     <input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
-                                    <input type="hidden" name="dimensi" class="tbdimensi" value="" />
-                                    <input type="hidden" name="diskusilist" class="tbdiskusilist" value="" />
+                                    <input type="text" name="dimensi" class="tbdimensi" value="" />
+                                    <input type="text" name="diskusilist" class="tbdiskusilist" value="" />
+                                    <input type="text" name="choicesstructural" class="tbchoicesstructural" value="" />
                                 </div>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>
@@ -358,6 +373,54 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- create centered modal -->
+<div class="modal fade" id="modal_option_structured" tabindex="-1" role="dialog" aria-labelledby="modal_option_structured" aria-hidden="true" style="overflow:hidden;">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modal_option_structured">Structural Kuesioner</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form id="form-structural-data">
+				<div class="modal-body">
+					<!-- create alert with icon fas fa-warning placed on left -->
+					<div class="alert alert-success" role="alert">
+						<div class="container" style="display: flex;padding: 0;">
+							<div class="alert-icon" style="width: 15%;">
+								<i class="now-ui-icons ui-1_bell-53" style="margin-top: 8px;"></i>
+							</div>
+							<span style="font-size: 11px;">Responden akan melihat pesan dan pilihan yang dibuat dibawah ini sebelum pengisian kuesioner dimulai, sehingga diskusi yang tampil akan sesuai dengan yang dipilih dibawah.</span>
+						</div>
+					</div>
+
+                    <div class="alert alert-danger alert-danger-structural-question-message-error" role="alert">
+						<div class="container" style="display: flex;padding: 0;">
+							<div class="alert-icon" style="width: 15%;">
+								<i class="now-ui-icons ui-1_bell-53" style="margin-top: 8px;"></i>
+							</div>
+							<span style="font-size: 11px;line-height: 3;"><b>Pesan</b> harus diisi.</span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<textarea class="form-control" id="option_structured_message" name="option_structured_message" rows="3" placeholder="Masukan pesan disini" required></textarea>
+						<label for="optionsInput" class="mt-3">Opsi Pilihan</label>
+						<ol class="list-options-ready">
+                            
+						</ol>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-close-structuralconf-dialog" data-dismiss="modal">Batal</button>
+					<button type="submit" class="btn btn-primary">Simpan</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <script>
@@ -399,6 +462,14 @@
         } else {
             // create ajax
 
+            // show swal.fire loading
+            Swal.fire({
+                title: 'Loading',
+                html: '<i class="fas fa-spinner fa-spin"></i>',
+                showConfirmButton: false,
+                allowOutsideClick: false
+            })
+
             // get this file
             var formData = new FormData();
             formData.append('file', $(this)[0].files[0]);
@@ -413,6 +484,10 @@
                     // console.log(response);
                     var dt = JSON.parse(response);
                     if (dt.response == 'ok') {
+
+                        // close swal loading
+                        Swal.close();
+
                         $('.jenis-msg').html(
                             `
                             ${dt.jenis}
@@ -424,20 +499,57 @@
                         $('.btn-confirm-import').removeAttr('disabled');
                         $('.tbdimensi').val(dt.datakuesioner);
                         $('.tbdiskusilist').val(dt.datadiskusi);
-                        $('.table_preview_data_import tbody').html(`
-                            <tr>
-                                <td>Dimensi/Gap/Tolak Ukur</td><td><label class='badge bg-success text-white'>OK</label></td>
+                        $('.tbchoicesstructural').val(dt.tbchoicesstructural);
+
+                        var strhtmltotbl = `
+                        <tr>
+                                <td style='font-size: 12px;'>Dimensi/Gap/Tolak Ukur</td><td style='text-align: center;'><label class='badge bg-success text-white'>${dt.verify.dimensi}</label></td><td style='text-align: center;'></td>
                             </tr>
                             <tr>
-                                <td>Indikator</td><td><label class='badge bg-success text-white'>OK</label></td>
+                                <td style='font-size: 12px;'>Indikator</td><td style='text-align: center;'><label class='badge bg-success text-white'>${dt.verify.indikator}</label></td><td style='text-align: center;'></td>
                             </tr>
                             <tr>
-                                <td>Diskusi</td><td><label class='badge bg-success text-white'>OK</label></td>
+                                <td style='font-size: 12px;'>Diskusi</td><td style='text-align: center;'><label class='badge bg-success text-white'>${dt.verify.diskusi}</label></td><td style='text-align: center;'></td>
                             </tr>
-                        `);
+                            <tr>
+                                <td style='font-size: 12px;'>Filter Based</td><td style='text-align: center;'>
+                        `;
+
+                        if(dt.verify.exception.status == 0) {
+                            strhtmltotbl += `
+                                <label class='badge bg-success text-white'>Tidak Aktif</label></td><td style='text-align: center;'></td>
+                            </tr>
+                            `;
+
+                            $('.tbchoicesstructural').val('N/A');
+                        } else {
+                            strhtmltotbl += `
+                                <label class='badge bg-warning text-white'>Perlu Tindakan</label></td><td style='text-align: center;'><button class='btn btn-warning btn-structured-options' style='width: 20px;height: 20px;font-size: 11px;text-align: center;padding: 0px;'><i class='fas fa-exclamation-triangle'></i></button></td>
+                            </tr>
+                            `;
+
+                            var listofexception = '';
+
+                            // foreach dt.verufy.exception.value insert string to listofexception
+                            $.each(dt.verify.exception.value, function(i, v) {
+                                listofexception += `
+                                <li>
+                                    <div style="display: grid; grid-template-columns: 1fr 0.1fr">
+                                        <input type="text" value="${v}" name="optionsValue[]" class="optionsValue" style="border:none" readonly/>
+                                    </div>
+                                </li>
+                                `;
+                            })
+
+                            $('.list-options-ready').append(listofexception);
+                        }
+
+                        $('.table_preview_data_import tbody').append(strhtmltotbl);
+
                     }
 
                     if (dt.response == 'error') {
+                        Swal.close();
                         $('.jenis-msg').html(
                             `
                             ${dt.jenis}
@@ -451,6 +563,7 @@
                 },
                 error: function(response) {
                     console.log(response);
+                    Swal.close();
 
                     // get response error
                     var dt = JSON.parse(response.responseText);
@@ -468,6 +581,47 @@
             });
         }
     })
+
+    $(document).on('click', '.btn-structured-options', function() {
+        $('#modal_option_structured').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+    })
+
+    $(document).on('input','#option_structured_message', function() {
+        var message = $(this).val();
+        $('.btn-confirm-option-structured').attr('disabled', true);
+        if(message.length > 0) {
+            $('.btn-confirm-option-structured').removeAttr('disabled');
+            $('.alert-danger-structural-question-message-error').css('display', 'none');
+        } else {
+            $('.alert-danger-structural-question-message-error').css('display', 'block');
+        }
+    })
+
+    $(document).on('submit', '#form-structural-data', function(e) {
+		// var btnselected = $(this).find('button[type="submit"]')
+		// btnselected.html('<i class="fa fa-spin fa-spinner"></i> Menyimpan').addClass('disabled').attr('disabled', true)
+		e.preventDefault()
+		var newData = [];
+		newData.push({
+			'description': $('#option_structured_message').val(),
+			'optionsValue': []
+		})
+		$('.optionsValue').each(function() {
+			if ($(this).val() != '') {
+				newData[0].optionsValue.push($(this).val())
+			}
+		})
+		$('#modal_option_structured').modal('hide')
+		$('.tbchoicesstructural').val(JSON.stringify(newData))
+
+        $('.table_preview_data_import').find('tbody').find('tr').eq(5).html(`
+            <td style='font-size: 12px;'>Filter Based</td><td style='text-align: center;'>
+            <label class='badge bg-success text-white'>ok</label></td><td style='text-align: center;'><button class='btn btn-success btn-structured-options' style='width: 20px;height: 20px;font-size: 11px;text-align: center;padding: 0px;'><i class="fas fa-pen"></i></button></td>
+        `);
+	})
 
     $(document).on('click', '.btn-delete', function() {
         // empty file input
@@ -577,48 +731,67 @@
 
         e.preventDefault()
 
-        var btnselected = $(document.activeElement)
+        // if name=choicesstructural from this form is empty, do not submit, show swal error
 
-        btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
+        if ($('.tbchoicesstructural').val() == '') {
+            // show swal
 
-        Swal.fire({
-            title: 'Konfirmasi Tindakan',
-            text: "Yakin disimpan?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                dataString = $("#form_kuesioner_new").serialize();
-                $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url() . 'Kuesioner/create_kuesioner_full' ?>",
-                    data: dataString,
-                    success: function(data) {
+            // scroll screen to top quick
+            $('.main-panel').animate({
+                scrollTop: 0
+            }, 700);
 
-                        var dt = JSON.parse(data)
+            // show toast swal
 
-                        if (dt.response == 'ok') {
-                            window.location.href = '<?php echo base_url() . 'kuesioner/success?thing=kuesioner&operation=add' ?>'
-                        } else {
-                            alert('check console')
+            alert('Selesaikan tindakan perbaikan terlebih dahulu')
+
+
+        } else {
+
+            var btnselected = $(document.activeElement)
+    
+            btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
+    
+            Swal.fire({
+                title: 'Konfirmasi Tindakan',
+                text: "Yakin disimpan?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dataString = $("#form_kuesioner_new").serialize();
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo base_url() . 'Kuesioner/create_kuesioner_full' ?>",
+                        data: dataString,
+                        success: function(data) {
+    
+                            var dt = JSON.parse(data)
+    
+                            if (dt.response == 'ok') {
+                                window.location.href = '<?php echo base_url() . 'kuesioner/success?thing=kuesioner&operation=add' ?>'
+                            } else {
+                                alert('check console')
+                            }
+                        },
+                        error: function(error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: "Oops!",
+                                text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+                            })
+                            btnselected.html('Simpan').removeClass('disabled').removeAttr('disabled')
                         }
-                    },
-                    error: function(error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: "Oops!",
-                            text: 'Tidak dapat tersambung dengan server, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
-                        })
-                        btnselected.html('Simpan').removeClass('disabled').removeAttr('disabled')
-                    }
-                });
-            } else {
-                btnselected.html('Simpan').removeClass('disabled').removeAttr('disabled')
-            }
-        })
+                    });
+                } else {
+                    btnselected.html('Simpan').removeClass('disabled').removeAttr('disabled')
+                }
+            })
+        }
+
     })
 
     $(document).on('change', '#clr', function() {

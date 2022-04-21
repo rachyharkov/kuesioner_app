@@ -94,6 +94,7 @@ class Backup extends CI_Controller
         $spreadsheet->getActiveSheet()->mergeCells('B2:B3');
         $spreadsheet->getActiveSheet()->mergeCells('C2:C3');
         $spreadsheet->getActiveSheet()->mergeCells('D2:D3');
+        $spreadsheet->getActiveSheet()->mergeCells('E2:E3');
         // set cell value
 
         $sheet->setCellValue('A1', 'KUESIONER');
@@ -103,9 +104,10 @@ class Backup extends CI_Controller
         $sheet->setCellValue('B2', 'Indikator');
         $sheet->setCellValue('C2', 'No');
         $sheet->setCellValue('D2', 'Diskusi');
+        $sheet->setCellValue('E2', 'Kriteria (Jika terdapat isian pada kolom ini, otomatis fitur exception kuesioner akan diaktifkan)');
 
         // set row 2 as bold
-        $spreadsheet->getActiveSheet()->getStyle('A2:D2')->getFont()->setBold(true);
+        $spreadsheet->getActiveSheet()->getStyle('A2:E2')->getFont()->setBold(true);
 
         // set text align of column A
         $spreadsheet->getActiveSheet()->getStyle('A2:A3')->getAlignment()->setHorizontal(
@@ -117,11 +119,13 @@ class Backup extends CI_Controller
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(7);
         $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(36);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(36);
 
         $spreadsheet->getActiveSheet()->getStyle('A')->getAlignment()->setWrapText(true);
         $spreadsheet->getActiveSheet()->getStyle('B')->getAlignment()->setWrapText(true);
         $spreadsheet->getActiveSheet()->getStyle('C')->getAlignment()->setWrapText(true);
         $spreadsheet->getActiveSheet()->getStyle('D')->getAlignment()->setWrapText(true);
+        $spreadsheet->getActiveSheet()->getStyle('E')->getAlignment()->setWrapText(true);
 
         // loop until 10 rows and fill with text
         for ($i = 3; $i <= 10; $i++) {
@@ -181,6 +185,7 @@ class Backup extends CI_Controller
                                 'dimensi' => trim($value['A']),
                                 'indikator' => trim($value['B']),
                                 'diskusi' => trim($value['D']),
+                                'exception' => trim($value['E']),
                             );
                         }
 
@@ -212,18 +217,50 @@ class Backup extends CI_Controller
                     $datany[] = $temp;
                 }
 
-
                 // echo '<pre>';
                 // echo json_encode($datany);
                 // echo '</pre>';
 
                 // $this->Akun_model->insert_batch($data);
+
+                $exceptiondata = [
+                    'status' => 0,
+                    'value' => []
+                ];
+
+                foreach ($diskusilist as $key => $value) {
+                    // if $value['exception'] is not empty, stop this foreach and set $exceptiondata['status'] to 1
+                    if ($value['exception']) {
+                        $exceptiondata['status'] = 1;
+                        break;
+                    }
+                }
+
+                if($exceptiondata['status'] == 1){
+                    foreach ($diskusilist as $key => $value) {
+                        if ($value['exception']) {
+                            // check if exception is already in $exceptiondata['value']
+                            if (!in_array($value['exception'], $exceptiondata['value'])) {
+                                // push to array
+                                array_push($exceptiondata['value'], $value['exception']);
+                            }
+                        }
+                    }
+                }
+
                 $arr = array(
                     'response' => 'ok',
                     'jenis' => 'Kuesioner',
                     'message' => 'Verified',
                     'datakuesioner' => json_encode($datany),
                     'datadiskusi' => json_encode($diskusilist),
+                    'verify' => array(
+                        'dimensi' => 'ok',
+                        'indikator' => 'ok',
+                        'diskusi' => 'ok',
+                        'urutan' => 'ok',
+                        'exception' => $exceptiondata
+                    )
                 );
                 echo json_encode($arr);
             } else {
