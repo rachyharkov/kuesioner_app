@@ -17,6 +17,7 @@ class Backup extends CI_Controller
         $this->load->model('Akun_model');
         $this->load->model('Kuesioner_model');
         $this->load->model('Backup_model');
+        $this->load->model('Formindividu_model');
         $this->load->library('template');
     }
 
@@ -31,6 +32,7 @@ class Backup extends CI_Controller
             'menu' => 'Backup',
             'action' => $action,
             'sett_apps' => $this->Setting_app_model->get_by_id(1),
+            'form_individu' => $this->Formindividu_model->get_all(),
         );
         $this->template->load('admin/backup/v_wrapper', $data);
     }

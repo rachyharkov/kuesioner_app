@@ -22,12 +22,12 @@
     .tooltip:after {
     	border-right: 6px solid transparent;
     	border-bottom: 6px solid rgba(0,0,0,.75); 
-      border-left: 6px solid transparent;
-      content: '';
-      height: 0;
+        border-left: 6px solid transparent;
+        content: '';
+        height: 0;
         top: 20px;
         left: 20px;
-      width: 0;
+        width: 0;
     }
     .tooltip:before {
       background: rgba(0,0,0,.75);
@@ -53,6 +53,9 @@
       transform: translate3d(0,0,0);
     }
 </style>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <div class="row">
     <div class="col-md-12">
@@ -201,6 +204,17 @@
                                             <label for="labelInputDeskripsiKuesioner" class="form-label">Deskripsi</label>
                                             <textarea name="deskripsi_kuesioner" rows="4" class="form-control" id="labelInputDeskripsiKuesioner" required placeholder="Masukan Deskripsi"></textarea>
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="label" class="form-label">Form Individu</label>
+                                            <div class="input-group">
+                                                <input type="text" readonly class="form-control form_individu_name" id="labelInputFormIndividu" required placeholder="- Pilih Form Individu -">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-primary btn-sm m-0" data-toggle="modal" data-target="#modal_form_individu">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <table class="table table-borderless" id="kategori_response_table">
                                             <tr id="row0" class="baris_kategori_respon">
                                                 <td>
@@ -341,6 +355,7 @@
                                 <div class="dataaa">
                                     <input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
                                     <input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
+                                    <input type="text" name="form_individu" class="form_individu" required readonly>
                                     <input type="text" name="dimensi" class="tbdimensi" value="" />
                                     <input type="text" name="diskusilist" class="tbdiskusilist" value="" />
                                     <input type="text" name="choicesstructural" class="tbchoicesstructural" value="" />
@@ -423,7 +438,51 @@
 	</div>
 </div>
 
+<!-- modal -->
+<div class="modal fade" id="modal_form_individu" role="dialog" aria-labelledby="modal_form_individu" aria-hidden="true" style="overflow:hidden;">
+	<div class="modal-dialog modal-md" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modal_form_individu">Form Individu</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- create dropdowns -->
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<select class="form-control selectformindividu" id="labelSelectformindividu" required name="selectformindividu" style="width: 100%;">
+								<?php foreach ($form_individu as $key => $value) { ?>
+									<option value="<?php echo $value->id_formindividu ?>"><?php echo $value->nama_form ?></option>
+								<?php
+								} ?>
+							</select>
+						</div>
+						<p style="font-size: 11px;">Ingin mengelola/menambah form individu? <a href="<?= base_url() . 'pengaturan/form_individu/' ?>">klik disini.</a></p>
+						<button type="button" class="btn btn-primary btn-choose-formindividu" disabled style="width: 100%;">
+							Simpan
+						</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<p class="text-left">Preview :</p>
+						<div class="preview_individu_form">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
+    $('.selectformindividu').select2({
+		placeholder: "Pilih form individu",
+	});
 
     $(document).ready(function() {
         $('.nav-tabs a.hrefto<?= $action ?>').click()
@@ -747,7 +806,7 @@
 
 
         } else {
-
+            var a = this
             var btnselected = $(document.activeElement)
     
             btnselected.html('<i class="fas fa-sync fa-spin"></i>').addClass('disabled').attr('disabled')
@@ -766,7 +825,11 @@
                     $.ajax({
                         type: "POST",
                         url: "<?php echo base_url() . 'Kuesioner/create_kuesioner_full' ?>",
-                        data: dataString,
+                        data: new FormData(a), //penggunaan FormData
+                        processData: false,
+                        contentType: false,
+                        cache: false,
+                        async: false,
                         success: function(data) {
     
                             var dt = JSON.parse(data)
@@ -937,6 +1000,44 @@
 				alert('File yang diupload bukan gambar')
 			}
 		}
+	})
+
+    $(document).on('change', '.selectformindividu', function() {
+		// ajax get
+		$('.preview_individu_form').html('<p>Loading Preview...</p>')
+		var id = $(this).val()
+
+		if (id != '') {
+			$('.btn-choose-formindividu').removeAttr('disabled')
+			$.ajax({
+				type: "GET",
+				url: "<?php echo base_url() . 'Individuform/preview_form/' ?>" + id,
+				success: function(data) {
+					$('.preview_individu_form').html(data)
+				},
+				error: function(error) {
+					Swal.fire({
+						icon: 'error',
+						title: "Oops!",
+						text: 'Tidak dapat melakukan preview Form Individu, pastikan koneksi anda aktif, jika masih terjadi hubungi admin IT'
+					})
+				}
+			});
+		} else {
+			$('.preview_individu_form').html('<p>Silahkan Pilih Form Individu</p>')
+			$('.btn-choose-formindividu').attr('disabled', true)
+		}
+	})
+
+	$(document).on('click', '.btn-choose-formindividu', function() {
+		var id = $('.selectformindividu').val()
+		var nama = $('.selectformindividu option:selected').text()
+
+		$('.form_individu_name').val(nama)
+		$('.form_individu').val(id)
+
+		// close modal
+		$('#modal_form_individu').modal('hide')
 	})
 
 </script>

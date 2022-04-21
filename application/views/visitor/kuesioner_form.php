@@ -81,7 +81,7 @@ text-align: center;
 margin: 2vh 0;">
 					<img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
 				</div>
-				<h4><?php echo $data_kuesioner->judul_kuesioner ?></h4>
+				<h4 class="mb-4"><?php echo $data_kuesioner->judul_kuesioner ?></h4>
 				<p><?php echo $data_kuesioner->deskripsi_kuesioner ?></p>
 
 				<div class="scroll-to-down-anim"></div>

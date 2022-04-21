@@ -3,7 +3,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title><?php echo $judul_kuesioner == null ? 'Not Found' : $judul_kuesioner ?> - Kuesioner Internal PT Pupuk Indonesia </title>
+		<title><?php echo $judul_kuesioner == null || $judul_kuesioner == '' ? 'Not Found' : $judul_kuesioner ?> - Kuesioner Internal PT Pupuk Indonesia </title>
 		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
 		<meta content="" name="description" />
 		<meta content="" name="author" />
@@ -19,31 +19,37 @@
 		$arr1 = ['#fab438','#11998e','#f47b24','#1f78bc'];
 		$arr2 = ['#feec03','#38ef7d','#fbaf14','#57a2cb'];
 
-		$theme_decode = json_decode($theme,TRUE);
-
 		$primarycol = '';
 		$secondarycol = '';
 		$theme_apply = '';
+		if($theme){
+			$theme_decode = json_decode($theme,TRUE);
 
-		if($theme_decode[0]['name'] == 'default'){
+			if($theme_decode[0]['name'] == 'default'){
+				$ano = array_rand($arr1, 1);
+				$primarycol = $arr1[$ano];
+				$secondarycol = $arr2[$ano];
+				$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
+			} elseif($theme_decode[0]['name'] == 'gradient'){
+				$ano1 = array_rand($arr1, 1);
+				$ano2 = array_rand($arr1, 1);
+				$primarycol = $arr1[$ano1];
+				$secondarycol = $arr2[$ano2];
+				$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
+			} elseif($theme_decode[0]['name'] == 'solid'){
+				$primarycol = $theme_decode[0]['value'];
+				$secondarycol = $theme_decode[0]['value'];
+				$theme_apply = 'background-image: url();background-color: '.$primarycol.';';
+			} elseif($theme_decode[0]['name'] == 'picture') {
+				$primarycol = $arr1[1];
+				$secondarycol = $arr2[1];
+				$theme_apply = 'background: url('.base_url().'assets/images/kuesioner/'.$theme_decode[0]['value'].') no-repeat center center fixed;background-size: cover;height: 100%;overflow: hidden;';
+			}
+		} else {
 			$ano = array_rand($arr1, 1);
 			$primarycol = $arr1[$ano];
 			$secondarycol = $arr2[$ano];
 			$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
-		} elseif($theme_decode[0]['name'] == 'gradient'){
-			$ano1 = array_rand($arr1, 1);
-			$ano2 = array_rand($arr1, 1);
-			$primarycol = $arr1[$ano1];
-			$secondarycol = $arr2[$ano2];
-			$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
-		} elseif($theme_decode[0]['name'] == 'solid'){
-			$primarycol = $theme_decode[0]['value'];
-			$secondarycol = $theme_decode[0]['value'];
-			$theme_apply = 'background-image: url();background-color: '.$primarycol.';';
-		} elseif($theme_decode[0]['name'] == 'picture') {
-			$primarycol = $arr1[1];
-			$secondarycol = $arr2[1];
-			$theme_apply = 'background: url('.base_url().'assets/images/kuesioner/'.$theme_decode[0]['value'].') no-repeat center center fixed;background-size: cover;height: 100%;overflow: hidden;';
 		}
 
 		?>

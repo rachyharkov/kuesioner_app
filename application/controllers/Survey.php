@@ -17,13 +17,19 @@ class Survey extends CI_Controller {
 	{
 		$id_kuesioner = $this->input->get('id');
 
-		$datakuesioner = $this->Kuesioner_model->get_by_id(decrypt_url($id_kuesioner));
+		$getdata = $this->Kuesioner_model->get_by_id(decrypt_url($id_kuesioner));
+
+		$datakuesioner = $getdata ? $getdata : false;
+
+		$judul_kuesioner = $datakuesioner ? $datakuesioner->judul_kuesioner : false;
+		$choices_structural = $datakuesioner ? $datakuesioner->choices_structural : false;
+		$theme = $datakuesioner ? $datakuesioner->theme : false;
 
 		$data = array(
 			'id_kuesioner' => decrypt_url($id_kuesioner),
-			'judul_kuesioner' => $datakuesioner->judul_kuesioner,
-			'choices_structural' => $datakuesioner->choices_structural,
-			'theme' => $datakuesioner->theme,
+			'judul_kuesioner' => $judul_kuesioner,
+			'choices_structural' => $choices_structural,
+			'theme' => $theme,
 			'classnyak' => $this
 		);
 

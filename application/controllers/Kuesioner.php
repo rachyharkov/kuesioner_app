@@ -185,7 +185,7 @@ class Kuesioner extends CI_Controller {
 		}
 
 		$datanya = array(
-			'id_formindividu' => 1,
+			'id_formindividu' => $form_individu,
 			'judul_kuesioner' => $judul_kuesioner,
 			'deskripsi_kuesioner' => $deskripsi_kuesioner,
 			'dimensi' => json_encode($dimensi_temp),
@@ -208,7 +208,7 @@ class Kuesioner extends CI_Controller {
 	{
 		$judul_kuesioner = $this->input->post('judul_kuesioner');
 		$deskripsi_kuesioner = $this->input->post('deskripsi_kuesioner');
-		
+		$form_individu = $this->input->post('form_individu');
 		$dimensi = $this->input->post('dimensi');
 		$choices_structural = $this->input->post('choicesstructural');
 		$theme_val = $this->input->post('theme_val');
@@ -270,7 +270,7 @@ class Kuesioner extends CI_Controller {
 		}
 
 		$datanya = array(
-			'id_formindividu' => 1,
+			'id_formindividu' => $form_individu,
 			'judul_kuesioner' => $judul_kuesioner,
 			'deskripsi_kuesioner' => $deskripsi_kuesioner,
 			'dimensi' => $dimensi,
