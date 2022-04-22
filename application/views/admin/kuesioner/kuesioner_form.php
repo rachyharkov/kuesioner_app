@@ -183,6 +183,9 @@
 										<tr id="row0" class="baris_kategori_respon">
 											<td>
 												<input type="text" name="kategori_respon[]" placeholder="Masukan nama kategori jawaban" class="form-control kategori_respon" required />
+												<div class="alertanuuan">
+													<p class="alertnyak" style="color: red; font-size: 11px"><b>Wajib ada pilihan pada kategori ini</b></p>
+												</div>
 												<table class="tabel_pilihan_row">
 
 												</table>
@@ -422,7 +425,7 @@
 </div>
 
 <script src="<?= base_url() . 'assets/admin/js/form-theme-editor.js' ?>"></script>
-
+<script src="<?= base_url() . 'assets/admin/js/heatmap-evdigi.js'?>"></script>
 <script>
 
 	$('.summernote').summernote({
@@ -488,7 +491,7 @@
 	$(document).on('click', '#add_kategori_respon', function() {
 		var x = $('.baris_kategori_respon').length
 		$('#kategori_response_table').append(`<tr id="row` + x +
-			`" class="baris_kategori_respon"><td><input type="text" name="kategori_respon[]" placeholder="Masukan nama kategori jawaban" class="form-control" required="" /><table class="tabel_pilihan_row"></table><span style="font-size: 11px;"><a href="#" class="add_pilihan">Tambah Pilihan</a></span></td><td style='vertical-align: top;'><button type="button" name="remove" id="` + x + `" class="btn btn-danger btn-sm btn_remove_kategori_respon">X</button></td></tr>`)
+			`" class="baris_kategori_respon"><td><input type="text" name="kategori_respon[]" placeholder="Masukan nama kategori jawaban" class="form-control" required="" /><div class="alertanuuan"><p class="alertnyak" style="color: red; font-size: 11px"><b>Wajib ada pilihan pada kategori ini</b></p></div><table class="tabel_pilihan_row"></table><span style="font-size: 11px;"><a href="#" class="add_pilihan">Tambah Pilihan</a></span></td><td style='vertical-align: top;'><button type="button" name="remove" id="` + x + `" class="btn btn-danger btn-sm btn_remove_kategori_respon">X</button></td></tr>`)
 	});
 
 	$(document).on('click', '.btn_remove_kategori_respon', function() {
@@ -505,19 +508,21 @@
 
 		console.log(tabelpilihan)
 		tabelpilihan.append(`
-        <tr id="kategori${whatrow}pilihanke${pilihaninputelementlength}">
-          <td style='padding: 0.3rem 0 0 0;'><input type="text" name="pilihan_kategori_respon${whatrow}[]" placeholder="pilihan" class="form-control" required="" /></td>
+        <tr id="kategori${whatrow}pilihanke${pilihaninputelementlength}" class="pilihandalamkategori">
+          <td style='padding: 0.3rem 0 0 0;'><input type="text" name="pilihan_kategori_respon${whatrow}[]" placeholder="pilihan" class="form-control tbpilihan" required="" /></td>
           <td style='vertical-align: top;'><a class="remove_pilihan" id="${whatrow}pilihanke${pilihaninputelementlength}"><i class="fas fa-times"></i></a></td>
         </tr>
         `)
 
 		console.log(`kategori${whatrow}pilihanke${pilihaninputelementlength} added`)
+		generateColorScaleforEachPilihanfromEachKategoriRespon()
 	})
 
 	$(document).on('click', '.remove_pilihan', function() {
 		var button_id = $(this).attr("id")
 		console.log(button_id + 'removed')
 		$('#kategori' + button_id + '').remove()
+		generateColorScaleforEachPilihanfromEachKategoriRespon()
 	})
 
 	$(document).on('submit', '#form_kuesioner_new', function(e) {
