@@ -104,6 +104,7 @@ class Kuesioner extends CI_Controller {
 		$form_individu = $this->input->post('form_individu');
 		$choices_structural = $this->input->post('choices_structural');
 		$theme_val = $this->input->post('theme_val');
+		$auto_feedback_detection = $this->input->post('auto_feedback_detection') ? 1 : 0;
 
 		$choices_structural = $choices_structural == '' ? 'N/A' : $choices_structural;
 
@@ -195,6 +196,7 @@ class Kuesioner extends CI_Controller {
 			'status' => 0,
 			'choices_structural' => $choices_structural,
 			'theme' => $theme_val,
+			'auto_feedback_detection' => $auto_feedback_detection,
 		);
 		// print_r($datanya);
 		$this->Kuesioner_model->insert($datanya);
@@ -212,6 +214,7 @@ class Kuesioner extends CI_Controller {
 		$dimensi = $this->input->post('dimensi');
 		$choices_structural = $this->input->post('choicesstructural');
 		$theme_val = $this->input->post('theme_val');
+		$auto_feedback_detection = $this->input->post('auto_feedback_detection') ? 1 : 0;
 
 		$datadiskusi = json_decode($this->input->post('diskusilist'), true);
 
@@ -280,6 +283,7 @@ class Kuesioner extends CI_Controller {
 			'status' => 0,
 			'choices_structural' => $choices_structural,
 			'theme' => $theme_val,
+			'auto_feedback_detection' => $auto_feedback_detection,
 		);
 
 		// print_r($datanya);

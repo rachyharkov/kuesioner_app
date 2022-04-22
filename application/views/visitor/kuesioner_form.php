@@ -74,7 +74,7 @@
 <form id="form_create_action" method="post" enctype="multipart/form-data">
 
 	<div class="container sequence-wrapper" style="padding: 1vh 0;display: block;animation-duration: 1.0s;">
-		<div class="card" style="width: 100%;">
+		<div class="card" style="width: 100%;border-top: 10px solid <?= $primary_col ?>;border-radius: 0.5rem;">
 			<div class="card-body">
 				<div style="width: 100%;
 text-align: center;

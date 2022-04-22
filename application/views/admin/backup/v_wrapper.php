@@ -215,6 +215,23 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="mb-3">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>Opsional</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-check">
+                                                        <label class="form-check-label">
+                                                            <input class="form-check-input additional_feedback_respond_check" name="auto_feedback_detection" type="checkbox">
+                                                            <span class="form-check-sign"></span>
+                                                            Auto Feedback Detection
+                                                            <span style="position: absolute;top: -7px;right: -27px;"><button data-title="Fitur ini akan mengaktifkan kotak inputan saran dan juga kotak input khusus (untuk mengetahui hal yang mengakibatkan responden memberi penilaian rendah) yang bisa diketik responden saat salah responden terdeteksi memilih jawaban dengan poin rendah (Hasil input kritik dan saran dapat dilihat pada detail laporan respon masing-masing responden)" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px; z-index: 1;" onclick="return false;"><i class="fas fa-question"></i></button></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <table class="table table-borderless" id="kategori_response_table">
                                             <tr id="row0" class="baris_kategori_respon">
                                                 <td>

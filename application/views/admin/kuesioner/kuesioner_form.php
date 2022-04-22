@@ -146,13 +146,13 @@
 											</label>
 										</div>
 										<div class="structural_choice_wrapper">
-											<input type="text" name="choices_structural" class="choices_structural" disabled>
+											<input type="hidden" name="choices_structural" class="choices_structural" disabled>
 										</div>
 										<div class="form-check">
 											<label class="form-check-label">
-												<input class="form-check-input additional_feedback_respond_check" type="checkbox">
+												<input class="form-check-input additional_feedback_respond_check" name="auto_feedback_detection" type="checkbox">
 												<span class="form-check-sign"></span>
-												Additional Feedback Respond
+												Auto Feedback Detection
 												<span style="position: absolute;top: -7px;right: -27px;"><button data-title="Fitur ini akan mengaktifkan kotak inputan saran dan juga kotak input khusus (untuk mengetahui hal yang mengakibatkan responden memberi penilaian rendah) yang bisa diketik responden saat salah responden terdeteksi memilih jawaban dengan poin rendah (Hasil input kritik dan saran dapat dilihat pada detail laporan respon masing-masing responden)" class="btn btn-danger btn-sm btn-status-status tooltip fade" style="margin-left: 5px; z-index: 1;" onclick="return false;"><i class="fas fa-question"></i></button></span>
 											</label>
 										</div>
@@ -194,8 +194,8 @@
 									</table>
 								</div>
 							</div>
-							<input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
-							<input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
+							<input type="hidden" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
+							<input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px; display: none;">
 							<button type="submit" class="btn btn-primary">Simpan</button>
 							<a href="<?php echo site_url('kuesioner') ?>" class="btn btn-danger list-data">Kembali</a>
 						</form>
@@ -297,7 +297,7 @@
 
 							<div class="card background_kuesioner" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
 								<div class="card-body" style="text-align: center;">
-									<div class="card" style="max-width: 314px; margin-top: 10px;">
+									<div class="card theme-preview-card" style="max-width: 314px; margin-top: 10px;border-radius: 0.5rem;border-top: 10px solid <?= $primarycol ?>;box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;">
 										<div class="card-body" style="min-height: 60vh;">
 											<div style="width: 100%;text-align: center;margin: 2vh 0;">
 												<img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
@@ -320,6 +320,9 @@
 									</div>
 								</div>
 							</div>
+							
+							<canvas id="temp-preview" style="display: none;"></canvas>
+							<canvas id="temp-canvas" style="display: none;"></canvas>
 						</div>
 
 					</div>
@@ -418,7 +421,17 @@
 	</div>
 </div>
 
+<script src="<?= base_url() . 'assets/admin/js/form-theme-editor.js' ?>"></script>
+
 <script>
+
+	$(document).ready(function() {
+
+		var colortobright = increase_brightness('<?= $primarycol ?>', 50)
+
+		$('.theme-preview-card').css('border-top','10px solid ' + colortobright)
+	})
+
 	$('.selectformindividu').select2({
 		placeholder: "Pilih form individu",
 	});
@@ -646,150 +659,5 @@
 		})
 		$('#modal_option_structured').modal('hide')
 		$('.choices_structural').val(JSON.stringify(newData))
-	})
-
-	$(document).on('change', '#clr', function() {
-		$('.background_kuesioner').css({
-			'background-image': 'url(' + $(this).val() + ')',
-			'background-color': $(this).val()
-		});
-	})
-
-	function themeSet(name, value){
-		var newData = [];
-		newData.push({
-			'name': name,
-			'value': value
-		})
-		$('#theme_val').val(JSON.stringify(newData))
-	}	
-
-	$(document).on('click', '.theme_choice', function() {
-
-		$('.theme_choice').removeClass('active')
-		$(this).addClass('active')
-
-		var theme = $(this).data('theme')
-
-		if (theme == 'solid') {
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 11px; color: gray;'>Latar belakang satu warna</p>
-				<input type="color" value= "#001A57" id="clr">
-				<label for="clr">Pilih Warna</label>	
-			`)
-
-			$('.background_kuesioner').css({
-				'background-image': 'url()',
-				'background-color': $('#clr').val()
-			});
-			
-			var style = `${$('#clr').val()}`
-			themeSet('solid', style)
-			$('#picture_background_input').val('')
-
-		} else if (theme == 'picture') {
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 11px; color: gray;'>Latar belakang dengan dengan gambar yang bisa dipilih (disarankan menggunakan gambar blur serta warna agak gelap) </p>
-				<button class='btn btn-primary btn-upload-pic'>Pilih Gambar</button>	
-			`)
-
-			$('.background_kuesioner').css({
-				'background': 'url(<?= base_url().'assets/images/kuesioner/default.png' ?>) no-repeat center center',
-				'background-size': 'cover',
-				'height': '100%',
-				'overflow': 'hidden',
-				'background-color': $('#clr').val()
-			});
-
-			var style = `pic`
-			themeSet('picture', style)
-
-		} else if(theme == 'gradient') {
-			var primarycol = '';
-			var secondarycol = '';
-
-			var arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
-			var arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
-
-			var rand1 = Math.floor(Math.random() * arr1.length);
-			var rand2 = Math.floor(Math.random() * arr2.length);
-
-			primarycol = arr1[rand1];
-			secondarycol = arr2[rand2];
-
-			$('.background_kuesioner').css('background-image', 'linear-gradient(to bottom right, ' + primarycol + ', ' + secondarycol + ')')
-
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
-				<p style='font-size: 11px; color: gray;'>Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berubah-ubah untuk seluruh responden</p>
-			`)
-
-			var style = `gradient_random`
-			themeSet('gradient', style)
-			$('#picture_background_input').val('')
-
-		} else {
-
-			var primarycol = '';
-			var secondarycol = '';
-
-			var arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
-			var arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
-
-			var rand1 = Math.floor(Math.random() * arr1.length);
-
-			primarycol = arr1[rand1];
-			secondarycol = arr2[rand1];
-
-			$('.background_kuesioner').css('background-image', 'linear-gradient(to bottom right, ' + primarycol + ', ' + secondarycol + ')')
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
-				<p style='font-size: 11px; color: gray;'>Empat Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berbeda bagi setiap responden</p>
-			`)
-
-			var style = `default_random`
-			themeSet('default', style)
-			$('#picture_background_input').val('')
-		}
-
-	})
-
-	$(document).on('click','.btn-upload-pic', function() {
-		$('#picture_background_input').click()
-	})
-
-	$(document).on('change','#picture_background_input', function() {
-		var file = this.files[0];
-
-		// can't submit if size more than 1mb
-		if (file.size > 1000000) {
-			$('#picture_background_input').val('')
-			alert('Ukuran gambar terdeteksi melebihi ketentuan (Size 1 MB maximum)')
-			return false
-		} else {
-
-			// detect image type
-			var imageType = /image.*/;
-
-			if (file.type.match(imageType)) {
-				var reader = new FileReader();
-
-				reader.onload = function(e) {
-					$('.background_kuesioner').css({
-						'background': 'url(' + e.target.result + ') no-repeat center center',
-						'background-size': 'cover',
-						'height': '100%',
-						'overflow': 'hidden',
-						'background-color': $('#clr').val()
-					});
-				}
-
-				reader.readAsDataURL(file);
-			} else {
-				// empty this input file
-				$('#picture_background_input').val('')
-				alert('File yang diupload bukan gambar')
-			}
-		}
 	})
 </script>

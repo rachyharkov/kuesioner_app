@@ -258,7 +258,7 @@ if ($this->session->userdata('failed')) {
 											<button class="btn btn-primary btn-neutral btn-action" style="font-size: 18px;"><i class="fas fa-ellipsis-v"></i></button>
 											<div class="context-menu">
 												<div class="item"><a href="#" class="share-option" data-toggle="modal" data-target="#modal-share-kuesioner"><span>Bagikan</span></a></div>
-												<div class="item"><a href="<?php echo base_url() . 'kuesioner/edit/' . $value->id_kuesioner ?>">Edit Diskusi</a></div>
+												<div class="item"><a href="<?php echo base_url() . 'kuesioner/edit/' . $value->id_kuesioner ?>">Edit</a></div>
 												<div class="item"><a href="<?php echo base_url() . 'kuesioner/export/' . $value->id_kuesioner ?>">Export Respon</a></div>
 												<div class="item"><a id="<?php echo $value->id_kuesioner ?>" class="link_delete_kuesioner text-danger">Hapus</a></div>
 											</div>
