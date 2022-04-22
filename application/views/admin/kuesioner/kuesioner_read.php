@@ -48,6 +48,10 @@
 		animation: bounce 1s infinite;
 	}
 
+	.note-editor {
+		margin-top: 1rem;
+	}
+
 	@keyframes bounce {
 		0% {
 			transform: scale(1.4);
@@ -88,7 +92,7 @@
 					<?php echo $aksi ?> Kuesioner
 
 					<input class="form-control mt-4" style="font-size: 24px;" type="text" name="judul_kuesioner" id="judul_kuesioner" value="<?php echo $data_kuesioner->judul_kuesioner ?>">
-					<textarea class="form-control mt-3" rows="4" id="deskripsi_kuesioner" name="deskripsi_kuesioner"><?php echo $data_kuesioner->deskripsi_kuesioner ?></textarea>
+					<textarea class="form-control mt-3 summernote" rows="4" id="deskripsi_kuesioner" name="deskripsi_kuesioner"><?php echo $data_kuesioner->deskripsi_kuesioner ?></textarea>
 				</div>
 				<div class="card-body">
 					<div class="alertny">
@@ -176,6 +180,14 @@
 	</div>
 </form>
 <script type="text/javascript">
+	$('.summernote').summernote({
+		toolbar: [
+			// [groupName, [list of button]]
+			['style', ['bold', 'italic', 'underline', 'clear']],
+			['font', ['strikethrough', 'superscript', 'subscript']],
+			['fontsize', ['fontsize']]
+		]
+	});
 
 	function save_all() {
 

@@ -242,7 +242,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="labelInputDeskripsiKuesioner" class="form-label">Deskripsi</label>
-                                            <textarea name="deskripsi_kuesioner" rows="4" class="form-control" id="labelInputDeskripsiKuesioner" required placeholder="Masukan Deskripsi"></textarea>
+                                            <textarea name="deskripsi_kuesioner" rows="4" class="form-control summernote" id="labelInputDeskripsiKuesioner" required placeholder="Masukan Deskripsi"></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label for="label" class="form-label">Form Individu</label>
@@ -540,10 +540,22 @@
 
 <script src="<?= base_url() . 'assets/admin/js/form-theme-editor.js' ?>"></script>
 
+<!-- import summernote -->
+
 <script>
+    $('.summernote').summernote({
+		toolbar: [
+			// [groupName, [list of button]]
+			['style', ['bold', 'italic', 'underline', 'clear']],
+			['font', ['strikethrough', 'superscript', 'subscript']],
+			['fontsize', ['fontsize']]
+		]
+	});
+    
     $('.selectformindividu').select2({
 		placeholder: "Pilih form individu",
 	});
+    $('.selectformindividu').val(null).trigger('change');
 
     $(document).ready(function() {
         $('.nav-tabs a.hrefto<?= $action ?>').click()

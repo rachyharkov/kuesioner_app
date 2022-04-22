@@ -21,6 +21,7 @@
 
 		$primarycol = '';
 		$secondarycol = '';
+		$accent = '';
 		$theme_apply = '';
 		if($theme){
 			$theme_decode = json_decode($theme,TRUE);
@@ -29,20 +30,24 @@
 				$ano = array_rand($arr1, 1);
 				$primarycol = $arr1[$ano];
 				$secondarycol = $arr2[$ano];
+				$accent = $arr1[$ano];
 				$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
 			} elseif($theme_decode[0]['name'] == 'gradient'){
 				$ano1 = array_rand($arr1, 1);
 				$ano2 = array_rand($arr1, 1);
 				$primarycol = $arr1[$ano1];
 				$secondarycol = $arr2[$ano2];
+				$accent = $arr1[$ano];
 				$theme_apply = 'background-image: linear-gradient(to bottom right, '.$primarycol.','.$secondarycol.');';
 			} elseif($theme_decode[0]['name'] == 'solid'){
 				$primarycol = $theme_decode[0]['value'];
 				$secondarycol = $theme_decode[0]['value'];
+				$accent = $theme_decode[0]['accent'];
 				$theme_apply = 'background-image: url();background-color: '.$primarycol.';';
 			} elseif($theme_decode[0]['name'] == 'picture') {
 				$primarycol = $arr1[1];
 				$secondarycol = $arr2[1];
+				$accent = 'get_accent';
 				$theme_apply = 'background: url('.base_url().'assets/images/kuesioner/'.$theme_decode[0]['value'].') no-repeat center center fixed;background-size: cover;height: 100%;overflow: hidden;';
 			}
 		} else {
@@ -165,6 +170,8 @@
 		
 	</head>
 	<body>
+		<canvas id="temp-preview" style="display: none;"></canvas>
+		<canvas id="temp-canvas" style="display: none;"></canvas>
 		<div class="container-fluid" style="<?= $theme_apply; ?>">
 			<div class="container-sm" style="max-width: 570px;min-height: 100vh;">
 				<div id="body" style="position: relative;padding-top: 5rem;">
@@ -184,11 +191,39 @@
 				</div>
 			</div>
 		</div>
+		<script>
+			// define base url
+			var base_url = '<?php echo base_url() ?>';
+		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> <!-- untuk sweet alret -->
+		<script src="<?= base_url() . 'assets/admin/js/form-theme-editor.js' ?>"></script>
 
 		<script type="text/javascript">
+			$(document).ready(function() {
+
+				<?php
+				if($theme_decode[0]['name'] == 'default' || $theme_decode[0]['name'] == 'solid' || $theme_decode[0]['name'] == 'gradient') {
+					?>
+
+					var colortobright = increase_brightness('<?= $primarycol ?>', 50)
+					$('.theme-preview-card').css('border-top','10px solid ' + colortobright)
+					
+					<?php
+				} else {
+					?>
+
+					var image = new Image()
+					image.src = base_url + 'assets/images/kuesioner/<?= $theme_decode[0]['value'] ?>'
+					image.onload = function() {
+						var accent = getDominantColor(image)
+						$('.theme-preview-card').css('border-top','1rem solid ' + accent)
+					}
+					<?php
+				}
+				?>
+			})
 			
 			$(document).on('submit','#form_create_action', function(e) {
 

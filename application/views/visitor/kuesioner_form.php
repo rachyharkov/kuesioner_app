@@ -74,7 +74,7 @@
 <form id="form_create_action" method="post" enctype="multipart/form-data">
 
 	<div class="container sequence-wrapper" style="padding: 1vh 0;display: block;animation-duration: 1.0s;">
-		<div class="card" style="width: 100%;border-top: 10px solid <?= $primary_col ?>;border-radius: 0.5rem;">
+		<div class="card" style="width: 100%;border-radius: 0.7rem;">
 			<div class="card-body">
 				<div style="width: 100%;
 text-align: center;
@@ -89,9 +89,9 @@ margin: 2vh 0;">
 			</div>
 		</div>
 	</div>
-
+	
 	<div class="container sequence-wrapper" style="padding: 1vh 0; display: block;animation-duration: 1.3s;">
-		<div class="card" style="width: 100%;">
+		<div class="card theme-preview-card" style="width: 100%;border-radius: 1rem;border-top: 1rem solid white;box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;">	
 			<div class="card-body">
 				<div style="width: 100%;
 text-align: center;
@@ -153,7 +153,7 @@ margin: 2vh 0;">
 	?>
 		<input type="hidden" name="soal<?php echo $value->urutan ?>id" value="<?php echo $value->id ?>">
 		<div class="container container-<?php echo $value->urutan ?> sequence-wrapper" style="padding: 1vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
-			<div class="card" style="width: 100%; position: relative;">
+			<div class="card" style="width: 100%; border-radius: 1rem; position: relative;">
 				<span class="badge rounded-pill bg-secondary" style="position: absolute;
 left: 50%;
 top: -13px;
@@ -210,6 +210,7 @@ justify-content: space-evenly;">
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+
 		$('.select-uwu1').select2({
 			placeholder: "Pilih Unit Kerja",
 			allowClear: true
