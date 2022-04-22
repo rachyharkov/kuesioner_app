@@ -194,7 +194,7 @@
 									</table>
 								</div>
 							</div>
-							<input type="hidden" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
+							<input type="hidden" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\",\"accent\":\"dynamic\"}]" ?>'/>
 							<input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px; display: none;">
 							<button type="submit" class="btn btn-primary">Simpan</button>
 							<a href="<?php echo site_url('kuesioner') ?>" class="btn btn-danger list-data">Kembali</a>
@@ -295,7 +295,7 @@
 								}
 							</style>
 
-							<div class="card background_kuesioner" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
+							<div class="card background_kuesioner" style="transition: all 500ms ease-in-out 0s; background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
 								<div class="card-body" style="text-align: center;">
 									<div class="card theme-preview-card" style="max-width: 314px; margin-top: 10px;border-radius: 0.5rem;border-top: 10px solid <?= $primarycol ?>;box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;">
 										<div class="card-body" style="min-height: 60vh;">

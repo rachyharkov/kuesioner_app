@@ -23,6 +23,12 @@
 
   <script src="<?php echo base_url().'assets/js/jquery-ui/jquery-ui.min.js' ?>"></script>
   <script src="<?php echo base_url().'assets/js/jquery.ui.touch-punch.min.js' ?>"></script>
+  <script>
+    // define base_url and site_url
+    var base_url = "<?php echo base_url(); ?>";
+    var site_url = "<?php echo site_url(); ?>";
+    
+  </script>
 </head>
 
 <body class="">

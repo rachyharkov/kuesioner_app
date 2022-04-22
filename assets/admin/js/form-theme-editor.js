@@ -1,3 +1,13 @@
+function themeSet(name, value, accent){
+
+    var newData = [];
+    newData.push({
+        'name': name,
+        'value': value,
+        'accent': accent
+    })
+    $('#theme_val').val(JSON.stringify(newData))
+}
 var canvas = document.getElementById("temp-canvas")
 var preview = document.getElementById("temp-preview")
 var ctx = canvas.getContext("2d")
@@ -32,6 +42,12 @@ $(document).on('change', '#clr', function() {
         'background-image': 'url(' + color + ')',
         'background-color': color
     });
+
+    $('.theme-preview-card').css('border-top','10px solid ' + accent)
+
+    themeSet('solid', color, accent)
+
+    
 })
 
 function getDominantColor(imageObject) {
@@ -48,16 +64,6 @@ function getDominantColor(imageObject) {
     return hex;
 }
 
-function themeSet(name, value, accent){
-
-    var newData = [];
-    newData.push({
-        'name': name,
-        'value': value,
-        'accent': accent
-    })
-    $('#theme_val').val(JSON.stringify(newData))
-}
 
 $(document).on('click', '.theme_choice', function() {
 

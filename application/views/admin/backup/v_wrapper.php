@@ -1,57 +1,97 @@
 <style>
-    .btn-status-status {
-        font-size: 11px;
-        border-radius: 55%;
-        width: 18px;
-        height: 18px;
-        text-align: center;
-        padding: 0px;
-    }
 
-    .tooltip {
-      position: relative;
-      opacity: 1 !important;
-    }
-    .tooltip:before,
-    .tooltip:after {
-      display: block;
-      opacity: 0;
-      pointer-events: none;
-      position: absolute;
-    }
-    .tooltip:after {
-    	border-right: 6px solid transparent;
-    	border-bottom: 6px solid rgba(0,0,0,.75); 
-        border-left: 6px solid transparent;
-        content: '';
-        height: 0;
-        top: 20px;
-        left: 20px;
-        width: 0;
-    }
-    .tooltip:before {
-      background: rgba(0,0,0,.75);
-      border-radius: 2px;
-      color: #fff;
-      content: attr(data-title);
-      font-size: 14px;
-      padding: 6px 10px;
-        top: 26px;
-      white-space: nowrap;
-    }
+    #cp_red .ui-slider-range {
+		background: #ef2929;
+	}
 
-    /* the animations */
-    /* fade */
-    .tooltip.fade:after,
-    .tooltip.fade:before {
-      transform: translate3d(0,-10px,0);
-      transition: all .15s ease-in-out;
-    }
-    .tooltip.fade:hover:after,
-    .tooltip.fade:hover:before {
-      opacity: 1;
-      transform: translate3d(0,0,0);
-    }
+	#cp_red .ui-slider-handle {
+		border-color: #ef2929;
+	}
+
+	#cp_green .ui-slider-range {
+		background: #8ae234;
+	}
+
+	#cp_green .ui-slider-handle {
+		border-color: #8ae234;
+	}
+
+	#cp_blue .ui-slider-range {
+		background: #729fcf;
+	}
+
+	#cp_blue .ui-slider-handle {
+		border-color: #729fcf;
+	}
+
+	.tabel_pilihan_row {
+		margin-top: 0.6rem;
+	}
+
+	.tabel_indicator_row {
+		margin-top: 0.6rem;
+	}
+
+	.btn-status-status {
+		font-size: 11px;
+		border-radius: 55%;
+		width: 18px;
+		height: 18px;
+		text-align: center;
+		padding: 0px;
+	}
+
+	.tooltip {
+		position: relative;
+		opacity: 1 !important;
+	}
+
+	.tooltip:before,
+	.tooltip:after {
+		display: block;
+		opacity: 0;
+		pointer-events: none;
+		position: absolute;
+	}
+
+	.tooltip:after {
+		border-right: 6px solid transparent;
+		border-bottom: 6px solid rgba(0, 0, 0, .75);
+		border-left: 6px solid transparent;
+		content: '';
+		height: 0;
+		top: 20px;
+		left: 3px;
+		width: 0;
+	}
+
+	.tooltip:before {
+		width: 300px;
+		background: rgba(0, 0, 0, .75);
+		border-radius: 2px;
+		color: #fff;
+		content: attr(data-title);
+		font-size: 10px;
+		padding: 6px 10px;
+		top: 26px;
+		white-space: nowrap;
+		left: -30px;
+		white-space: pre-wrap;
+	}
+
+	/* the animations */
+	/* fade */
+	.tooltip.fade:after,
+	.tooltip.fade:before {
+		transform: translate3d(0, -10px, 0);
+		transition: all .15s ease-in-out;
+	}
+
+	.tooltip.fade:hover:after,
+	.tooltip.fade:hover:before {
+		opacity: 1;
+		transform: translate3d(0, 0, 0);
+	}
 </style>
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -341,9 +381,9 @@
                                                 }
                                             </style>
 
-                                            <div class="card background_kuesioner" style="background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
+                                            <div class="card background_kuesioner" style="transition: all 500ms ease-in-out 0s;background-image: linear-gradient(to bottom right, <?php echo $primarycol . ',' . $secondarycol ?>);">
                                                 <div class="card-body" style="text-align: center;">
-                                                    <div class="card" style="max-width: 314px; margin-top: 10px;">
+                                                <div class="card theme-preview-card" style="max-width: 314px; margin-top: 10px;border-radius: 0.5rem;border-top: 10px solid <?= $primarycol ?>;box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;">
                                                         <div class="card-body" style="min-height: 60vh;">
                                                             <div style="width: 100%;text-align: center;margin: 2vh 0;">
                                                                 <img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
@@ -366,11 +406,13 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <canvas id="temp-preview" style="display: none;"></canvas>
+							                <canvas id="temp-canvas" style="display: none;"></canvas>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="dataaa">
-                                    <input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\"}]" ?>'/>
+                                    <input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\",\"accent\":\"dynamic\"}]" ?>'/>
                                     <input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
                                     <input type="text" name="form_individu" class="form_individu" required readonly>
                                     <input type="text" name="dimensi" class="tbdimensi" value="" />
@@ -495,6 +537,8 @@
 		</div>
 	</div>
 </div>
+
+<script src="<?= base_url() . 'assets/admin/js/form-theme-editor.js' ?>"></script>
 
 <script>
     $('.selectformindividu').select2({
@@ -873,151 +917,6 @@
         }
 
     })
-
-    $(document).on('change', '#clr', function() {
-		$('.background_kuesioner').css({
-			'background-image': 'url(' + $(this).val() + ')',
-			'background-color': $(this).val()
-		});
-	})
-
-	function themeSet(name, value){
-		var newData = [];
-		newData.push({
-			'name': name,
-			'value': value
-		})
-		$('#theme_val').val(JSON.stringify(newData))
-	}	
-
-	$(document).on('click', '.theme_choice', function() {
-
-		$('.theme_choice').removeClass('active')
-		$(this).addClass('active')
-
-		var theme = $(this).data('theme')
-
-		if (theme == 'solid') {
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 11px; color: gray;'>Latar belakang satu warna</p>
-				<input type="color" value= "#001A57" id="clr">
-				<label for="clr">Pilih Warna</label>	
-			`)
-
-			$('.background_kuesioner').css({
-				'background-image': 'url()',
-				'background-color': $('#clr').val()
-			});
-			
-			var style = `${$('#clr').val()}`
-			themeSet('solid', style)
-			$('#picture_background_input').val('')
-
-		} else if (theme == 'picture') {
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 11px; color: gray;'>Latar belakang dengan dengan gambar yang bisa dipilih (disarankan menggunakan gambar blur serta warna agak gelap) </p>
-				<button class='btn btn-primary btn-upload-pic'>Pilih Gambar</button>	
-			`)
-
-			$('.background_kuesioner').css({
-				'background': 'url(<?= base_url().'assets/images/kuesioner/default.png' ?>) no-repeat center center',
-				'background-size': 'cover',
-				'height': '100%',
-				'overflow': 'hidden',
-				'background-color': $('#clr').val()
-			});
-
-			var style = `pic`
-			themeSet('picture', style)
-
-		} else if(theme == 'gradient') {
-			var primarycol = '';
-			var secondarycol = '';
-
-			var arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
-			var arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
-
-			var rand1 = Math.floor(Math.random() * arr1.length);
-			var rand2 = Math.floor(Math.random() * arr2.length);
-
-			primarycol = arr1[rand1];
-			secondarycol = arr2[rand2];
-
-			$('.background_kuesioner').css('background-image', 'linear-gradient(to bottom right, ' + primarycol + ', ' + secondarycol + ')')
-
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
-				<p style='font-size: 11px; color: gray;'>Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berubah-ubah untuk seluruh responden</p>
-			`)
-
-			var style = `gradient_random`
-			themeSet('gradient', style)
-			$('#picture_background_input').val('')
-
-		} else {
-
-			var primarycol = '';
-			var secondarycol = '';
-
-			var arr1 = ['#fab438', '#11998e', '#f47b24', '#1f78bc'];
-			var arr2 = ['#feec03', '#38ef7d', '#fbaf14', '#57a2cb'];
-
-			var rand1 = Math.floor(Math.random() * arr1.length);
-
-			primarycol = arr1[rand1];
-			secondarycol = arr2[rand1];
-
-			$('.background_kuesioner').css('background-image', 'linear-gradient(to bottom right, ' + primarycol + ', ' + secondarycol + ')')
-			$('.theme_setting_wrapper').html(`
-				<p style='font-size: 19px; color: gray; margin-bottom: 0;'><i class="fas fa-lightbulb"></i></p>
-				<p style='font-size: 11px; color: gray;'>Empat Latar belakang Perpaduan Warna Dasar PT Pupuk Indonesia yang berbeda bagi setiap responden</p>
-			`)
-
-			var style = `default_random`
-			themeSet('default', style)
-			$('#picture_background_input').val('')
-		}
-
-	})
-
-	$(document).on('click','.btn-upload-pic', function() {
-		$('#picture_background_input').click()
-	})
-
-	$(document).on('change','#picture_background_input', function() {
-		var file = this.files[0];
-
-		// can't submit if size more than 1mb
-		if (file.size > 1000000) {
-			$('#picture_background_input').val('')
-			alert('Ukuran gambar terdeteksi melebihi ketentuan (Size 1 MB maximum)')
-			return false
-		} else {
-
-			// detect image type
-			var imageType = /image.*/;
-
-			if (file.type.match(imageType)) {
-				var reader = new FileReader();
-
-				reader.onload = function(e) {
-					$('.background_kuesioner').css({
-						'background': 'url(' + e.target.result + ') no-repeat center center',
-						'background-size': 'cover',
-						'height': '100%',
-						'overflow': 'hidden',
-						'background-color': $('#clr').val()
-					});
-				}
-
-				reader.readAsDataURL(file);
-			} else {
-				// empty this input file
-				$('#picture_background_input').val('')
-				alert('File yang diupload bukan gambar')
-			}
-		}
-	})
 
     $(document).on('change', '.selectformindividu', function() {
 		// ajax get
