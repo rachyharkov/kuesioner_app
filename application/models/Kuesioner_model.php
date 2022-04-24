@@ -28,6 +28,15 @@ class Kuesioner_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_all_diskusi_by_kuesioner_exception($id, $exception)
+    {
+        // get all diskusi by kuesioner id and exception=$exception and exception = ''
+
+        $q = "SELECT * FROM `tbl_diskusi` WHERE id_kuesioner = $id AND (exception = '' OR exception = '$exception') ORDER BY urutan ASC;";
+
+        return $this->db->query($q)->result();
+    }
+
     public function get_by_id($id_kuesioner)
     {
         $this->db->where('id_kuesioner', $id_kuesioner);

@@ -78,68 +78,6 @@ class Diskusi extends CI_Controller {
 		echo json_encode($arr);
 	}
 
-	public function update_diskusi()
-	{
-		$id_kuesioner = $this->input->post('id_kuesioner', TRUE);
-		$barisdiskusi = $this->input->post('barisdiskusi', true);
-
-		$id_diskusi = $this->input->post('id_diskusi', TRUE);
-
-		$cekdiskusiygudahdibuat = $this->Diskusi_model->get_alldiskusi_by_id_kuesioner($id_kuesioner);
-
-		if ($cekdiskusiygudahdibuat) {
-			// code...
-		} else {
-			$datadiskusi = [];
-
-			
-		}
-
-		// $datadiskusi = [];
-
-		// $getdatafromdb = $this->Diskusi_model->
-
-		
-		$datatoupdate = array(
-			'urutan' => $i,
-			'dimensi' => $this->input->post('dimensidiskusi'.$i),
-			'indikator' => $this->input->post('indikatordiskusi'.$i),
-			'isi_diskusi' => $this->input->post('isidiskusi'.$i)
-		);
-
-		$this->Diskusi_model->update($id_diskusi, $datatoupdate);
-
-
-		// for ($i=1; $i <= count($barisdiskusi); $i++) { 
-		// 	$id_diskusi = $this->input->post('id_diskusi'.$i, TRUE);
-
-		// 	$cek = $this->Kuesioner_model->get_by_id($id_kuesioner);
-
-		// 	if ($id_diskusi) {
-				
-		// 		$datatoupdate = array(
-		// 			'urutan' => $i,
-		// 			'dimensi' => $this->input->post('dimensidiskusi'.$i),
-		// 			'indikator' => $this->input->post('indikatordiskusi'.$i),
-		// 			'isi_diskusi' => $this->input->post('isidiskusi'.$i)
-		// 		);
-
-		// 		$this->Diskusi_model->update($id_diskusi, $datatoupdate);
-
-		// 		$status = 'ok';
-		// 	} else {
-		// 		$status = 'no';
-		// 	}
-		// 	// $datadiskusi[] = $datatoinsert;
-		// }
-
-		$json = array(
-			'status' => $status
-		);
-
-		echo json_encode($json);
-	}
-
 	public function save_all_diskusi()
 	{
 		$arrayofdiskusi = $this->input->post('jsonString');

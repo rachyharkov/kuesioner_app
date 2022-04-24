@@ -8,7 +8,6 @@ class Survey extends CI_Controller {
         parent::__construct();
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
-        $this->load->model('Direktorat_model');
 		$this->load->model('Formindividu_model');
         $this->load->model('Jawaban_model');
     }
@@ -24,20 +23,25 @@ class Survey extends CI_Controller {
 		$judul_kuesioner = $datakuesioner ? $datakuesioner->judul_kuesioner : false;
 		$choices_structural = $datakuesioner ? $datakuesioner->choices_structural : false;
 		$theme = $datakuesioner ? $datakuesioner->theme : false;
+		$exception = $datakuesioner ? $datakuesioner->choices_structural : false;
 
 		$data = array(
-			'id_kuesioner' => decrypt_url($id_kuesioner),
+			'id_kuesioner' => $id_kuesioner,
 			'judul_kuesioner' => $judul_kuesioner,
 			'choices_structural' => $choices_structural,
 			'theme' => $theme,
+			'exception' => $exception,
 			'classnyak' => $this
 		);
 
 		$this->load->view('visitor/wrapper', $data);
 	}
 
-	public function get_kuesioner($id)
+	public function get_kuesioner()
 	{
+
+		$id = decrypt_url($this->input->get('id'));
+
 		$list_diskusi = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id);
 
 		if (!$list_diskusi) {
@@ -47,19 +51,39 @@ class Survey extends CI_Controller {
 			// detect status of kuesioner
 			$status = $getdatakuesioner->status;
 			if($status == 0) {
+
 				$data = array(
 					'judul_kuesioner' => $getdatakuesioner->judul_kuesioner,
 				);
-				$this->load->view('error_kuesionerdeactivate', $data);
+
+				$arr = array(
+					'status' => 'success',
+					'html' => $this->load->view('error_kuesionerdeactivate', $data, TRUE)
+				);
+
+				echo json_encode($arr);
 			} else {
+
+				$exception = $this->input->get('sel');
+				$list_diskusi = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id);
+				
+				if($exception != 'skip'){
+					$list_diskusi = $this->Kuesioner_model->get_all_diskusi_by_kuesioner_exception($id, $exception);
+				}
+
 				$data = array(
-					'direktorat' => $this->Direktorat_model->get_all(),
-					'list_diskusi' => $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id),
+					'list_diskusi' => $list_diskusi,
 					'data_kuesioner' => $this->Kuesioner_model->get_by_id($id),
 					'data_formindividu' => $this->Formindividu_model->get_by_id($getdatakuesioner->id_formindividu)
 				);
+
+				$arr = array(
+					'status' => 'success',
+					'html' => $this->load->view('visitor/kuesioner_form', $data, TRUE)
+				);
+
+				echo json_encode($arr);
 	
-				$this->load->view('visitor/kuesioner_form',$data);
 			}
 		}
 
@@ -71,9 +95,9 @@ class Survey extends CI_Controller {
 
 		$jawaban = [];
 
-		$datasoal = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
-
 		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+
+		$datasoal = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
 
 		$data_formindividu = $this->Formindividu_model->get_by_id($data_kuesioner->id_formindividu);
 
@@ -82,7 +106,7 @@ class Survey extends CI_Controller {
 		for ($i=1; $i <= $jumlah ; $i++) { 
 			$jawabantemp = array(
 				'id_kuesioner' => $id_kuesioner,
-				'id_diskusi' => $this->input->post('soal'.$i.'id'),
+				'id_diskusi' => $datasoal[$i-1]->id,
 			);
 
 			$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);

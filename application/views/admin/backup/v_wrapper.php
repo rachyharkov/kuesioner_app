@@ -415,12 +415,12 @@
                                     </div>
                                 </div>
                                 <div class="dataaa">
-                                    <input type="text" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\",\"accent\":\"dynamic\"}]" ?>'/>
-                                    <input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;">
-                                    <input type="text" name="form_individu" class="form_individu" required readonly>
-                                    <input type="text" name="dimensi" class="tbdimensi" value="" />
-                                    <input type="text" name="diskusilist" class="tbdiskusilist" value="" />
-                                    <input type="text" name="choicesstructural" class="tbchoicesstructural" value="" />
+                                    <input type="hidden" name="theme_val" id="theme_val" value='<?php echo "[{\"name\":\"default\",\"value\":\"default_random\",\"accent\":\"dynamic\"}]" ?>'/>
+                                    <input type="file" id="picture_background_input" name="picture_bekgron" style="margin-bottom: 5px;display: none;">
+                                    <input type="hidden" name="form_individu" class="form_individu" required readonly>
+                                    <input type="hidden" name="dimensi" class="tbdimensi" value="" />
+                                    <input type="hidden" name="diskusilist" class="tbdiskusilist" value="" />
+                                    <input type="hidden" name="choicesstructural" class="tbchoicesstructural" value="" />
                                 </div>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </form>

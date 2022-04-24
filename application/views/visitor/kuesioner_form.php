@@ -74,7 +74,7 @@
 <form id="form_create_action" method="post" enctype="multipart/form-data">
 
 	<div class="container sequence-wrapper" style="padding: 1vh 0;display: block;animation-duration: 1.0s;">
-		<div class="card" style="width: 100%;border-radius: 0.7rem;">
+		<div class="card" style="width: 100%;border-radius: 0.7rem;box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
 			<div class="card-body">
 				<div style="width: 100%;
 text-align: center;
@@ -87,11 +87,22 @@ margin: 2vh 0;">
 				<div class="scroll-to-down-anim"></div>
 
 			</div>
+			<div class="card-footer" style="padding-top: 1rem;">
+				<!-- create switch radio -->
+				<p class="text-danger" style="float: left;">* Wajib Diisi</p>
+				<!-- create button with autosave icon -->
+				
+				<!-- cloud check icon -->
+				<button type="button" class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#modalAutoSaveDetail" style="float: right;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-check" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+					<path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/></svg>
+				</button>
+			</div>
 		</div>
 	</div>
 	
-	<div class="container sequence-wrapper" style="padding: 1vh 0; display: block;animation-duration: 1.3s;">
-		<div class="card theme-preview-card" style="width: 100%;border-radius: 1rem;border-top: 1rem solid white;box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;">	
+	<div class="container sequence-wrapper" style="padding: 2vh 0; display: block;animation-duration: 1.3s;">
+		<div class="card theme-preview-card" style="width: 100%;border-radius: 1rem;border-top: 1rem solid white;box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">	
 			<div class="card-body">
 				<div style="width: 100%;
 text-align: center;
@@ -147,17 +158,17 @@ margin: 2vh 0;">
 	<?php
 
 	$dataanimationoffset = 1.3;
-
+	$no = 1;
 	foreach ($list_diskusi as $key => $value) {
 
 	?>
-		<input type="hidden" name="soal<?php echo $value->urutan ?>id" value="<?php echo $value->id ?>">
-		<div class="container container-<?php echo $value->urutan ?> sequence-wrapper" style="padding: 1vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
-			<div class="card" style="width: 100%; border-radius: 1rem; position: relative;">
+		<input type="hidden" name="soal<?php echo $no ?>id" value="<?php echo $value->id ?>">
+		<div class="container container-<?php echo $no ?> sequence-wrapper" style="padding: 2vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
+			<div class="card" style="width: 100%; border-radius: 1rem; position: relative;box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
 				<span class="badge rounded-pill bg-secondary" style="position: absolute;
 left: 50%;
 top: -13px;
-transform: scale(1.4);"><?php echo $value->urutan ?></span>
+transform: scale(1.4);"><?php echo $no ?></span>
 				<div class="card-body">
 					<div class="alert-wrapper">
 
@@ -201,12 +212,48 @@ justify-content: space-evenly;">
 			</div>
 		</div>
 	<?php
+		$no++;
 	}
 
 	?>
+	<?php
+
+	if($data_kuesioner->auto_feedback_detection) {
+		?>
+		<div class="feedback-wrapper">
+			<div class="container sequence-wrapper negative-feedback-wrapper" style="padding: 2vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
+				<div class="card" style="width: 100%; border-radius: 1rem; position: relative;box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
+					<span class="badge rounded-pill bg-warning" style="position: absolute;left: 50%;top: -13px;transform: scale(1.4);"><i class="fas fa-frown"></i></span>
+					<div class="card-body">
+						<p class="card-text">Mohon maaf jika ada yang membuat anda kecewa, kami mendeteksi bahwa anda memberikan penilaian jauh dibawah ekspetasi kami, beritahu kami apa yang terjadi?</p>
+		
+						<textarea class="form-control" name="tbfeedback_negative" rows="3" style="width: 100%;"></textarea>
+					</div>
+				</div>
+			</div>
+		
+			<div class="container sequence-wrapper positive-feedback-wrapper" style="padding: 2vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
+				<div class="card" style="width: 100%; border-radius: 1rem; position: relative;box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
+					<span class="badge rounded-pill bg-success" style="position: absolute;left: 50%;top: -13px;transform: scale(1.4);"><i class="fas fa-smile"></i></span>
+					<div class="card-body">
+						<p class="card-text">Adakah yang ingin disampaikan pada kuesioner ini? (saran, hal yang disukai, dan sebagainya)</p>
+		
+						<textarea class="form-control" name="tbfeedback_negative" rows="3" style="width: 100%;"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<?php
+	}
+
+	?>
+
 	<input type="hidden" name="id_kuesioner" value="<?php echo $data_kuesioner->id_kuesioner ?>">
-	<button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 10vh; font-size: 1.2rem;">Selesai</button>
+	<button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 5vh; font-size: 1.2rem;">Submit</button>
 </form>
+
+
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {

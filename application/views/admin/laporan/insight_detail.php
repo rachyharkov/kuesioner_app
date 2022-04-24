@@ -222,7 +222,9 @@ $jawabanlist = $this->db->query($query)->result();
 											if ($arrjawabanfound['id_diskusi'] == $id_diskusi) {
 												$jawabannya = $arrjawabanfound[$namakategorirespon];
 
-												$arrayresponlistdantotaljawaban[$jawabannya] += 1;
+												if(isset($arrayresponlistdantotaljawaban[$jawabannya])){
+													$arrayresponlistdantotaljawaban[$jawabannya]+= 1;
+												}
 											}
 										}
 
@@ -358,7 +360,7 @@ $jawabanlist = $this->db->query($query)->result();
 		$(document).on('click', '.next-response', function() {
 			var total_resp = $('#totalkuesioner').text();
 			var urutan = parseInt($('.urutan_respond').val());
-			if (urutan < 5) {
+			if (urutan < total_resp) {
 				urutan++;
 				$('.urutan_respond').val(urutan);
 				fetch_detail(urutan);

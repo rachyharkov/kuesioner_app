@@ -17,7 +17,6 @@ class Kuesioner extends CI_Controller {
         $this->load->model('Diskusi_model');
 		$this->load->model('Formindividu_model');
         $this->load->model('Jawaban_model');
-        $this->load->model('Direktorat_model');
         $this->load->library('Template');
 		$this->load->library('pagination');
     }

@@ -211,16 +211,19 @@ class Report_processor{
                             
                             // find the index of the $datakategorirespondannilai['indikator'] by $diskusi->indikator
                             $index_indikator = array_search($diskusi->indikator, array_column($datadimensiindikatordannilai[$index]['indikator'], 'nama_indikator'));
-                            
-                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['total_nilai'] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+
+                            $nilai = isset($pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]]) ? $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]] : 0;
+
+                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['total_nilai'] += $nilai;
 
                             $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['detail'][$nama_kategori_respon] = 0; 
                             
                             $jawabannya = $json_decode[$keyjd][$nama_kategori_respon];
-
                             
+                            if($jawabannya) {
+                                $datakategorirespondannilai[$nama_kategori_respon][$jawabannya] += $pacuannilai[$nama_kategori_respon][$jawabannya];
+                            }
 
-                            $datakategorirespondannilai[$nama_kategori_respon][$jawabannya] += $pacuannilai[$nama_kategori_respon][$jawabannya];
                         }
                     }
                 }
@@ -245,7 +248,9 @@ class Report_processor{
                                        
                             $index_indikator = array_search($diskusi->indikator, array_column($datadimensiindikatordannilai[$index]['indikator'], 'nama_indikator'));
 
-                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['detail'][$nama_kategori_respon] += $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]];
+                            $nilai = isset($pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]]) ? $pacuannilai[$nama_kategori_respon][$value[$nama_kategori_respon]] : 0;
+
+                            $datadimensiindikatordannilai[$index]['indikator'][$index_indikator]['detail'][$nama_kategori_respon] += $nilai;
                         }
                     }
                 }
