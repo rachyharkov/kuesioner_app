@@ -81,7 +81,7 @@ $secondarycol = $arr2[$ano];
                     <div class="card-body" style="text-align: center;">
                         <div class="card" style="max-width: 490px;">
                             <div class="card-body" style="min-height: 60vh;">
-                                <input type="text" name="form_design" class="form_design" value='<?= $id != null ? $design_form : '[]' ; ?>'>
+                                <input type="hidden" name="form_design" class="form_design" value='<?= $id != null ? $design_form : '[]' ; ?>'>
                                 <div style="width: 100%;text-align: center;margin: 2vh 0;">
                                     <img src="<?php echo base_url() . 'assets/images/logo_perusahaan.png' ?>" height="50" style="margin: auto;">
                                 </div>

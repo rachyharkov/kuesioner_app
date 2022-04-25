@@ -106,7 +106,7 @@ class Backup extends CI_Controller
         $sheet->setCellValue('B2', 'Indikator');
         $sheet->setCellValue('C2', 'No');
         $sheet->setCellValue('D2', 'Diskusi');
-        $sheet->setCellValue('E2', 'Kriteria (Jika terdapat isian pada kolom ini, otomatis fitur exception kuesioner akan diaktifkan)');
+        $sheet->setCellValue('E2', 'Filter');
 
         // set row 2 as bold
         $spreadsheet->getActiveSheet()->getStyle('A2:E2')->getFont()->setBold(true);

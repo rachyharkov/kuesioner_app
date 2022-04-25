@@ -39,7 +39,6 @@ class Survey extends CI_Controller {
 
 	public function get_kuesioner()
 	{
-
 		$id = decrypt_url($this->input->get('id'));
 
 		$list_diskusi = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id);
