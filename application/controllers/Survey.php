@@ -102,10 +102,10 @@ class Survey extends CI_Controller {
 
 		$jumlah = count($datasoal);
 
-		for ($i=1; $i <= $jumlah ; $i++) { 
+		for ($i=0; $i < $jumlah ; $i++) { 
 			$jawabantemp = array(
 				'id_kuesioner' => $id_kuesioner,
-				'id_diskusi' => $datasoal[$i-1]->id,
+				'id_diskusi' => $datasoal[$i]->id,
 			);
 
 			$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
