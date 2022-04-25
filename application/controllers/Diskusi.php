@@ -14,7 +14,6 @@ class Diskusi extends CI_Controller {
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
         $this->load->model('Jawaban_model');
-        $this->load->model('Direktorat_model');
         $this->load->model('Diskusi_model');
     }
 

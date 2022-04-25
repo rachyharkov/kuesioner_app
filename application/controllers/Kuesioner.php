@@ -374,7 +374,6 @@ class Kuesioner extends CI_Controller {
 		// Buat header tabel nya pada baris ke 3
 		// $sheet->setCellValue('A2', "No");
 		// $sheet->setCellValue('B2', "Email");
-		// $sheet->setCellValue('C2', "Direktorat");
 		// $sheet->setCellValue('D2', "Nama karyawan");
 		// $sheet->setCellValue('E2', "Unit Kerja");
 		// $sheet->setCellValue('F2', "Job Grade");

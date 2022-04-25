@@ -168,11 +168,14 @@ class Backup extends CI_Controller
             if ($decrypt == 'Kuesioner') {
                 foreach ($sheetData as $key => $value) {
                     if ($key > 2) {
+
                         if ($value['A']) {
 
-                            if (!in_array($value['A'], $dimensinamelist)) {
+                            $dimens = trim($value['A']);
+
+                            if (!in_array($dimens, $dimensinamelist)) {
                                 // push to array
-                                array_push($dimensinamelist, $value['A']);
+                                array_push($dimensinamelist, $dimens);
                             }
                         }
                     }
@@ -197,7 +200,7 @@ class Backup extends CI_Controller
 
                 foreach ($dimensinamelist as $key => $value) {
                     $temp = array(
-                        'name' => $value,
+                        'name' => trim($value),
                         'indikator' => []
                     );
 
@@ -205,10 +208,13 @@ class Backup extends CI_Controller
 
                     foreach ($sheetData as $key => $valueowo) {
                         if ($key > 2) {
-                            if ($value == $valueowo['A']) {
+
+                            $dimns = trim($valueowo['A']);
+
+                            if ($value == $dimns) {
                                 if (!in_array($valueowo['B'], $indikator)) {
                                     // push to array
-                                    array_push($indikator, $valueowo['B']);
+                                    array_push($indikator, trim($valueowo['B']));
                                 }
                             }
                         }
