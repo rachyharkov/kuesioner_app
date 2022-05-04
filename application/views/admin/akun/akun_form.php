@@ -28,53 +28,20 @@
 				Akun Saya
 			</div>
 			<div class="card-body">
-            <form>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                    <label for="inputEmail4">Email</label>
-                    <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+                <form id="form-update-password">
+                    <div class="form-column">
+                        <div class="form-group col-md-6">
+                            <label for="inputoldPassword">Update Password</label>
+                            <input type="password" class="form-control" id="inputoldPassword" name="inputoldPassword" placeholder="Password">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="password" class="form-control" id="inputnewPassword" name="inputnewPassword" placeholder="Password Baru">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input type="password" class="form-control" id="inputconfirmnewPassword" name="inputconfirmnewPassword" placeholder="Konfirmasi Password ">
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
-                    <label for="inputPassword4">Password</label>
-                    <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputAddress">Address</label>
-                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-                </div>
-                <div class="form-group">
-                    <label for="inputAddress2">Address 2</label>
-                    <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                    <label for="inputCity">City</label>
-                    <input type="text" class="form-control" id="inputCity">
-                    </div>
-                    <div class="form-group col-md-4">
-                    <label for="inputState">State</label>
-                    <select id="inputState" class="form-control">
-                        <option selected>Choose...</option>
-                        <option>...</option>
-                    </select>
-                    </div>
-                    <div class="form-group col-md-2">
-                    <label for="inputZip">Zip</label>
-                    <input type="text" class="form-control" id="inputZip">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox"> Check me out
-                        <span class="form-check-sign">
-                        <span class="check"></span>
-                        </span>
-                    </label>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Sign in</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </form>
             </div>
 			<div class="card-footer">
@@ -84,5 +51,59 @@
   	</div>
 </div>
 <script type="text/javascript">
+    $(document).ready(function() {
 
+
+
+        $('#form-update-password').submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var formData = new FormData(this);
+            $.ajax({
+                url: '<?php echo base_url('akun/update_password'); ?>',
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+
+                    var dt = JSON.parse(response);
+
+                    if(dt.status == 'wrong_confirm') {
+                        Swal.fire({
+                            title: "Terjadi Kesalahan",
+                            text: dt.message,
+                            type: "error",
+                            confirmButtonText: "Ok"
+                        });
+                    } else if(dt.status == 'success') {
+                        Swal.fire({
+                            title: "Password Berhasil Diubah",
+                            text: "Password berhasil diubah",
+                            type: "success",
+                            confirmButtonText: "Ok"
+                        });
+
+                        $('#form-update-password')[0].reset();
+                    } else {
+                        Swal.fire({
+                            title: "Terjadi Kesalahan",
+                            text: dt.message,
+                            type: "error",
+                            confirmButtonText: "Ok"
+                        });
+                    }
+                },
+                error: function(response) {
+                    Swal.fire({
+                        title: "Terjadi Kesalahan",
+                        text: "Silahkan coba lagi",
+                        type: "error",
+                        confirmButtonText: "Ok"
+                    });
+                }
+            });
+        });
+    });
 </script>

@@ -437,13 +437,10 @@ class Kuesioner extends CI_Controller {
 
 		// // Proses file excel
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment; filename="Data Responden.xlsx"'); // Set nama file excel nya
-		header('Cache-Control: max-age=0');
-
-		$writer = new Xlsx($spreadsheet);
-		ob_end_clean();
-		ob_start();
-		$writer->save('php://output');
+        header('Content-Disposition: attachment;filename="datarespond-'.$data_kuesioner->judul_kuesioner.'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $writer->save('php://output');
 	}
 
 	public function delete($id_kuesioner)
