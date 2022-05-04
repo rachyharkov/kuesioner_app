@@ -221,13 +221,13 @@ justify-content: space-evenly;">
 	if($data_kuesioner->auto_feedback_detection) {
 		?>
 		<div class="feedback-wrapper">
-			<div class="container sequence-wrapper negative-feedback-wrapper" style="padding: 2vh 0; display: block; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
+			<div class="container sequence-wrapper negative-feedback-wrapper" style="padding: 2vh 0; display: none; margin-top: 11px;animation-duration: <?= $dataanimationoffset+0.3 ?>s;">
 				<div class="card" style="width: 100%; border-radius: 1rem; position: relative;box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
 					<span class="badge rounded-pill bg-warning" style="position: absolute;left: 50%;top: -13px;transform: scale(1.4);"><i class="fas fa-frown"></i></span>
 					<div class="card-body">
 						<p class="card-text">Mohon maaf jika ada yang membuat anda kecewa, kami mendeteksi bahwa anda memberikan penilaian jauh dibawah ekspetasi kami, beritahu kami apa yang terjadi?</p>
 		
-						<textarea class="form-control" name="tbfeedback_negative" rows="3" style="width: 100%;"></textarea>
+						<textarea class="form-control tbfeedback_negative" name="tbfeedback_negative" rows="3" style="width: 100%;" required>N/A</textarea>
 					</div>
 				</div>
 			</div>
@@ -238,7 +238,7 @@ justify-content: space-evenly;">
 					<div class="card-body">
 						<p class="card-text">Adakah yang ingin disampaikan pada kuesioner ini? (saran, hal yang disukai, dan sebagainya)</p>
 		
-						<textarea class="form-control" name="tbfeedback_negative" rows="3" style="width: 100%;"></textarea>
+						<textarea class="form-control tbfeedback_positive" name="tbfeedback_positive" rows="3" style="width: 100%;"></textarea>
 					</div>
 				</div>
 			</div>

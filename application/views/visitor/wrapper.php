@@ -475,6 +475,57 @@
 				autoSaveResponse();
 			}, 5000);
 			
+			<?php 
+			if($datakuesioner->auto_feedback_detection) {
+				?>
+
+				function detectFeedbackBehavior() {
+					var arr = []
+
+					// detect if any choice is checked
+					$('.choicenya').each(function() {
+						if($(this).is(':checked')) {
+							var id = $(this).attr('id');
+
+							// split id by _ and get last part
+							var id_split = id.split('_');
+							var id_last = id_split[id_split.length - 1];
+							arr.push(id_last)
+						}
+					})
+
+					var negative_feedback = 0
+
+					// detect if arr has number with less than '2', if true, alert
+					var count = 0;
+					for(var i = 0; i < arr.length; i++) {
+						if(arr[i] < 2) {
+							// set negative_feedback to 1 then stop loop
+							negative_feedback = 1;
+							break;
+						}
+					} 
+
+					if(negative_feedback == 1) {
+						alert('LOW FEEDBACK DETECTED')
+						$('.negative-feedback-wrapper').show().find('textarea.tbfeedback_negative').html('')
+					} else {
+						$('.negative-feedback-wrapper').hide().find('textarea.tbfeedback_negative').html('N/A')
+					}
+				}
+				
+				alert('AUTO FEEDBACK ACTIVE')
+
+				// create setTimout for autosave every 5 seconds
+
+				$(document).on('click','.choicenya', function() {
+					detectFeedbackBehavior()
+				})
+
+				<?php
+			}
+			?>
+
 			<?php
 			if ($theme_decode[0]['name'] == 'default' || $theme_decode[0]['name'] == 'solid' || $theme_decode[0]['name'] == 'gradient') {
 			?>

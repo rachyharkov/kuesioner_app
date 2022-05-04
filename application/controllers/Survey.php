@@ -29,6 +29,7 @@ class Survey extends CI_Controller {
 			'id_kuesioner' => $id_kuesioner,
 			'judul_kuesioner' => $judul_kuesioner,
 			'choices_structural' => $choices_structural,
+			'datakuesioner' => $datakuesioner,
 			'theme' => $theme,
 			'exception' => $exception,
 			'classnyak' => $this
@@ -135,9 +136,21 @@ class Survey extends CI_Controller {
 			$datadiriresponden[$value['prefix']] = $this->input->post($value['prefix'], true);
 		}
 
+		$feedback = 'N/A';
+
+		if($data_kuesioner->auto_feedback_detection == 1) {
+			$datafeedback = array(
+				'negative' => $this->input->post('tbfeedback_negative', true),
+				'positive' => $this->input->post('tbfeedback_positive', true),
+			);
+
+			$feedback = json_encode($datafeedback);
+		}
+
 		$datanya = array(
 			'data_diri' => json_encode($datadiriresponden),
-			'jawaban' => json_encode($jawaban)
+			'jawaban' => json_encode($jawaban),
+			'feedback' => $feedback
 		);
 
 		$this->Jawaban_model->insert($datanya);
