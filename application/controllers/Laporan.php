@@ -60,7 +60,18 @@ class Laporan extends CI_Controller {
 
 		$choices = json_decode($this->Kuesioner_model->get_by_id($id_kuesioner)->kategori_respon, TRUE);
 
-		$str = '
+		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
+		$str ='';
+
+		if($data_kuesioner->auto_feedback_detection == '1') {
+			$str .= '
+				<div class="alert alert-success" role="alert">
+					Respon ini memiliki feedback (cek pada bagian paling bawah)
+				</div>
+			';
+		}
+
+		$str .= '
 		<div id="printJS-form">';
 
 		
@@ -123,7 +134,6 @@ class Laporan extends CI_Controller {
 								</div>
 							</div>";
 						}
-						
 			$str.= '
 						</div>
 					</div>
@@ -132,11 +142,34 @@ class Laporan extends CI_Controller {
 			';
 		}
 
+		if($data_kuesioner->auto_feedback_detection == '1') {
+			$feedback = $data->feedback;
+
+			if($feedback == 'N/A') {
+				$feedback = 'Tidak ada';
+			} else {
+				
+				$fb = json_decode($feedback, TRUE);
+
+				foreach ($fb as $key => $value) {
+					$str.= '
+					<div class="card">
+						<div class="card-body">
+							<p>'.$key.' Feedback</p>
+							<textarea class="form-control" rows="3" style="width: 100%;">'.$value.'</textarea>
+						</div>
+					</div>';
+				}
+
+			}
+		}
+
 		$str .= '</div>';
 		
 		$arr = array(
 			'response' => 'ok',
 			'page' => $str,
+			'have_feedback' => $data_kuesioner->auto_feedback_detection,
 			'total_resp' => $total_responden
 		);
 		
