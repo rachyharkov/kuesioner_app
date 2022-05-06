@@ -312,6 +312,8 @@ $jawabanlist = $this->db->query($query)->result();
 							padding: 6px 12px;"><i class="fas fa-chevron-right"></i></button>
 					</div>
 
+					
+
 					<button class="btn btn-primary btn-sm" id="btn-print-responden" style="margin-left: 8px;" onclick="printJS('printJS-form', 'html')">
 						<i class="fas fa-print"></i>
 					</button>
