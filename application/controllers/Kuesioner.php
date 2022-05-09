@@ -380,13 +380,16 @@ class Kuesioner extends CI_Controller {
 		// $sheet->setCellValue('G2', "Status Karyawan");
 		// $sheet->setCellValue('H2', "Nama Jabatan");
 		
-		$ld = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
+		$ld = $this->Kuesioner_model->get_all_diskusi($id_kuesioner);
 
 		$kategoriresponbykuesioner = json_decode($this->Kuesioner_model->get_by_id($id_kuesioner)->kategori_respon, TRUE);
 
 		$col = $positionny + 1;
 		foreach ($ld as $key => $value) {
-			$sheet->setCellValueByColumnAndRow($col, 2, $value->isi_diskusi);
+
+			$tagfilter = $value['exception'] ? '['.$value['exception'].']' : '';
+
+			$sheet->setCellValueByColumnAndRow($col, 2, $tagfilter.' '.$value['isi_diskusi']);
 
 			foreach ($kategoriresponbykuesioner as $key => $krbk) {
 				$sheet->setCellValueByColumnAndRow($col++, 3, $krbk['nama']);
@@ -503,7 +506,8 @@ class Kuesioner extends CI_Controller {
 					'urutan' => $urutan,
 					'dimensi' => $dimensi,
 					'indikator' => $indikator,
-					'isi_diskusi' => $isi_diskusi
+					'isi_diskusi' => $isi_diskusi,
+					'exception' => ''
 				);
 
 				$this->Diskusi_model->update($id_diskusi, $datatoupdate);
@@ -516,7 +520,8 @@ class Kuesioner extends CI_Controller {
 					'urutan' => $urutan,
 					'dimensi' => '',
 					'indikator' => '',
-					'isi_diskusi' => ''
+					'isi_diskusi' => '',
+					'exception' => ''
 				);
 
 				$this->Diskusi_model->insert($datatoinsert);

@@ -22,10 +22,23 @@ class Kuesioner_model extends CI_Model {
 
     public function get_all_diskusi_by_kuesioner($id_kuesioner)
     {
-        $this->db->select('*')->from('tbl_diskusi')->where('id_kuesioner',$id_kuesioner);
+        $this->db->select('*')->from('tbl_diskusi')->where([
+            'id_kuesioner' => $id_kuesioner,
+            'exception' => ''
+        ]);
         $this->db->order_by('urutan','ASC');
 
         return $this->db->get()->result();
+    }
+
+    public function get_all_diskusi($id_kuesioner)
+    {
+        $this->db->select('*')->from('tbl_diskusi')->where([
+            'id_kuesioner' => $id_kuesioner
+        ]);
+        $this->db->order_by('urutan','ASC');
+
+        return $this->db->get()->result_array();
     }
 
     public function get_all_diskusi_by_kuesioner_exception($id, $exception)

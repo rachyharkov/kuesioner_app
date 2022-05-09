@@ -106,7 +106,7 @@ $jawabanlist = $this->db->query($query)->result();
 				</div>
 			</div>
 		</div>
-		<div class="align-self-stretch custom-auto-width d-flex flex-row flex-md-column justify-content-between" style="">
+		<div class="align-self-stretch custom-auto-width d-flex flex-row flex-md-column justify-content-between">
 			<div class="align-self-stretch card" style="margin: 0;">
 				<div class="card-body">
 					<p style="margin: 0;">Status</p>
@@ -311,9 +311,6 @@ $jawabanlist = $this->db->query($query)->result();
 							background-color: white;
 							padding: 6px 12px;"><i class="fas fa-chevron-right"></i></button>
 					</div>
-
-					
-
 					<button class="btn btn-primary btn-sm" id="btn-print-responden" style="margin-left: 8px;" onclick="printJS('printJS-form', 'html')">
 						<i class="fas fa-print"></i>
 					</button>

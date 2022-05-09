@@ -131,8 +131,8 @@
 											<div class="col-7">
 												<textarea class="form-control isidiskusi" style="width: 100%;" rows="5" name="isidiskusi[]" ><?php echo $ld->isi_diskusi ?></textarea>
 											</div>
-											<div class="col-5 row">
-												<div class="col-12">
+											<div class="col-5">
+												<div class="col-12 mt-2">
 													<input type="hidden" name="id_diskusi[]" value=""/>
 													<select name="dimensidiskusi[]" class="form-control dimensidiskusi">
 														<option>- pilih dimensi -</option>
@@ -145,7 +145,7 @@
 														?>
 													</select>
 												</div>
-												<div class="col-12">
+												<div class="col-12 mt-2">
 													<select name="indikatordiskusi[]" class="form-control indikatordiskusi">
 														<?php
 														foreach($data_dimensi as $dd) {
@@ -156,6 +156,41 @@
 														?>
 													</select>	
 												</div>
+												<?php
+												if($data_kuesioner->choices_structural != 'N/A'){
+
+													$datastructural = json_decode($data_kuesioner->choices_structural, true);
+													?>
+														<div class="col-12 mt-2">
+															<select name="filterexception[]" class="form-control filterexception">
+																<option value="">- tampilkan diskusi pada opsi? -</option>
+																<?php
+																if($ld->exception == '') {
+																	?>
+																	<option value="ALL" selected>All</option>
+																	<?php
+																} else {
+																	?>
+																	<option value="ALL">All</option>
+																	<?php
+																}
+																foreach($datastructural[0]['optionsValue'] as $v) {
+																	if($ld->exception == $v) {
+																		?>
+																		<option value="<?php echo $v ?>" selected><?php echo $v ?></option>
+																		<?php
+																	} else {
+																		?>
+																		<option value="<?php echo $v ?>"><?php echo $v ?></option>
+																		<?php
+																	}
+																}
+																?>
+															</select>
+														</div>
+													<?php
+												}
+												?>
 											</div>
 										</div>
 										<button type="button" class="btn btn-danger btn-delete-diskusi" style="font-size: 10px;padding: 5px;"><i class="fas fa-trash-alt"></i></button>
@@ -199,13 +234,14 @@
 		var aData = [];
 
 		/* object constructur */
-		function Diskusi(id_diskusi,id_kuesioner, urutan, dimensi, indikator, isi_diskusi) {
+		function Diskusi(id_diskusi,id_kuesioner, urutan, dimensi, indikator, isi_diskusi, filterexception) {
 			this.id_diskusi = id_diskusi
 			this.id_kuesioner = id_kuesioner
 			this.urutan = urutan
 			this.dimensi = dimensi
 			this.indikator = indikator
 			this.isi_diskusi = isi_diskusi
+			this.filterexception = filterexception
 		  // this.diskusi = function() {
 		  //   // return (this.id_diskusi + " " + this.urutan);
 		  //   return (`${this.id_diskusi} ${this.urutan}`); // es6 template string
@@ -220,10 +256,19 @@
 			var dimensi = $(this).find('.dimensidiskusi').val()
 			var indikator = $(this).find('.indikatordiskusi').val()
 			var isi_diskusi = $(this).find('textarea.isidiskusi').val()
+			var filterexception = $(this).find('.filterexception').val()
 
-			//add each li position to the array...
-			// the +1 is for make it start from 1 instead of 0
-			aData.push(new Diskusi(id_diskusi, id_kuesioner, urutan, dimensi, indikator, isi_diskusi));
+			aData.push(
+				new Diskusi(
+					id_diskusi, 
+					id_kuesioner, 
+					urutan, 
+					dimensi, 
+					indikator, 
+					isi_diskusi,
+					filterexception
+				)
+			);
 		});
 		/* loop array */
 
@@ -304,6 +349,8 @@
 	$('.btn-tambah-diskusi').on('click',function(e) {
 		e.preventDefault()
 
+		var thisel = $(this)
+		
 		var availablebaris = $('.baris-diskusi').length
 
 		var action = $(this).attr('data-action')
@@ -346,8 +393,8 @@
 										<div class="col-7">
 											<textarea class="form-control isidiskusi" style="width: 100%;" rows="5" name="isidiskusi[]" ></textarea>
 										</div>
-										<div class="col-5 row">
-											<div class="col-12">
+										<div class="col-5">
+											<div class="col-12 mt-2">
 												<input type="hidden" name="id_diskusi[]" value=""/>
 												<select name="dimensidiskusi[]" class="form-control dimensidiskusi">
 													<option>- pilih dimensi -</option>
@@ -360,11 +407,32 @@
 													?>
 												</select>
 											</div>
-											<div class="col-12">
+											<div class="col-12 mt-2">
 												<select name="indikatordiskusi[]" class="form-control indikatordiskusi">
 													<option>- pilih indikator -</option>
 												</select>	
 											</div>
+											<?php
+												if($data_kuesioner->choices_structural != 'N/A'){
+
+													$datastructural = json_decode($data_kuesioner->choices_structural, true);
+													?>
+														<div class="col-12 mt-2">
+															<select name="filterexception[]" class="form-control filterexception">
+																<option value="" selected>- tampilkan diskusi pada opsi? -</option>
+																<option value="ALL">All</option>
+																<?php
+																	foreach($datastructural[0]['optionsValue'] as $v) {
+																		?>
+																		<option value="<?php echo $v ?>"><?php echo $v ?></option>
+																		<?php
+																	}
+																?>
+															</select>
+														</div>
+													<?php
+												}
+												?>
 										</div>
 									</div>
 									<button type="button" class="btn btn-danger btn-delete-diskusi" style="font-size: 10px;padding: 5px;"><i class="fas fa-trash-alt"></i></button>
@@ -440,6 +508,10 @@
 	})
 
 	$(document).on('change','.indikatordiskusi', function() {
+		save_all()
+	})
+
+	$(document).on('change','.filterexception', function() {
 		save_all()
 	})
 

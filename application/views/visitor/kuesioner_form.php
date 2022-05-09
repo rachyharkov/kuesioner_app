@@ -192,8 +192,8 @@ justify-content: space-evenly;">
 									<?php
 									foreach ($kr['respon_list'] as $key => $rp) {
 									?>
-										<label for="disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>_<?php echo $key ?>" class="radio">
-											<input type="radio" value="<?php echo $rp ?>" name="disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>" id="disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>_<?php echo $key ?>" class="hidden choicenya disc<?php echo $value->urutan ?>_col<?php echo $keykr ?>" />
+										<label for="disc<?php echo $value->id ?>_col<?php echo $keykr ?>_<?php echo $key ?>" class="radio">
+											<input type="radio" value="<?php echo $rp ?>" name="disc<?php echo $value->id ?>_col<?php echo $keykr ?>" id="disc<?php echo $value->id ?>_col<?php echo $keykr ?>_<?php echo $key ?>" class="hidden choicenya disc<?php echo $value->id ?>_col<?php echo $keykr ?>" />
 											<span class="label"></span><?php echo $rp ?>
 										</label>
 									<?php

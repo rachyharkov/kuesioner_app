@@ -10,6 +10,7 @@ class Laporan extends CI_Controller {
         $this->load->model('Setting_app_model');
         $this->load->model('Kuesioner_model');
         $this->load->model('Laporan_model');
+		$this->load->model('Diskusi_model');
         $this->load->library('template');
 		$this->load->library('report_processor');
     }
@@ -89,45 +90,56 @@ class Laporan extends CI_Controller {
 			';	
 		}
 
-		foreach ($datajawaban as $key => $value) {
+		$dk = $this->Kuesioner_model->get_all_diskusi($id_kuesioner);
 
-			$pertanyaan = $this->db->where('id', $value['id_diskusi'])->get('tbl_diskusi')->row();
-	
+		foreach ($dk as $key => $value) {
+			$pertanyaan = $value;
+			
+			$span = $value['exception']  ? '<span class="badge bg-success text-white mr-3">'.$value['exception'].'</span>' : '';
+			$index = array_search($pertanyaan['id'], array_column($datajawaban, 'id_diskusi'));
+
 			$str .= '
 			<form>
-				<div class="card">
-					<div class="card-body">
-						<p>'.$pertanyaan->isi_diskusi.'</p>
+				<div class="card">';
+					if(!$index){
+						$str .= '<div style="position: absolute;width: 100%;height: 100%;background: #87879194;border-radius: 0.1875rem;z-index: 1;"></div>';
+					}
+						$str.='<div class="card-body">
+						<p>'.$span.' '.$pertanyaan['isi_diskusi'].'</p>
 						
 						<div class="container-fluid" style="display: flex;flex-direction: row; justify-content: space-evenly;">';
-
+						
 						foreach ($choices as $keykr => $kr) {
 							$str .= "
 							<div>
 								<span style='width: 100%;text-align: center;display: block;font-size: 12px;font-weight: bold;'>".$kr['nama']."</span>
-
+	
 								<div class='form-check form-check-radio'>";
 									
 								$urutan = 0;
-
+	
 								foreach ($kr['respon_list'] as $key => $rp) {
-
+	
 									$owo = '';
+	
+									// find index of array by id_kuesioner
+									
 
-									// echo $rp;
-									// echo $value[$kr['nama']];
-
-									if($rp == $value[$kr['nama']]) {
-										$owo = 'checked';
+									// if index found
+									if($index) {
+										if($rp == $datajawaban[$index][$kr['nama']]) {
+											$owo = 'checked';
+										}
 									}
-								
+									
+										
 									$str .=	"
 											<label for='disc".$urutan."_col".$keykr."_".$key."' class='form-check-label'>
 												<input class='form-check-input preview-answer' type='radio' ".$owo." value='".$rp."' name='disc".$urutan."_col".$keykr."' id='disc".$urutan."_col".$keykr."_".$key."' disabled>
 												".$rp."
 												<span class='form-check-sign'></span>
 											</label>";
-
+	
 									$urutan++;
 								}
 							$str .= "
@@ -141,6 +153,7 @@ class Laporan extends CI_Controller {
 			</form>
 			';
 		}
+
 
 		if($data_kuesioner->auto_feedback_detection == '1') {
 			$feedback = $data->feedback;

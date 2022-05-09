@@ -84,11 +84,19 @@ class Diskusi extends CI_Controller {
 		$arrayofdiskusitemp = json_decode($arrayofdiskusi);
 
 		foreach ($arrayofdiskusitemp as $key => $value) {
+
+			$fie = $value->filterexception;
+
+			if($fie == 'ALL') {
+				$fie = '';
+			}
+
 			$datatoupdate = array(
 				'urutan' => $value->urutan,
 				'dimensi' => $value->dimensi,
 				'indikator' => $value->indikator,
-				'isi_diskusi' => $value->isi_diskusi
+				'isi_diskusi' => $value->isi_diskusi,
+				'exception' => $fie
 			);
 			$this->Diskusi_model->update($value->id_diskusi, $datatoupdate);
 		}

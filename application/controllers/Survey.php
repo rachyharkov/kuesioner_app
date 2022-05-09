@@ -97,23 +97,22 @@ class Survey extends CI_Controller {
 
 		$data_kuesioner = $this->Kuesioner_model->get_by_id($id_kuesioner);
 
-		$datasoal = $this->Kuesioner_model->get_all_diskusi_by_kuesioner($id_kuesioner);
+		$datasoal = $this->Kuesioner_model->get_all_diskusi($id_kuesioner);
 
 		$data_formindividu = $this->Formindividu_model->get_by_id($data_kuesioner->id_formindividu);
 
 		$jumlah = count($datasoal);
 
-		for ($i=0; $i < $jumlah ; $i++) { 
+		foreach($datasoal as $key => $vds) {
 			$jawabantemp = array(
 				'id_kuesioner' => $id_kuesioner,
-				'id_diskusi' => $datasoal[$i]->id,
+				'id_diskusi' => $vds['id'],
 			);
 
 			$kategori_respon = json_decode($data_kuesioner->kategori_respon, TRUE);
-
 			foreach ($kategori_respon as $key => $value) {
 				$kategorirespwithanswer = [
-					$value['nama'] => $this->input->post('disc'.$i.'_col'.$key)
+					$value['nama'] => $this->input->post('disc'.$vds['id'].'_col'.$key)
 				];
 
 				$jawabantemp = array_merge($jawabantemp, $kategorirespwithanswer);
@@ -121,11 +120,6 @@ class Survey extends CI_Controller {
 
 			$jawaban[] = $jawabantemp;
 		}
-		// echo "<pre>";
-		// print_r($jawaban);
-		// echo "</pre>";
-
-		// $jawaban = '';
 
 		$dataformindividu = json_decode($data_formindividu->design_form, true);
 
